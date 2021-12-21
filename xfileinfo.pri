@@ -14,3 +14,4 @@ SOURCES += \
 
 DISTFILES += \
     $$PWD/xfileinfo.cmake
+
