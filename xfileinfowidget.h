@@ -22,6 +22,7 @@
 #define XFILEINFOWIDGET_H
 
 #include <QWidget>
+#include "xfileinfo.h"
 
 namespace Ui {
 class XFileInfoWidget;
