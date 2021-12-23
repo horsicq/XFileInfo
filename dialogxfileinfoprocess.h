@@ -18,46 +18,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef XFILEINFO_H
-#define XFILEINFO_H
+#ifndef DIALOGXFILEINFOPROCESS_H
+#define DIALOGXFILEINFOPROCESS_H
 
-#include <QStandardItemModel>
-#include "xformats.h"
+#include <QDialog>
 
-class XFileInfo : public QObject
+namespace Ui {
+class DialogXFileInfoProcess;
+}
+
+class DialogXFileInfoProcess : public QDialog
 {
     Q_OBJECT
 
 public:
-
-    struct OPTIONS
-    {
-       bool bHideEmpty;
-    }
-
-    explicit XFileInfo(QObject *pParent=nullptr);
-
-    void setData(QIODevice *pDevice,QStandardItemModel *pModel,OPTIONS options);
-
-signals:
-    void errorMessage(QString sText);
-    void completed(qint64 nElapsed);
+    explicit DialogXFileInfoProcess(QWidget *pParent=nullptr);
+    ~DialogXFileInfoProcess();
 
 private:
-    QStandardItem *appendRecord(QStandardItem *pParent,QString sName,QVariant varData);
-    void setCurrentStatus(QString sStatus);
-
-public slots:
-    void stop();
-    void process();
-    QString getCurrentStatus();
-
-private:
-    QIODevice *g_pDevice;
-    QStandardItemModel *g_pModel;
-    OPTIONS g_options;
-    bool g_bIsStop;
-    QString g_sCurrentStatus;
+    Ui::DialogXFileInfoProcess *ui;
 };
 
-#endif // XFILEINFO_H
+#endif // DIALOGXFILEINFOPROCESS_H

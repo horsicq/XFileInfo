@@ -22,6 +22,75 @@
 
 XFileInfo::XFileInfo(QObject *pParent) : QObject(pParent)
 {
+    g_pDevice=nullptr;
+    g_bIsStop=false;
+}
 
+void XFileInfo::setData(QIODevice *pDevice, QStandardItemModel *pModel, OPTIONS options)
+{
+    this->g_pDevice=pDevice;
+    this->g_pModel=pModel;
+    this->g_options=options;
+}
+
+QStandardItem *XFileInfo::appendRecord(QStandardItem *pParent, QString sName, QVariant varData)
+{
+    QStandardItem *pResult=0;
+
+    bool bSuccess=true;
+
+    if(g_options.bHideEmpty)
+    {
+        if(varData.toString()=="")
+        {
+            bSuccess=false;
+        }
+    }
+
+    if(bSuccess)
+    {
+        pResult=new QStandardItem(sName);
+        pResult->setData(varData);
+
+        if(pParent)
+        {
+            pParent->appendRow(pResult);
+        }
+        else
+        {
+            g_pModel->appendRow(pResult);
+        }
+    }
+
+    return pResult;
+}
+
+void XFileInfo::setCurrentStatus(QString sStatus)
+{
+    g_sCurrentStatus=sStatus;
+}
+
+void XFileInfo::stop()
+{
+    g_bIsStop=true;
+}
+
+void XFileInfo::process()
+{
+    QElapsedTimer scanTimer;
+    scanTimer.start();
+
+    g_pModel=new QStandardItemModel;
+
+    appendRecord(0,tr("File name"),XBinary::getDeviceFileName(g_pDevice));
+
+    g_bIsStop=false;
+
+    emit completed(scanTimer.elapsed());
+}
+
+QString XFileInfo::getCurrentStatus()
+{
+    return g_sCurrentStatus;
 }
 
