@@ -21,7 +21,12 @@
 #ifndef XFILEINFO_H
 #define XFILEINFO_H
 
+#include <QStandardItem>
 #include <QStandardItemModel>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QXmlStreamWriter>
 #include "xformats.h"
 
 class XFileInfo : public QObject
@@ -39,6 +44,12 @@ public:
 
     void setData(QIODevice *pDevice,QStandardItemModel *pModel,OPTIONS options);
 
+    static QString toXML(QStandardItemModel *pModel);
+    static QString toJSON(QStandardItemModel *pModel);
+    static QString toCSV(QStandardItemModel *pModel);
+    static QString toTSV(QStandardItemModel *pModel);
+    static QString toFormattedString(QStandardItemModel *pModel);
+
 signals:
     void errorMessage(QString sText);
     void completed(qint64 nElapsed);
@@ -46,6 +57,11 @@ signals:
 private:
     QStandardItem *appendRecord(QStandardItem *pParent,QString sName,QVariant varData);
     void setCurrentStatus(QString sStatus);
+    static void _toXML(QXmlStreamWriter *pXml,QStandardItem *pItem,qint32 nLevel);
+    static void _toJSON(QJsonObject *pJsonObject,QStandardItem *pItem,qint32 nLevel);
+    static void _toCSV(QString *pString,QStandardItem *pItem,qint32 nLevel);
+    static void _toTSV(QString *pString,QStandardItem *pItem,qint32 nLevel);
+    static void _toFormattedString(QString *pString,QStandardItem *pItem,qint32 nLevel);
 
 public slots:
     void stop();

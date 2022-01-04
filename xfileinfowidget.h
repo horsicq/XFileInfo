@@ -46,6 +46,8 @@ protected:
 
 private slots:
     void on_checkBoxShowAll_toggled(bool bChecked);
+    void on_pushButtonSave_clicked();
+    void on_pushButtonReload_clicked();
 
 private:
     Ui::XFileInfoWidget *ui;

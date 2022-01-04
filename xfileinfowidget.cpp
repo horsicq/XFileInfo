@@ -60,7 +60,7 @@ void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, bool bAu
 void XFileInfoWidget::reload()
 {
     XFileInfo::OPTIONS options={};
-    options.bShowAll=ui->checkBoxShowAll->isChecked();
+//    options.bShowAll=ui->checkBoxShowAll->isChecked();
 
     QStandardItemModel *pModel=new QStandardItemModel;
 
@@ -68,7 +68,10 @@ void XFileInfoWidget::reload()
 
     if(dip.exec()==QDialog::Accepted)
     {
-        // TODO
+        QString sText=XFileInfo::toFormattedString(pModel);
+//        QString sText=XFileInfo::toCSV(pModel);
+
+        ui->plainTextEditFileInfo->setPlainText(sText);
     }
 
     delete pModel;
@@ -84,5 +87,21 @@ void XFileInfoWidget::on_checkBoxShowAll_toggled(bool bChecked)
 {
     Q_UNUSED(bChecked)
 
+    reload();
+}
+
+void XFileInfoWidget::on_pushButtonSave_clicked()
+{
+    QString sFileName=XBinary::getResultFileName(g_pDevice,QString("%1.txt").arg(tr("Info")));
+    sFileName=QFileDialog::getSaveFileName(this, tr("Save file"),sFileName, QString("%1 (*.txt);;%2 (*)").arg(tr("Text files"),tr("All files")));
+
+    if(!sFileName.isEmpty())
+    {
+        XOptions::savePlainTextEdit(ui->plainTextEditFileInfo,sFileName);
+    }
+}
+
+void XFileInfoWidget::on_pushButtonReload_clicked()
+{
     reload();
 }

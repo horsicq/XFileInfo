@@ -26,9 +26,64 @@ DialogXFileInfoProcess::DialogXFileInfoProcess(QWidget *pParent, QIODevice *pDev
     ui(new Ui::DialogXFileInfoProcess)
 {
     ui->setupUi(this);
+
+    g_pFileInfo=new XFileInfo;
+    g_pThread=new QThread;
+
+    g_pFileInfo->moveToThread(g_pThread);
+
+    connect(g_pThread, SIGNAL(started()), g_pFileInfo, SLOT(process()));
+    connect(g_pFileInfo, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
+    connect(g_pFileInfo, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
+
+    g_pFileInfo->setData(pDevice,pModel,options);
+    g_pThread->start();
+
+    g_pTimer=new QTimer(this);
+    connect(g_pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
+    g_pTimer->start(N_REFRESH_DELAY);
+
+    g_bIsStop=false;
 }
 
 DialogXFileInfoProcess::~DialogXFileInfoProcess()
 {
+    g_pFileInfo->stop(); // mb TODO if g_bIsStop
+    g_pTimer->stop();
+
+    g_pThread->quit();
+    g_pThread->wait();
+
     delete ui;
+
+    delete g_pThread;
+    delete g_pFileInfo;
+}
+
+void DialogXFileInfoProcess::on_pushButtonCancel_clicked()
+{
+    g_bIsStop=true;
+
+    g_pFileInfo->stop();
+}
+
+void DialogXFileInfoProcess::onCompleted(qint64 nElapsed)
+{
+    Q_UNUSED(nElapsed)
+
+    if(!g_bIsStop)
+    {
+        accept();
+    }
+    else
+    {
+        reject();
+    }
+}
+
+void DialogXFileInfoProcess::timerSlot()
+{
+    QString sStatus=g_pFileInfo->getCurrentStatus();
+
+    ui->labelStatus->setText(sStatus);
 }

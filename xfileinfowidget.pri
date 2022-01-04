@@ -13,8 +13,8 @@ FORMS += \
     $$PWD/dialogxfileinfoprocess.ui \
     $$PWD/xfileinfowidget.ui
 
-!contains(XCONFIG, xformats) {
-    XCONFIG += xformats
+!contains(XCONFIG, xfileinfo) {
+    XCONFIG += xfileinfo
     include($$PWD/xfileinfo.pri)
 }
 

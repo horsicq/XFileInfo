@@ -22,6 +22,8 @@
 #define DIALOGXFILEINFOPROCESS_H
 
 #include <QDialog>
+#include <QThread>
+#include <QTimer>
 #include "xfileinfo.h"
 
 namespace Ui {
@@ -36,8 +38,18 @@ public:
     explicit DialogXFileInfoProcess(QWidget *pParent,QIODevice *pDevice,QStandardItemModel *pModel,XFileInfo::OPTIONS options);
     ~DialogXFileInfoProcess();
 
+private slots:
+    void on_pushButtonCancel_clicked();
+    void onCompleted(qint64 nElapsed);
+    void timerSlot();
+
 private:
+    static const qint32 N_REFRESH_DELAY=1000;
     Ui::DialogXFileInfoProcess *ui;
+    XFileInfo *g_pFileInfo;
+    QThread *g_pThread;
+    bool g_bIsStop;
+    QTimer *g_pTimer;
 };
 
 #endif // DIALOGXFILEINFOPROCESS_H
