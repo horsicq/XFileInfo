@@ -22,13 +22,67 @@
 #include "ui_xfileinfowidget.h"
 
 XFileInfoWidget::XFileInfoWidget(QWidget *pParent) :
-    QWidget(pParent),
+    XShortcutsWidget(pParent),
     ui(new Ui::XFileInfoWidget)
 {
     ui->setupUi(this);
+
+    g_pDevice=nullptr;
+    g_nOffset=0;
+    g_nSize=0;
 }
 
 XFileInfoWidget::~XFileInfoWidget()
 {
     delete ui;
+}
+
+void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, bool bAuto)
+{
+    this->g_pDevice=pDevice;
+
+    if(this->g_nSize==-1)
+    {
+        this->g_nSize=(pDevice->size())-(this->g_nOffset);
+    }
+
+    ui->lineEditOffset->setValue32_64(this->g_nOffset);
+    ui->lineEditSize->setValue32_64(this->g_nSize);
+
+    XFormats::setFileTypeComboBox(fileType,g_pDevice,ui->comboBoxType);
+
+    if(bAuto)
+    {
+        reload();
+    }
+}
+
+void XFileInfoWidget::reload()
+{
+    XFileInfo::OPTIONS options={};
+    options.bShowAll=ui->checkBoxShowAll->isChecked();
+
+    QStandardItemModel *pModel=new QStandardItemModel;
+
+    DialogXFileInfoProcess dip(XOptions::getMainWidget(this),g_pDevice,pModel,options);
+
+    if(dip.exec()==QDialog::Accepted)
+    {
+        // TODO
+    }
+
+    delete pModel;
+}
+
+void XFileInfoWidget::registerShortcuts(bool bState)
+{
+    Q_UNUSED(bState)
+    // TODO !!!
+}
+
+void XFileInfoWidget::on_checkBoxShowAll_toggled(bool bChecked)
+{
+    Q_UNUSED(bChecked)
+
+    reload();
 }

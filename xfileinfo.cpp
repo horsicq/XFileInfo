@@ -39,12 +39,9 @@ QStandardItem *XFileInfo::appendRecord(QStandardItem *pParent, QString sName, QV
 
     bool bSuccess=true;
 
-    if(g_options.bHideEmpty)
+    if(varData.toString()=="")
     {
-        if(varData.toString()=="")
-        {
-            bSuccess=false;
-        }
+        bSuccess=g_options.bShowAll;
     }
 
     if(bSuccess)

@@ -22,13 +22,15 @@
 #define XFILEINFOWIDGET_H
 
 #include <QWidget>
+#include "dialogxfileinfoprocess.h"
 #include "xfileinfo.h"
+#include "xshortcutswidget.h"
 
 namespace Ui {
 class XFileInfoWidget;
 }
 
-class XFileInfoWidget : public QWidget
+class XFileInfoWidget : public XShortcutsWidget
 {
     Q_OBJECT
 
@@ -36,8 +38,20 @@ public:
     explicit XFileInfoWidget(QWidget *pParent=nullptr);
     ~XFileInfoWidget();
 
+    void setData(QIODevice *pDevice,XBinary::FT fileType,bool bAuto=false);
+    void reload();
+
+protected:
+    virtual void registerShortcuts(bool bState);
+
+private slots:
+    void on_checkBoxShowAll_toggled(bool bChecked);
+
 private:
     Ui::XFileInfoWidget *ui;
+    QIODevice *g_pDevice;
+    qint64 g_nOffset;
+    qint64 g_nSize;
 };
 
 #endif // XFILEINFOWIDGET_H

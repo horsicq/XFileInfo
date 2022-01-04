@@ -22,6 +22,7 @@
 #define DIALOGXFILEINFOPROCESS_H
 
 #include <QDialog>
+#include "xfileinfo.h"
 
 namespace Ui {
 class DialogXFileInfoProcess;
@@ -32,7 +33,7 @@ class DialogXFileInfoProcess : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogXFileInfoProcess(QWidget *pParent=nullptr);
+    explicit DialogXFileInfoProcess(QWidget *pParent,QIODevice *pDevice,QStandardItemModel *pModel,XFileInfo::OPTIONS options);
     ~DialogXFileInfoProcess();
 
 private:

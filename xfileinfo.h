@@ -32,7 +32,7 @@ public:
 
     struct OPTIONS
     {
-        bool bHideEmpty;
+        bool bShowAll;
     };
 
     explicit XFileInfo(QObject *pParent=nullptr);
