@@ -83,13 +83,6 @@ void XFileInfoWidget::registerShortcuts(bool bState)
     // TODO !!!
 }
 
-void XFileInfoWidget::on_checkBoxShowAll_toggled(bool bChecked)
-{
-    Q_UNUSED(bChecked)
-
-    reload();
-}
-
 void XFileInfoWidget::on_pushButtonSave_clicked()
 {
     QString sFileName=XBinary::getResultFileName(g_pDevice,QString("%1.txt").arg(tr("Info")));

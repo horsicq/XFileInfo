@@ -1,4 +1,4 @@
-/* Copyright (c) 2021 hors<horsicq@gmail.com>
+/* Copyright (c) 2021-2021 hors<horsicq@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,41 +18,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef XFILEINFOWIDGET_H
-#define XFILEINFOWIDGET_H
+#include "dialogxfileinfo.h"
+#include "ui_dialogxfileinfo.h"
 
-#include <QWidget>
-#include "dialogxfileinfoprocess.h"
-#include "xfileinfo.h"
-#include "xshortcutswidget.h"
-
-namespace Ui {
-class XFileInfoWidget;
+DialogXFileInfo::DialogXFileInfo(QWidget *pParent) :
+    QDialog(pParent),
+    ui(new Ui::DialogXFileInfo)
+{
+    ui->setupUi(this);
 }
 
-class XFileInfoWidget : public XShortcutsWidget
+DialogXFileInfo::~DialogXFileInfo()
 {
-    Q_OBJECT
+    delete ui;
+}
 
-public:
-    explicit XFileInfoWidget(QWidget *pParent=nullptr);
-    ~XFileInfoWidget();
+void DialogXFileInfo::setData(QIODevice *pDevice, XBinary::FT fileType, bool bAuto)
+{
+    ui->widget->setData(pDevice,fileType,bAuto);
+}
 
-    void setData(QIODevice *pDevice,XBinary::FT fileType,bool bAuto=false);
-    void reload();
+void DialogXFileInfo::on_pushButtonClose_clicked()
+{
+    this->close();
+}
 
-protected:
-    virtual void registerShortcuts(bool bState);
-
-private slots:
-    void on_pushButtonSave_clicked();
-    void on_pushButtonReload_clicked();
-
-private:
-    Ui::XFileInfoWidget *ui;
-    QIODevice *g_pDevice;
-    qint64 g_nOffset;
-    qint64 g_nSize;
-};
-
-#endif // XFILEINFOWIDGET_H

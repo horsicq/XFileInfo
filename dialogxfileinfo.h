@@ -1,4 +1,4 @@
-/* Copyright (c) 2021 hors<horsicq@gmail.com>
+/* Copyright (c) 2021-2021 hors<horsicq@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,41 +18,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef XFILEINFOWIDGET_H
-#define XFILEINFOWIDGET_H
+#ifndef DIALOGXFILEINFO_H
+#define DIALOGXFILEINFO_H
 
-#include <QWidget>
-#include "dialogxfileinfoprocess.h"
-#include "xfileinfo.h"
-#include "xshortcutswidget.h"
+#include <QDialog>
+#include "xfileinfowidget.h"
 
 namespace Ui {
-class XFileInfoWidget;
+class DialogXFileInfo;
 }
 
-class XFileInfoWidget : public XShortcutsWidget
+class DialogXFileInfo : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit XFileInfoWidget(QWidget *pParent=nullptr);
-    ~XFileInfoWidget();
+    explicit DialogXFileInfo(QWidget *pParent=nullptr);
+    ~DialogXFileInfo();
 
     void setData(QIODevice *pDevice,XBinary::FT fileType,bool bAuto=false);
-    void reload();
-
-protected:
-    virtual void registerShortcuts(bool bState);
 
 private slots:
-    void on_pushButtonSave_clicked();
-    void on_pushButtonReload_clicked();
+    void on_pushButtonClose_clicked();
 
 private:
-    Ui::XFileInfoWidget *ui;
-    QIODevice *g_pDevice;
-    qint64 g_nOffset;
-    qint64 g_nSize;
+    Ui::DialogXFileInfo *ui;
 };
 
-#endif // XFILEINFOWIDGET_H
+#endif // DIALOGXFILEINFO_H
