@@ -40,6 +40,8 @@ XFileInfoWidget::~XFileInfoWidget()
 void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, bool bAuto)
 {
     this->g_pDevice=pDevice;
+    g_nOffset=0;
+    g_nSize=pDevice->size();
 
     if(this->g_nSize==-1)
     {

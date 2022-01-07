@@ -81,6 +81,11 @@ void DialogXFileInfoProcess::onCompleted(qint64 nElapsed)
     }
 }
 
+void DialogXFileInfoProcess::errorMessage(QString sText)
+{
+    // TODO
+}
+
 void DialogXFileInfoProcess::timerSlot()
 {
     QString sStatus=g_pFileInfo->getCurrentStatus();

@@ -41,6 +41,7 @@ public:
 private slots:
     void on_pushButtonCancel_clicked();
     void onCompleted(qint64 nElapsed);
+    void errorMessage(QString sText);
     void timerSlot();
 
 private:

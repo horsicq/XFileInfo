@@ -234,6 +234,7 @@ void XFileInfo::process()
     scanTimer.start();
 
     appendRecord(0,tr("File name"),XBinary::getDeviceFileName(g_pDevice));
+    appendRecord(0,tr("Size"),g_pDevice->size());
 
     if(!g_bIsStop)
     {
@@ -254,6 +255,12 @@ void XFileInfo::process()
             if(!g_bIsStop) appendRecord(0,"SHA384",XBinary::getHash(XBinary::HASH_SHA384,g_pDevice));
             if(!g_bIsStop) appendRecord(0,"SHA512",XBinary::getHash(XBinary::HASH_SHA512,g_pDevice));
         }
+    }
+    if(!g_bIsStop)
+    {
+        setCurrentStatus(tr("Entropy"));
+
+        if(!g_bIsStop) appendRecord(0,tr("Entropy"),XBinary::getEntropy(g_pDevice));
     }
 
     g_bIsStop=false;
