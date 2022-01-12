@@ -37,7 +37,9 @@ public:
 
     struct OPTIONS
     {
+        XBinary::FT fileType;
         bool bShowAll;
+        bool bComment;
     };
 
     explicit XFileInfo(QObject *pParent=nullptr);
@@ -62,6 +64,7 @@ private:
     static void _toCSV(QString *pString,QStandardItem *pItem,qint32 nLevel);
     static void _toTSV(QString *pString,QStandardItem *pItem,qint32 nLevel);
     static void _toFormattedString(QString *pString,QStandardItem *pItem,qint32 nLevel);
+    void addOsInfo(XBinary::OSINFO osInfo);
 
 public slots:
     void stop();

@@ -223,6 +223,25 @@ void XFileInfo::_toFormattedString(QString *pString, QStandardItem *pItem, qint3
     }
 }
 
+void XFileInfo::addOsInfo(XBinary::OSINFO osInfo)
+{
+    if(!g_bIsStop)
+    {
+        QString sOperationSystem=XBinary::osNameIdToString(osInfo.osName);
+
+        if(osInfo.sOsVersion!="")
+        {
+            sOperationSystem+=QString("(%1)").arg(osInfo.sOsVersion);
+        }
+
+        appendRecord(0,tr("Operation system"),sOperationSystem);
+    }
+
+    if(!g_bIsStop) appendRecord(0,tr("Arch"),osInfo.sArch);
+    if(!g_bIsStop) appendRecord(0,tr("Mode"),XBinary::modeIdToString(osInfo.mode));
+    if(!g_bIsStop) appendRecord(0,tr("Type"),osInfo.sType);
+}
+
 void XFileInfo::stop()
 {
     g_bIsStop=true;
@@ -234,7 +253,16 @@ void XFileInfo::process()
     scanTimer.start();
 
     appendRecord(0,tr("File name"),XBinary::getDeviceFileName(g_pDevice));
-    appendRecord(0,tr("Size"),g_pDevice->size());
+
+    qint64 nSize=g_pDevice->size();
+    QString sSize=QString::number(nSize);
+
+    if(g_options.bComment)
+    {
+        sSize+=QString("(%1)").arg(XBinary::bytesCountToString(nSize));
+    }
+
+    appendRecord(0,tr("Size"),sSize);
 
     if(!g_bIsStop)
     {
@@ -256,11 +284,43 @@ void XFileInfo::process()
             if(!g_bIsStop) appendRecord(0,"SHA512",XBinary::getHash(XBinary::HASH_SHA512,g_pDevice));
         }
     }
+
     if(!g_bIsStop)
     {
         setCurrentStatus(tr("Entropy"));
 
-        if(!g_bIsStop) appendRecord(0,tr("Entropy"),XBinary::getEntropy(g_pDevice));
+        if(!g_bIsStop)
+        {
+            double dEntropy=XBinary::getEntropy(g_pDevice);
+            QString sEntropy=QString::number(dEntropy);
+
+            if(g_options.bComment)
+            {
+                sEntropy+=QString("(%1)").arg(XBinary::isPacked(dEntropy)?(tr("packed")):(tr("not packed")));
+            }
+
+            appendRecord(0,tr("Entropy"),sEntropy);
+        }
+    }
+
+    if(!g_bIsStop)
+    {
+        if(XBinary::checkFileType(XBinary::FT_ELF,g_options.fileType))
+        {
+            setCurrentStatus("ELF");
+
+            XELF elf(g_pDevice);
+
+            if(elf.isValid())
+            {
+                if(!g_bIsStop)
+                {
+                    XBinary::OSINFO osInfo=elf.getOsInfo();
+
+                    addOsInfo(osInfo);
+                }
+            }
+        }
     }
 
     g_bIsStop=false;

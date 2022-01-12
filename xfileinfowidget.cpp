@@ -30,6 +30,8 @@ XFileInfoWidget::XFileInfoWidget(QWidget *pParent) :
     g_pDevice=nullptr;
     g_nOffset=0;
     g_nSize=0;
+
+    ui->checkBoxComment->setChecked(true);
 }
 
 XFileInfoWidget::~XFileInfoWidget()
@@ -61,22 +63,28 @@ void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, bool bAu
 
 void XFileInfoWidget::reload()
 {
-    XFileInfo::OPTIONS options={};
-//    options.bShowAll=ui->checkBoxShowAll->isChecked();
-
-    QStandardItemModel *pModel=new QStandardItemModel;
-
-    DialogXFileInfoProcess dip(XOptions::getMainWidget(this),g_pDevice,pModel,options);
-
-    if(dip.exec()==QDialog::Accepted)
+    if(g_pDevice)
     {
-        QString sText=XFileInfo::toFormattedString(pModel);
-//        QString sText=XFileInfo::toCSV(pModel);
+        XFileInfo::OPTIONS options={};
+        options.fileType=(XBinary::FT)(ui->comboBoxType->currentData().toInt());
+    //    options.bShowAll=ui->checkBoxShowAll->isChecked();
+        options.bComment=ui->checkBoxComment->isChecked();
 
-        ui->plainTextEditFileInfo->setPlainText(sText);
+        QStandardItemModel *pModel=new QStandardItemModel;
+
+        DialogXFileInfoProcess dip(XOptions::getMainWidget(this),g_pDevice,pModel,options);
+
+        if(dip.exec()==QDialog::Accepted)
+        {
+            QString sText=XFileInfo::toFormattedString(pModel);
+    //        QString sText=XFileInfo::toCSV(pModel);
+
+            ui->plainTextEditFileInfo->setPlainText(sText);
+        }
+
+        delete pModel;
     }
 
-    delete pModel;
 }
 
 void XFileInfoWidget::registerShortcuts(bool bState)
@@ -98,5 +106,12 @@ void XFileInfoWidget::on_pushButtonSave_clicked()
 
 void XFileInfoWidget::on_pushButtonReload_clicked()
 {
+    reload();
+}
+
+void XFileInfoWidget::on_checkBoxComment_toggled(bool bChecked)
+{
+    Q_UNUSED(bChecked)
+
     reload();
 }
