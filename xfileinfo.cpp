@@ -237,7 +237,7 @@ void XFileInfo::addOsInfo(XBinary::OSINFO osInfo)
         appendRecord(0,tr("Operation system"),sOperationSystem);
     }
 
-    if(!g_bIsStop) appendRecord(0,tr("Arch"),osInfo.sArch);
+    if(!g_bIsStop) appendRecord(0,tr("Architecture"),osInfo.sArch);
     if(!g_bIsStop) appendRecord(0,tr("Mode"),XBinary::modeIdToString(osInfo.mode));
     if(!g_bIsStop) appendRecord(0,tr("Type"),osInfo.sType);
 }
