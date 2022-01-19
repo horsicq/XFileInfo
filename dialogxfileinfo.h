@@ -23,18 +23,20 @@
 
 #include <QDialog>
 #include "xfileinfowidget.h"
+#include "xshortcutsdialog.h"
 
 namespace Ui {
 class DialogXFileInfo;
 }
 
-class DialogXFileInfo : public QDialog
+class DialogXFileInfo : public XShortcutsDialog
 {
     Q_OBJECT
 
 public:
     explicit DialogXFileInfo(QWidget *pParent=nullptr);
     ~DialogXFileInfo();
+    virtual void setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions);
 
     void setData(QIODevice *pDevice,XBinary::FT fileType,bool bAuto=false);
 

@@ -22,7 +22,7 @@
 #include "ui_dialogxfileinfo.h"
 
 DialogXFileInfo::DialogXFileInfo(QWidget *pParent) :
-    QDialog(pParent),
+    XShortcutsDialog(pParent),
     ui(new Ui::DialogXFileInfo)
 {
     ui->setupUi(this);
@@ -31,6 +31,11 @@ DialogXFileInfo::DialogXFileInfo(QWidget *pParent) :
 DialogXFileInfo::~DialogXFileInfo()
 {
     delete ui;
+}
+
+void DialogXFileInfo::setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions)
+{
+    ui->widget->setGlobal(pShortcuts,pXOptions);
 }
 
 void DialogXFileInfo::setData(QIODevice *pDevice, XBinary::FT fileType, bool bAuto)
