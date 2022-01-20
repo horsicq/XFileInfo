@@ -48,7 +48,7 @@ DialogXFileInfoProcess::DialogXFileInfoProcess(QWidget *pParent, QIODevice *pDev
 
 DialogXFileInfoProcess::~DialogXFileInfoProcess()
 {
-    g_pFileInfo->stop(); // mb TODO if g_bIsStop
+    g_pFileInfo->stop(); // mb TODO if g_bIsStop !!!
     g_pTimer->stop();
 
     g_pThread->quit();
