@@ -321,6 +321,22 @@ void XFileInfo::process()
                 }
             }
         }
+        else if(XBinary::checkFileType(XBinary::FT_MACHO,g_options.fileType))
+        {
+            setCurrentStatus("MACH-O");
+
+            XMACH mach(g_pDevice);
+
+            if(mach.isValid())
+            {
+                if(!g_bIsStop)
+                {
+                    XBinary::OSINFO osInfo=mach.getOsInfo();
+
+                    addOsInfo(osInfo);
+                }
+            }
+        }
     }
 
     g_bIsStop=false;

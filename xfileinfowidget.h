@@ -48,6 +48,7 @@ private slots:
     void on_pushButtonSave_clicked();
     void on_pushButtonReload_clicked(); 
     void on_checkBoxComment_toggled(bool bChecked);
+    void on_comboBoxType_currentIndexChanged(int index);
 
 private:
     Ui::XFileInfoWidget *ui;

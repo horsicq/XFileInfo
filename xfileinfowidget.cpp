@@ -115,3 +115,10 @@ void XFileInfoWidget::on_checkBoxComment_toggled(bool bChecked)
 
     reload();
 }
+
+void XFileInfoWidget::on_comboBoxType_currentIndexChanged(int nIndex)
+{
+    Q_UNUSED(nIndex)
+
+    reload();
+}
