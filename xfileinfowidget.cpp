@@ -70,13 +70,13 @@ void XFileInfoWidget::reload()
     //    options.bShowAll=ui->checkBoxShowAll->isChecked();
         options.bComment=ui->checkBoxComment->isChecked();
 
-        QStandardItemModel *pModel=new QStandardItemModel;
+        XFileInfoModel *pModel=new XFileInfoModel;
 
         DialogXFileInfoProcess dip(XOptions::getMainWidget(this),g_pDevice,pModel,options);
 
         if(dip.exec()==QDialog::Accepted)
         {
-            QString sText=XFileInfo::toFormattedString(pModel);
+            QString sText=pModel->toFormattedString();
     //        QString sText=XFileInfo::toCSV(pModel);
 
             ui->plainTextEditFileInfo->setPlainText(sText);

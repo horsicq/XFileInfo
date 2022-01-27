@@ -26,7 +26,7 @@ XFileInfo::XFileInfo(QObject *pParent) : QObject(pParent)
     g_bIsStop=false;
 }
 
-void XFileInfo::setData(QIODevice *pDevice, QStandardItemModel *pModel, OPTIONS options)
+void XFileInfo::setData(QIODevice *pDevice, XFileInfoModel *pModel, OPTIONS options)
 {
     // TODO XBinary for Hash Stop
     this->g_pDevice=pDevice;
@@ -34,76 +34,41 @@ void XFileInfo::setData(QIODevice *pDevice, QStandardItemModel *pModel, OPTIONS 
     this->g_options=options;
 }
 
-QString XFileInfo::toXML(QStandardItemModel *pModel)
+bool XFileInfo::processFile(QString sFileName, XFileInfoModel *pModel, OPTIONS options)
 {
-    QString sResult;
-    QXmlStreamWriter xml(&sResult);
+    bool bResult=false;
 
-    xml.setAutoFormatting(true);
+    QFile file;
 
-    _toXML(&xml,pModel->invisibleRootItem(),0);
+    file.setFileName(sFileName);
 
-    return sResult;
+    if(file.open(QIODevice::ReadOnly))
+    {
+        XFileInfo fileInfo;
+        fileInfo.setData(&file,pModel,options);
+        fileInfo.process();
+
+        file.close();
+
+        bResult=true;
+    }
+
+    return bResult;
 }
 
-QString XFileInfo::toJSON(QStandardItemModel *pModel)
+XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pParent, QString sName, QVariant varData)
 {
-    QString sResult;
+    XFileInfoItem *pResult=0;
 
-    QJsonObject jsonResult;
-
-    _toJSON(&jsonResult,pModel->invisibleRootItem(),0);
-
-    QJsonDocument saveFormat(jsonResult);
-
-    QByteArray baData=saveFormat.toJson(QJsonDocument::Indented);
-
-    sResult=baData.data();
-
-    return sResult;
-}
-
-QString XFileInfo::toCSV(QStandardItemModel *pModel)
-{
-    QString sResult;
-
-    _toCSV(&sResult,pModel->invisibleRootItem(),0);
-
-    return sResult;
-}
-
-QString XFileInfo::toTSV(QStandardItemModel *pModel)
-{
-    QString sResult;
-
-    _toTSV(&sResult,pModel->invisibleRootItem(),0);
-
-    return sResult;
-}
-
-QString XFileInfo::toFormattedString(QStandardItemModel *pModel)
-{
-    QString sResult;
-
-    _toFormattedString(&sResult,pModel->invisibleRootItem(),0);
-
-    return sResult;
-}
-
-QStandardItem *XFileInfo::appendRecord(QStandardItem *pParent, QString sName, QVariant varData)
-{
-    QStandardItem *pResult=0;
-
-    pResult=new QStandardItem(sName);
-    pResult->setData(varData);
+    pResult=new XFileInfoItem(sName,varData);
 
     if(pParent)
     {
-        pParent->appendRow(pResult);
+        pParent->appendChild(pResult);
     }
     else
     {
-        g_pModel->appendRow(pResult);
+        g_pModel->appendChild(pResult);
     }
 
     return pResult;
@@ -114,118 +79,9 @@ void XFileInfo::setCurrentStatus(QString sStatus)
     g_sCurrentStatus=sStatus;
 }
 
-void XFileInfo::_toXML(QXmlStreamWriter *pXml, QStandardItem *pItem, qint32 nLevel)
-{
-    if(nLevel)
-    {
-        pXml->writeStartElement("record");
-        pXml->writeAttribute("name",pItem->text());
-        pXml->writeAttribute("value",pItem->data().toString());
-    }
-    else
-    {
-        pXml->writeStartElement("info");
-    }
-
-    qint32 nNumberOfChildren=pItem->rowCount();
-
-    for(qint32 i=0;i<nNumberOfChildren;i++)
-    {
-        _toXML(pXml,pItem->child(i),nLevel+1);
-    }
-
-    pXml->writeEndElement();
-}
-
-void XFileInfo::_toJSON(QJsonObject *pJsonObject, QStandardItem *pItem, qint32 nLevel)
-{
-    if(nLevel)
-    {
-        pJsonObject->insert(pItem->text(),pItem->data().toString());
-    }
-
-    if(pItem->rowCount())
-    {
-        if(nLevel)
-        {
-            QJsonArray jsArray;
-
-            qint32 nNumberOfChildren=pItem->rowCount();
-
-            for(qint32 i=0;i<nNumberOfChildren;i++)
-            {
-                QJsonObject jsRecord;
-
-                _toJSON(&jsRecord,pItem->child(i),nLevel+1);
-
-                jsArray.append(jsRecord);
-            }
-
-            pJsonObject->insert("records",jsArray);
-        }
-        else
-        {
-            qint32 nNumberOfChildren=pItem->rowCount();
-
-            for(qint32 i=0;i<nNumberOfChildren;i++)
-            {
-                _toJSON(pJsonObject,pItem->child(i),nLevel+1);
-            }
-        }
-    }
-}
-
-void XFileInfo::_toCSV(QString *pString, QStandardItem *pItem, qint32 nLevel)
-{
-    if(nLevel)
-    {
-        pString->append(QString("%1;%2\n").arg(pItem->text(),pItem->data().toString()));
-    }
-
-    qint32 nNumberOfChildren=pItem->rowCount();
-
-    for(qint32 i=0;i<nNumberOfChildren;i++)
-    {
-        _toCSV(pString,pItem->child(i),nLevel+1);
-    }
-}
-
-void XFileInfo::_toTSV(QString *pString, QStandardItem *pItem, qint32 nLevel)
-{
-    if(nLevel)
-    {
-        pString->append(QString("%1\t%2\n").arg(pItem->text(),pItem->data().toString()));
-    }
-
-    qint32 nNumberOfChildren=pItem->rowCount();
-
-    for(qint32 i=0;i<nNumberOfChildren;i++)
-    {
-        _toTSV(pString,pItem->child(i),nLevel+1);
-    }
-}
-
-void XFileInfo::_toFormattedString(QString *pString, QStandardItem *pItem, qint32 nLevel)
-{
-    if(nLevel)
-    {
-        QString sResult;
-        sResult=sResult.leftJustified(4*(nLevel-1),' '); // TODO function
-        sResult.append(QString("%1: %2\n").arg(pItem->text(),pItem->data().toString()));
-        pString->append(sResult);
-    }
-
-    qint32 nNumberOfChildren=pItem->rowCount();
-
-    for(qint32 i=0;i<nNumberOfChildren;i++)
-    {
-        _toFormattedString(pString,pItem->child(i),nLevel+1);
-    }
-}
-
 void XFileInfo::addOsInfo(XBinary::OSINFO osInfo)
 {
-    if(check("Operation system"))
+    if(check("Operation system",""))
     {
         QString sOperationSystem=XBinary::osNameIdToString(osInfo.osName);
 
@@ -237,23 +93,32 @@ void XFileInfo::addOsInfo(XBinary::OSINFO osInfo)
         appendRecord(0,tr("Operation system"),sOperationSystem);
     }
 
-    if(check("Architecture")) appendRecord(0,tr("Architecture"),osInfo.sArch);
-    if(check("Mode")) appendRecord(0,tr("Mode"),XBinary::modeIdToString(osInfo.mode));
-    if(check("Type")) appendRecord(0,tr("Type"),osInfo.sType);
-    if(check("Endianess")) appendRecord(0,tr("Endianess"),XBinary::endiannessToString(osInfo.bIsBigEndian));
+    if(check("Architecture","")) appendRecord(0,tr("Architecture"),osInfo.sArch);
+    if(check("Mode","")) appendRecord(0,tr("Mode"),XBinary::modeIdToString(osInfo.mode));
+    if(check("Type","")) appendRecord(0,tr("Type"),osInfo.sType);
+    if(check("Endianess","")) appendRecord(0,tr("Endianess"),XBinary::endiannessToString(osInfo.bIsBigEndian));
 }
 
-bool XFileInfo::check(QString sString)
+bool XFileInfo::check(QString sString, QString sExtra)
 {
     bool bResult=false;
 
     if(!g_bIsStop)
     {
-        bResult=true;
-
         if(g_options.sString!="")
         {
-            bResult=(g_options.sString==sString);
+            if(g_options.sString==sString)
+            {
+                bResult=true;
+            }
+            else if(g_options.sString==sExtra)
+            {
+                bResult=true;
+            }
+        }
+        else
+        {
+            bResult=true;
         }
     }
 
@@ -275,7 +140,14 @@ void XFileInfo::process()
     QElapsedTimer scanTimer;
     scanTimer.start();
 
-    if(check("File name")) appendRecord(0,tr("File name"),XBinary::getDeviceFileName(g_pDevice));
+    XBinary::FT fileType=g_options.fileType;
+
+    if(fileType==XBinary::FT_UNKNOWN)
+    {
+        fileType=XBinary::getPrefFileType(g_pDevice);
+    }
+
+    if(check("File name","")) appendRecord(0,tr("File name"),XBinary::getDeviceFileName(g_pDevice));
 
     qint64 nSize=g_pDevice->size();
     QString sSize=QString::number(nSize);
@@ -285,25 +157,25 @@ void XFileInfo::process()
         sSize+=QString("(%1)").arg(XBinary::bytesCountToString(nSize));
     }
 
-    if(check("Size")) appendRecord(0,tr("Size"),sSize);
+    if(check("Size","")) appendRecord(0,tr("Size"),sSize);
 
     if((g_options.bShowAll)||(g_options.sString!=""))
     {
-        if(check("MD4")) appendRecord(0,"MD4",XBinary::getHash(XBinary::HASH_MD4,g_pDevice));
+        if(check("MD4","hash")) appendRecord(0,"MD4",XBinary::getHash(XBinary::HASH_MD4,g_pDevice));
     }
 
-    if(check("MD5")) appendRecord(0,"MD5",XBinary::getHash(XBinary::HASH_MD5,g_pDevice));
-    if(check("SHA1")) appendRecord(0,"SHA1",XBinary::getHash(XBinary::HASH_SHA1,g_pDevice));
+    if(check("MD5","hash")) appendRecord(0,"MD5",XBinary::getHash(XBinary::HASH_MD5,g_pDevice));
+    if(check("SHA1","hash")) appendRecord(0,"SHA1",XBinary::getHash(XBinary::HASH_SHA1,g_pDevice));
 
     if((g_options.bShowAll)||(g_options.sString!=""))
     {
-        if(check("SHA224")) appendRecord(0,"SHA224",XBinary::getHash(XBinary::HASH_SHA224,g_pDevice));
-        if(check("SHA256")) appendRecord(0,"SHA256",XBinary::getHash(XBinary::HASH_SHA256,g_pDevice));
-        if(check("SHA384")) appendRecord(0,"SHA384",XBinary::getHash(XBinary::HASH_SHA384,g_pDevice));
-        if(check("SHA512")) appendRecord(0,"SHA512",XBinary::getHash(XBinary::HASH_SHA512,g_pDevice));
+        if(check("SHA224","hash")) appendRecord(0,"SHA224",XBinary::getHash(XBinary::HASH_SHA224,g_pDevice));
+        if(check("SHA256","hash")) appendRecord(0,"SHA256",XBinary::getHash(XBinary::HASH_SHA256,g_pDevice));
+        if(check("SHA384","hash")) appendRecord(0,"SHA384",XBinary::getHash(XBinary::HASH_SHA384,g_pDevice));
+        if(check("SHA512","hash")) appendRecord(0,"SHA512",XBinary::getHash(XBinary::HASH_SHA512,g_pDevice));
     }
 
-    if(check("Entropy"))
+    if(check("Entropy",""))
     {
         double dEntropy=XBinary::getEntropy(g_pDevice);
         QString sEntropy=QString::number(dEntropy);
@@ -318,7 +190,7 @@ void XFileInfo::process()
 
     if(!g_bIsStop)
     {
-        if(XBinary::checkFileType(XBinary::FT_ELF,g_options.fileType))
+        if(XBinary::checkFileType(XBinary::FT_ELF,fileType))
         {
             XELF elf(g_pDevice);
 
@@ -329,10 +201,12 @@ void XFileInfo::process()
                     XBinary::OSINFO osInfo=elf.getOsInfo();
 
                     addOsInfo(osInfo);
+
+                    // TODO
                 }
             }
         }
-        else if(XBinary::checkFileType(XBinary::FT_MACHO,g_options.fileType))
+        else if(XBinary::checkFileType(XBinary::FT_MACHO,fileType))
         {
             XMACH mach(g_pDevice);
 
@@ -343,6 +217,98 @@ void XFileInfo::process()
                     XBinary::OSINFO osInfo=mach.getOsInfo();
 
                     addOsInfo(osInfo);
+
+                    XBinary::_MEMORY_MAP memoryMap=mach.getMemoryMap();
+
+                    if(check("Entry point(Address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(mach.getEntryPointAddress(&memoryMap)));
+                    if(check("Entry point(Offset)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Offset")),XBinary::valueToHexEx(mach.getEntryPointOffset(&memoryMap)));
+
+                    // TODO
+                }
+            }
+        }
+        else if(XBinary::checkFileType(XBinary::FT_PE,fileType))
+        {
+            XPE pe(g_pDevice);
+
+            if(pe.isValid())
+            {
+                if(!g_bIsStop)
+                {
+                    XBinary::OSINFO osInfo=pe.getOsInfo();
+
+                    addOsInfo(osInfo);
+
+                    XBinary::_MEMORY_MAP memoryMap=pe.getMemoryMap();
+
+                    if(check("Entry point(Address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(pe.getEntryPointAddress(&memoryMap)));
+                    if(check("Entry point(Offset)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Offset")),XBinary::valueToHexEx(pe.getEntryPointOffset(&memoryMap)));
+
+                    // TODO
+                }
+            }
+        }
+        else if(XBinary::checkFileType(XBinary::FT_NE,fileType))
+        {
+            XNE ne(g_pDevice);
+
+            if(ne.isValid())
+            {
+                if(!g_bIsStop)
+                {
+                    XBinary::OSINFO osInfo=ne.getOsInfo();
+
+                    addOsInfo(osInfo);
+
+                    // TODO
+                }
+            }
+        }
+        else if(XBinary::checkFileType(XBinary::FT_LE,fileType))
+        {
+            XLE le(g_pDevice);
+
+            if(le.isValid())
+            {
+                if(!g_bIsStop)
+                {
+                    XBinary::OSINFO osInfo=le.getOsInfo();
+
+                    addOsInfo(osInfo);
+
+                    // TODO
+                }
+            }
+        }
+        else if(XBinary::checkFileType(XBinary::FT_MSDOS,fileType))
+        {
+            XMSDOS msdos(g_pDevice);
+
+            if(msdos.isValid())
+            {
+                if(!g_bIsStop)
+                {
+                    XBinary::OSINFO osInfo=msdos.getOsInfo();
+
+                    addOsInfo(osInfo);
+
+                    // TODO
+                }
+            }
+        }
+        else if(XBinary::checkFileType(XBinary::FT_DEX,fileType))
+        {
+            XDEX dex(g_pDevice);
+
+            if(dex.isValid())
+            {
+                if(!g_bIsStop)
+                {
+                    XBinary::OSINFO osInfo=dex.getOsInfo();
+
+                    addOsInfo(osInfo);
+
+                    // TODO
                 }
             }
         }

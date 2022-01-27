@@ -21,12 +21,7 @@
 #ifndef XFILEINFO_H
 #define XFILEINFO_H
 
-#include <QStandardItem>
-#include <QStandardItemModel>
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QXmlStreamWriter>
+#include "xfileinfomodel.h"
 #include "xformats.h"
 
 class XFileInfo : public QObject
@@ -34,7 +29,6 @@ class XFileInfo : public QObject
     Q_OBJECT
 
 public:
-
     struct OPTIONS
     {
         XBinary::FT fileType;
@@ -45,28 +39,18 @@ public:
 
     explicit XFileInfo(QObject *pParent=nullptr);
 
-    void setData(QIODevice *pDevice,QStandardItemModel *pModel,OPTIONS options);
-
-    static QString toXML(QStandardItemModel *pModel);
-    static QString toJSON(QStandardItemModel *pModel);
-    static QString toCSV(QStandardItemModel *pModel);
-    static QString toTSV(QStandardItemModel *pModel);
-    static QString toFormattedString(QStandardItemModel *pModel);
+    void setData(QIODevice *pDevice,XFileInfoModel *pModel,OPTIONS options);
+    static bool processFile(QString sFileName,XFileInfoModel *pModel,OPTIONS options);
 
 signals:
     void errorMessage(QString sText);
     void completed(qint64 nElapsed);
 
 private:
-    QStandardItem *appendRecord(QStandardItem *pParent,QString sName,QVariant varData);
+    XFileInfoItem *appendRecord(XFileInfoItem *pParent,QString sName,QVariant varData);
     void setCurrentStatus(QString sStatus);
-    static void _toXML(QXmlStreamWriter *pXml,QStandardItem *pItem,qint32 nLevel);
-    static void _toJSON(QJsonObject *pJsonObject,QStandardItem *pItem,qint32 nLevel);
-    static void _toCSV(QString *pString,QStandardItem *pItem,qint32 nLevel);
-    static void _toTSV(QString *pString,QStandardItem *pItem,qint32 nLevel);
-    static void _toFormattedString(QString *pString,QStandardItem *pItem,qint32 nLevel);
     void addOsInfo(XBinary::OSINFO osInfo);
-    bool check(QString sString);
+    bool check(QString sString,QString sExtra);
 
 public slots:
     void stop();
@@ -75,7 +59,7 @@ public slots:
 
 private:
     QIODevice *g_pDevice;
-    QStandardItemModel *g_pModel;
+    XFileInfoModel *g_pModel;
     OPTIONS g_options;
     bool g_bIsStop;
     QString g_sCurrentStatus;

@@ -18,39 +18,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#ifndef DIALOGXFILEINFOPROCESS_H
-#define DIALOGXFILEINFOPROCESS_H
+#ifndef XFILEINFOITEM_H
+#define XFILEINFOITEM_H
 
-#include <QDialog>
-#include <QThread>
-#include <QTimer>
-#include "xfileinfo.h"
+#include <QString>
+#include <QObject>
+#include <QVariant>
 
-namespace Ui {
-class DialogXFileInfoProcess;
-}
-
-class DialogXFileInfoProcess : public QDialog
+class XFileInfoItem
 {
-    Q_OBJECT
-
 public:
-    explicit DialogXFileInfoProcess(QWidget *pParent,QIODevice *pDevice,XFileInfoModel *pModel,XFileInfo::OPTIONS options);
-    ~DialogXFileInfoProcess();
+    XFileInfoItem(const QString &sName,const QVariant &varValue,XFileInfoItem *pParentItem=nullptr);
+    ~XFileInfoItem();
 
-private slots:
-    void on_pushButtonCancel_clicked();
-    void onCompleted(qint64 nElapsed);
-    void errorMessage(QString sText);
-    void timerSlot();
+    void appendChild(XFileInfoItem *pChild);
+    XFileInfoItem *child(int nRow);
+    int childCount() const;
+    int columnCount() const;
+    QVariant data(int nColumn) const;
+    QString getName();
+    QVariant getValue();
+
+    int row() const;
+    XFileInfoItem *getParentItem();
 
 private:
-    static const qint32 N_REFRESH_DELAY=1000;
-    Ui::DialogXFileInfoProcess *ui;
-    XFileInfo *g_pFileInfo;
-    QThread *g_pThread;
-    bool g_bIsStop;
-    QTimer *g_pTimer;
+    QList<XFileInfoItem *> g_listChildItems;
+    QString g_sName;
+    QVariant g_varValue;
+    XFileInfoItem *g_pParentItem;
 };
 
-#endif // DIALOGXFILEINFOPROCESS_H
+#endif // XFILEINFOITEM_H

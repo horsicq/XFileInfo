@@ -21,7 +21,7 @@
 #include "dialogxfileinfoprocess.h"
 #include "ui_dialogxfileinfoprocess.h"
 
-DialogXFileInfoProcess::DialogXFileInfoProcess(QWidget *pParent, QIODevice *pDevice, QStandardItemModel *pModel, XFileInfo::OPTIONS options) :
+DialogXFileInfoProcess::DialogXFileInfoProcess(QWidget *pParent, QIODevice *pDevice, XFileInfoModel *pModel, XFileInfo::OPTIONS options) :
     QDialog(pParent),
     ui(new Ui::DialogXFileInfoProcess)
 {
