@@ -225,7 +225,7 @@ void XFileInfo::_toFormattedString(QString *pString, QStandardItem *pItem, qint3
 
 void XFileInfo::addOsInfo(XBinary::OSINFO osInfo)
 {
-    if(!g_bIsStop)
+    if(check("Operation system"))
     {
         QString sOperationSystem=XBinary::osNameIdToString(osInfo.osName);
 
@@ -237,9 +237,32 @@ void XFileInfo::addOsInfo(XBinary::OSINFO osInfo)
         appendRecord(0,tr("Operation system"),sOperationSystem);
     }
 
-    if(!g_bIsStop) appendRecord(0,tr("Architecture"),osInfo.sArch);
-    if(!g_bIsStop) appendRecord(0,tr("Mode"),XBinary::modeIdToString(osInfo.mode));
-    if(!g_bIsStop) appendRecord(0,tr("Type"),osInfo.sType);
+    if(check("Architecture")) appendRecord(0,tr("Architecture"),osInfo.sArch);
+    if(check("Mode")) appendRecord(0,tr("Mode"),XBinary::modeIdToString(osInfo.mode));
+    if(check("Type")) appendRecord(0,tr("Type"),osInfo.sType);
+    if(check("Endianess")) appendRecord(0,tr("Endianess"),XBinary::endiannessToString(osInfo.bIsBigEndian));
+}
+
+bool XFileInfo::check(QString sString)
+{
+    bool bResult=false;
+
+    if(!g_bIsStop)
+    {
+        bResult=true;
+
+        if(g_options.sString!="")
+        {
+            bResult=(g_options.sString==sString);
+        }
+    }
+
+    if(bResult)
+    {
+        setCurrentStatus(sString);
+    }
+
+    return bResult;
 }
 
 void XFileInfo::stop()
@@ -252,7 +275,7 @@ void XFileInfo::process()
     QElapsedTimer scanTimer;
     scanTimer.start();
 
-    appendRecord(0,tr("File name"),XBinary::getDeviceFileName(g_pDevice));
+    if(check("File name")) appendRecord(0,tr("File name"),XBinary::getDeviceFileName(g_pDevice));
 
     qint64 nSize=g_pDevice->size();
     QString sSize=QString::number(nSize);
@@ -262,53 +285,41 @@ void XFileInfo::process()
         sSize+=QString("(%1)").arg(XBinary::bytesCountToString(nSize));
     }
 
-    appendRecord(0,tr("Size"),sSize);
+    if(check("Size")) appendRecord(0,tr("Size"),sSize);
 
-    if(!g_bIsStop)
+    if((g_options.bShowAll)||(g_options.sString!=""))
     {
-        setCurrentStatus(tr("Hash"));
-
-        if(g_options.bShowAll)
-        {
-            if(!g_bIsStop) appendRecord(0,"MD4",XBinary::getHash(XBinary::HASH_MD4,g_pDevice));
-        }
-
-        if(!g_bIsStop) appendRecord(0,"MD5",XBinary::getHash(XBinary::HASH_MD5,g_pDevice));
-        if(!g_bIsStop) appendRecord(0,"SHA1",XBinary::getHash(XBinary::HASH_SHA1,g_pDevice));
-
-        if(g_options.bShowAll)
-        {
-            if(!g_bIsStop) appendRecord(0,"SHA224",XBinary::getHash(XBinary::HASH_SHA224,g_pDevice));
-            if(!g_bIsStop) appendRecord(0,"SHA256",XBinary::getHash(XBinary::HASH_SHA256,g_pDevice));
-            if(!g_bIsStop) appendRecord(0,"SHA384",XBinary::getHash(XBinary::HASH_SHA384,g_pDevice));
-            if(!g_bIsStop) appendRecord(0,"SHA512",XBinary::getHash(XBinary::HASH_SHA512,g_pDevice));
-        }
+        if(check("MD4")) appendRecord(0,"MD4",XBinary::getHash(XBinary::HASH_MD4,g_pDevice));
     }
 
-    if(!g_bIsStop)
+    if(check("MD5")) appendRecord(0,"MD5",XBinary::getHash(XBinary::HASH_MD5,g_pDevice));
+    if(check("SHA1")) appendRecord(0,"SHA1",XBinary::getHash(XBinary::HASH_SHA1,g_pDevice));
+
+    if((g_options.bShowAll)||(g_options.sString!=""))
     {
-        setCurrentStatus(tr("Entropy"));
+        if(check("SHA224")) appendRecord(0,"SHA224",XBinary::getHash(XBinary::HASH_SHA224,g_pDevice));
+        if(check("SHA256")) appendRecord(0,"SHA256",XBinary::getHash(XBinary::HASH_SHA256,g_pDevice));
+        if(check("SHA384")) appendRecord(0,"SHA384",XBinary::getHash(XBinary::HASH_SHA384,g_pDevice));
+        if(check("SHA512")) appendRecord(0,"SHA512",XBinary::getHash(XBinary::HASH_SHA512,g_pDevice));
+    }
 
-        if(!g_bIsStop)
+    if(check("Entropy"))
+    {
+        double dEntropy=XBinary::getEntropy(g_pDevice);
+        QString sEntropy=QString::number(dEntropy);
+
+        if(g_options.bComment)
         {
-            double dEntropy=XBinary::getEntropy(g_pDevice);
-            QString sEntropy=QString::number(dEntropy);
-
-            if(g_options.bComment)
-            {
-                sEntropy+=QString("(%1)").arg(XBinary::isPacked(dEntropy)?(tr("packed")):(tr("not packed")));
-            }
-
-            appendRecord(0,tr("Entropy"),sEntropy);
+            sEntropy+=QString("(%1)").arg(XBinary::isPacked(dEntropy)?(tr("packed")):(tr("not packed")));
         }
+
+        appendRecord(0,tr("Entropy"),sEntropy);
     }
 
     if(!g_bIsStop)
     {
         if(XBinary::checkFileType(XBinary::FT_ELF,g_options.fileType))
         {
-            setCurrentStatus("ELF");
-
             XELF elf(g_pDevice);
 
             if(elf.isValid())
@@ -323,8 +334,6 @@ void XFileInfo::process()
         }
         else if(XBinary::checkFileType(XBinary::FT_MACHO,g_options.fileType))
         {
-            setCurrentStatus("MACH-O");
-
             XMACH mach(g_pDevice);
 
             if(mach.isValid())

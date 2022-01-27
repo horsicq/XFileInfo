@@ -40,6 +40,7 @@ public:
         XBinary::FT fileType;
         bool bShowAll;
         bool bComment;
+        QString sString;
     };
 
     explicit XFileInfo(QObject *pParent=nullptr);
@@ -65,6 +66,7 @@ private:
     static void _toTSV(QString *pString,QStandardItem *pItem,qint32 nLevel);
     static void _toFormattedString(QString *pString,QStandardItem *pItem,qint32 nLevel);
     void addOsInfo(XBinary::OSINFO osInfo);
+    bool check(QString sString);
 
 public slots:
     void stop();
