@@ -56,6 +56,81 @@ bool XFileInfo::processFile(QString sFileName, XFileInfoModel *pModel, OPTIONS o
     return bResult;
 }
 
+QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
+{
+    QList<QString> listResult;
+
+    listResult.append("File name");
+    listResult.append("Size");
+    listResult.append("Hash");
+    listResult.append("MD4");
+    listResult.append("MD5");
+    listResult.append("SHA1");
+    listResult.append("SHA224");
+    listResult.append("SHA256");
+    listResult.append("SHA384");
+    listResult.append("SHA512");
+    listResult.append("Entropy");
+
+    if( XBinary::checkFileType(XBinary::FT_ELF,fileType)||
+        XBinary::checkFileType(XBinary::FT_MACHO,fileType)||
+        XBinary::checkFileType(XBinary::FT_PE,fileType)||
+        XBinary::checkFileType(XBinary::FT_NE,fileType)||
+        XBinary::checkFileType(XBinary::FT_LE,fileType)||
+        XBinary::checkFileType(XBinary::FT_MSDOS,fileType)||
+        XBinary::checkFileType(XBinary::FT_DEX,fileType))
+    {
+        listResult.append("Operation system");
+        listResult.append("Architecture");
+        listResult.append("Mode");
+        listResult.append("Type");
+        listResult.append("Endianess");
+    }
+
+    if( XBinary::checkFileType(XBinary::FT_ELF,fileType)||
+        XBinary::checkFileType(XBinary::FT_MACHO,fileType)||
+        XBinary::checkFileType(XBinary::FT_PE,fileType)||
+        XBinary::checkFileType(XBinary::FT_NE,fileType)||
+        XBinary::checkFileType(XBinary::FT_LE,fileType)||
+        XBinary::checkFileType(XBinary::FT_MSDOS,fileType))
+    {
+        listResult.append("Entry point");
+        listResult.append("Entry point(Address)");
+        listResult.append("Entry point(Offset)");
+    }
+
+    if(XBinary::checkFileType(XBinary::FT_ELF,fileType))
+    {
+        // TODO
+    }
+    else if(XBinary::checkFileType(XBinary::FT_MACHO,fileType))
+    {
+        // TODO
+    }
+    else if(XBinary::checkFileType(XBinary::FT_PE,fileType))
+    {
+        // TODO
+    }
+    else if(XBinary::checkFileType(XBinary::FT_NE,fileType))
+    {
+        // TODO
+    }
+    else if(XBinary::checkFileType(XBinary::FT_LE,fileType))
+    {
+        // TODO
+    }
+    else if(XBinary::checkFileType(XBinary::FT_MSDOS,fileType))
+    {
+        // TODO
+    }
+    else if(XBinary::checkFileType(XBinary::FT_DEX,fileType))
+    {
+        // TODO
+    }
+
+    return listResult;
+}
+
 XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pParent, QString sName, QVariant varData)
 {
     XFileInfoItem *pResult=0;
@@ -202,6 +277,11 @@ void XFileInfo::process()
 
                     addOsInfo(osInfo);
 
+                    XBinary::_MEMORY_MAP memoryMap=elf.getMemoryMap();
+
+                    if(check("Entry point(Address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(elf.getEntryPointAddress(&memoryMap)));
+                    if(check("Entry point(Offset)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Offset")),XBinary::valueToHexEx(elf.getEntryPointOffset(&memoryMap)));
+
                     // TODO
                 }
             }
@@ -260,6 +340,11 @@ void XFileInfo::process()
 
                     addOsInfo(osInfo);
 
+                    XBinary::_MEMORY_MAP memoryMap=ne.getMemoryMap();
+
+                    if(check("Entry point(Address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(ne.getEntryPointAddress(&memoryMap)));
+                    if(check("Entry point(Offset)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Offset")),XBinary::valueToHexEx(ne.getEntryPointOffset(&memoryMap)));
+
                     // TODO
                 }
             }
@@ -276,6 +361,11 @@ void XFileInfo::process()
 
                     addOsInfo(osInfo);
 
+                    XBinary::_MEMORY_MAP memoryMap=le.getMemoryMap();
+
+                    if(check("Entry point(Address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(le.getEntryPointAddress(&memoryMap)));
+                    if(check("Entry point(Offset)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Offset")),XBinary::valueToHexEx(le.getEntryPointOffset(&memoryMap)));
+
                     // TODO
                 }
             }
@@ -291,6 +381,11 @@ void XFileInfo::process()
                     XBinary::OSINFO osInfo=msdos.getOsInfo();
 
                     addOsInfo(osInfo);
+
+                    XBinary::_MEMORY_MAP memoryMap=msdos.getMemoryMap();
+
+                    if(check("Entry point(Address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(msdos.getEntryPointAddress(&memoryMap)));
+                    if(check("Entry point(Offset)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Offset")),XBinary::valueToHexEx(msdos.getEntryPointOffset(&memoryMap)));
 
                     // TODO
                 }
