@@ -32,6 +32,8 @@ XFileInfoWidget::XFileInfoWidget(QWidget *pParent) :
     g_nSize=0;
 
     ui->checkBoxComment->setChecked(true);
+
+    XOptions::setMonoFont(ui->plainTextEditFileInfo);
 }
 
 XFileInfoWidget::~XFileInfoWidget()

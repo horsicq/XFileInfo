@@ -23,6 +23,7 @@
 
 #include "xfileinfomodel.h"
 #include "xformats.h"
+#include "xcapstone.h"
 
 class XFileInfo : public QObject
 {
@@ -49,6 +50,7 @@ signals:
     void completed(qint64 nElapsed);
 
 private:
+    const int N_SIGNATURECOUNT=10;
     XFileInfoItem *appendRecord(XFileInfoItem *pParent,QString sName,QVariant varData);
     void setCurrentStatus(QString sStatus);
     void addOsInfo(XBinary::OSINFO osInfo);
