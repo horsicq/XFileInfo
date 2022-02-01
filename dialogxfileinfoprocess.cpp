@@ -33,7 +33,7 @@ DialogXFileInfoProcess::DialogXFileInfoProcess(QWidget *pParent, QIODevice *pDev
     g_pFileInfo->moveToThread(g_pThread);
 
     connect(g_pThread,SIGNAL(started()),g_pFileInfo,SLOT(process()));
-    connect(g_pFileInfo, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
+    connect(g_pFileInfo,SIGNAL(completed(qint64)),this,SLOT(onCompleted(qint64)));
     connect(g_pFileInfo, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
 
     g_pFileInfo->setData(pDevice,pModel,options);
