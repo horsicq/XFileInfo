@@ -40,7 +40,7 @@ DialogXFileInfoProcess::DialogXFileInfoProcess(QWidget *pParent, QIODevice *pDev
     g_pThread->start();
 
     g_pTimer=new QTimer(this);
-    connect(g_pTimer, SIGNAL(timeout()), this, SLOT(timerSlot()));
+    connect(g_pTimer,SIGNAL(timeout()),this,SLOT(timerSlot()));
     g_pTimer->start(N_REFRESH_DELAY);
 
     g_bIsStop=false;
