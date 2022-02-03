@@ -83,6 +83,7 @@ void DialogXFileInfoProcess::onCompleted(qint64 nElapsed)
 
 void DialogXFileInfoProcess::errorMessage(QString sText)
 {
+    Q_UNUSED(sText)
     // TODO
 }
 
