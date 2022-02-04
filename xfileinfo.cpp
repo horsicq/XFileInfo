@@ -114,6 +114,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     else if(XBinary::checkFileType(XBinary::FT_PE,fileType))
     {
         // TODO
+        // Image base
     }
     else if(XBinary::checkFileType(XBinary::FT_NE,fileType))
     {
