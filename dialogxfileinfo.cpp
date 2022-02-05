@@ -33,7 +33,7 @@ DialogXFileInfo::~DialogXFileInfo()
     delete ui;
 }
 
-void DialogXFileInfo::setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions)
+void DialogXFileInfo::setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions)
 {
     ui->widget->setGlobal(pShortcuts,pXOptions);
 }
