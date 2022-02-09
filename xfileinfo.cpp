@@ -179,7 +179,7 @@ void XFileInfo::addOsInfo(XBinary::OSINFO osInfo)
     if(check("Endianess","")) appendRecord(0,tr("Endianess"),XBinary::endiannessToString(osInfo.bIsBigEndian));
 }
 
-bool XFileInfo::check(QString sString, QString sExtra)
+bool XFileInfo::check(QString sString,QString sExtra)
 {
     bool bResult=false;
 
