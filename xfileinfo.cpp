@@ -26,7 +26,7 @@ XFileInfo::XFileInfo(QObject *pParent) : QObject(pParent)
     g_bIsStop=false;
 }
 
-void XFileInfo::setData(QIODevice *pDevice, XFileInfoModel *pModel, OPTIONS options)
+void XFileInfo::setData(QIODevice *pDevice,XFileInfoModel *pModel,OPTIONS options)
 {
     // TODO XBinary for Hash Stop
     this->g_pDevice=pDevice;
