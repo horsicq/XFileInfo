@@ -34,7 +34,7 @@ void XFileInfo::setData(QIODevice *pDevice,XFileInfoModel *pModel,OPTIONS option
     this->g_options=options;
 }
 
-bool XFileInfo::processFile(QString sFileName, XFileInfoModel *pModel, OPTIONS options)
+bool XFileInfo::processFile(QString sFileName,XFileInfoModel *pModel,OPTIONS options)
 {
     bool bResult=false;
 
