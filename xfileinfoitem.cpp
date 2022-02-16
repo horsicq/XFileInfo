@@ -20,7 +20,7 @@
  */
 #include "xfileinfoitem.h"
 
-XFileInfoItem::XFileInfoItem(const QString &sName, const QVariant &varValue, XFileInfoItem *pParentItem)
+XFileInfoItem::XFileInfoItem(const QString &sName,const QVariant &varValue,XFileInfoItem *pParentItem)
 {
     this->g_pParentItem=pParentItem;
     this->g_sName=sName;
