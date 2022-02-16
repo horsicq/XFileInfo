@@ -136,7 +136,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     return listResult;
 }
 
-XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pParent, QString sName, QVariant varData)
+XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pParent,QString sName,QVariant varData)
 {
     XFileInfoItem *pResult=0;
 
