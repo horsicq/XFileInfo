@@ -41,7 +41,7 @@ XFileInfoWidget::~XFileInfoWidget()
     delete ui;
 }
 
-void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, bool bAuto)
+void XFileInfoWidget::setData(QIODevice *pDevice,XBinary::FT fileType,bool bAuto)
 {
     this->g_pDevice=pDevice;
     g_nOffset=0;
