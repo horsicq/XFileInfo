@@ -71,6 +71,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     listResult.append("SHA384");
     listResult.append("SHA512");
     listResult.append("Entropy");
+    listResult.append("File type");
 
     if( XBinary::checkFileType(XBinary::FT_ELF,fileType)||
         XBinary::checkFileType(XBinary::FT_MACHO,fileType)||
@@ -131,6 +132,10 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     else if(XBinary::checkFileType(XBinary::FT_DEX,fileType))
     {
         // TODO
+    }
+    else if(XBinary::checkFileType(XBinary::FT_PDF,fileType))
+    {
+        listResult.append("Version");
     }
 
     return listResult;
@@ -241,18 +246,18 @@ void XFileInfo::process()
 
     if((g_options.bShowAll)||(g_options.sString!=""))
     {
-        if(check("MD4","hash")) appendRecord(0,"MD4",XBinary::getHash(XBinary::HASH_MD4,g_pDevice));
+        if(check("MD4","Hash")) appendRecord(0,"MD4",XBinary::getHash(XBinary::HASH_MD4,g_pDevice));
     }
 
-    if(check("MD5","hash")) appendRecord(0,"MD5",XBinary::getHash(XBinary::HASH_MD5,g_pDevice));
-    if(check("SHA1","hash")) appendRecord(0,"SHA1",XBinary::getHash(XBinary::HASH_SHA1,g_pDevice));
+    if(check("MD5","Hash")) appendRecord(0,"MD5",XBinary::getHash(XBinary::HASH_MD5,g_pDevice));
+    if(check("SHA1","Hash")) appendRecord(0,"SHA1",XBinary::getHash(XBinary::HASH_SHA1,g_pDevice));
 
     if((g_options.bShowAll)||(g_options.sString!=""))
     {
-        if(check("SHA224","hash")) appendRecord(0,"SHA224",XBinary::getHash(XBinary::HASH_SHA224,g_pDevice));
-        if(check("SHA256","hash")) appendRecord(0,"SHA256",XBinary::getHash(XBinary::HASH_SHA256,g_pDevice));
-        if(check("SHA384","hash")) appendRecord(0,"SHA384",XBinary::getHash(XBinary::HASH_SHA384,g_pDevice));
-        if(check("SHA512","hash")) appendRecord(0,"SHA512",XBinary::getHash(XBinary::HASH_SHA512,g_pDevice));
+        if(check("SHA224","Hash")) appendRecord(0,"SHA224",XBinary::getHash(XBinary::HASH_SHA224,g_pDevice));
+        if(check("SHA256","Hash")) appendRecord(0,"SHA256",XBinary::getHash(XBinary::HASH_SHA256,g_pDevice));
+        if(check("SHA384","Hash")) appendRecord(0,"SHA384",XBinary::getHash(XBinary::HASH_SHA384,g_pDevice));
+        if(check("SHA512","Hash")) appendRecord(0,"SHA512",XBinary::getHash(XBinary::HASH_SHA512,g_pDevice));
     }
 
     if(check("Entropy",""))
@@ -278,6 +283,8 @@ void XFileInfo::process()
             {
                 if(!g_bIsStop)
                 {
+                    if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(elf.getFileType()));
+
                     XBinary::OSINFO osInfo=elf.getOsInfo();
 
                     addOsInfo(osInfo);
@@ -303,6 +310,8 @@ void XFileInfo::process()
             {
                 if(!g_bIsStop)
                 {
+                    if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(mach.getFileType()));
+
                     XBinary::OSINFO osInfo=mach.getOsInfo();
 
                     addOsInfo(osInfo);
@@ -328,6 +337,8 @@ void XFileInfo::process()
             {
                 if(!g_bIsStop)
                 {
+                    if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(pe.getFileType()));
+
                     XBinary::OSINFO osInfo=pe.getOsInfo();
 
                     addOsInfo(osInfo);
@@ -353,6 +364,8 @@ void XFileInfo::process()
             {
                 if(!g_bIsStop)
                 {
+                    if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(ne.getFileType()));
+
                     XBinary::OSINFO osInfo=ne.getOsInfo();
 
                     addOsInfo(osInfo);
@@ -378,6 +391,8 @@ void XFileInfo::process()
             {
                 if(!g_bIsStop)
                 {
+                    if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(le.getFileType()));
+
                     XBinary::OSINFO osInfo=le.getOsInfo();
 
                     addOsInfo(osInfo);
@@ -403,6 +418,8 @@ void XFileInfo::process()
             {
                 if(!g_bIsStop)
                 {
+                    if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(msdos.getFileType()));
+
                     XBinary::OSINFO osInfo=msdos.getOsInfo();
 
                     addOsInfo(osInfo);
@@ -428,6 +445,8 @@ void XFileInfo::process()
             {
                 if(!g_bIsStop)
                 {
+                    if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(dex.getFileType()));
+
                     XBinary::OSINFO osInfo=dex.getOsInfo();
 
                     addOsInfo(osInfo);
@@ -435,6 +454,20 @@ void XFileInfo::process()
                     // TODO
                 }
             }
+        }
+        else if(XBinary::checkFileType(XBinary::FT_PDF,fileType))
+        {
+            XPDF pdf(g_pDevice);
+
+            if(pdf.isValid())
+            {
+                if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(pdf.getFileType()));
+                if(check("Version","Version")) appendRecord(0,tr("Version"),pdf.getVersion());
+            }
+        }
+        else
+        {
+            if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(XBinary::getPrefFileType(g_pDevice,true)));
         }
     }
 
