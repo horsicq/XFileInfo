@@ -75,6 +75,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
 
     if( XBinary::checkFileType(XBinary::FT_ELF,fileType)||
         XBinary::checkFileType(XBinary::FT_MACHO,fileType)||
+        XBinary::checkFileType(XBinary::FT_COM,fileType)||
         XBinary::checkFileType(XBinary::FT_PE,fileType)||
         XBinary::checkFileType(XBinary::FT_NE,fileType)||
         XBinary::checkFileType(XBinary::FT_LE,fileType)||
@@ -90,6 +91,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
 
     if( XBinary::checkFileType(XBinary::FT_ELF,fileType)||
         XBinary::checkFileType(XBinary::FT_MACHO,fileType)||
+        XBinary::checkFileType(XBinary::FT_COM,fileType)||
         XBinary::checkFileType(XBinary::FT_PE,fileType)||
         XBinary::checkFileType(XBinary::FT_NE,fileType)||
         XBinary::checkFileType(XBinary::FT_LE,fileType)||
@@ -130,6 +132,10 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
         // TODO
     }
     else if(XBinary::checkFileType(XBinary::FT_DEX,fileType))
+    {
+        // TODO
+    }
+    else if(XBinary::checkFileType(XBinary::FT_COM,fileType))
     {
         // TODO
     }
@@ -429,6 +435,33 @@ void XFileInfo::process()
                     if(check("Entry point(Address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(msdos.getEntryPointAddress(&memoryMap)));
                     if(check("Entry point(Offset)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Offset")),XBinary::valueToHexEx(msdos.getEntryPointOffset(&memoryMap)));
                     if(check("Entry point(Relative address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Relative address")),XBinary::valueToHexEx(msdos.getEntryPointRVA(&memoryMap)));
+                    if(check("Entry point(Bytes)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Bytes")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_FULL,N_SIGNATURECOUNT));
+                    if(check("Entry point(Signature)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASK,N_SIGNATURECOUNT));
+                    if(check("Entry point(Signature)(Rel)","Entry point")) appendRecord(0,QString("%1(%2)(Rel)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASKREL,N_SIGNATURECOUNT));
+
+                    // TODO
+                }
+            }
+        }
+        else if(XBinary::checkFileType(XBinary::FT_COM,fileType))
+        {
+            XCOM xcom(g_pDevice);
+
+            if(xcom.isValid())
+            {
+                if(!g_bIsStop)
+                {
+                    if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(xcom.getFileType()));
+
+                    XBinary::OSINFO osInfo=xcom.getOsInfo();
+
+                    addOsInfo(osInfo);
+
+                    XBinary::_MEMORY_MAP memoryMap=xcom.getMemoryMap();
+
+                    if(check("Entry point(Address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(xcom.getEntryPointAddress(&memoryMap)));
+                    if(check("Entry point(Offset)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Offset")),XBinary::valueToHexEx(xcom.getEntryPointOffset(&memoryMap)));
+                    if(check("Entry point(Relative address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Relative address")),XBinary::valueToHexEx(xcom.getEntryPointRVA(&memoryMap)));
                     if(check("Entry point(Bytes)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Bytes")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_FULL,N_SIGNATURECOUNT));
                     if(check("Entry point(Signature)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASK,N_SIGNATURECOUNT));
                     if(check("Entry point(Signature)(Rel)","Entry point")) appendRecord(0,QString("%1(%2)(Rel)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASKREL,N_SIGNATURECOUNT));
