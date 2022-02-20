@@ -218,7 +218,7 @@ QString XFileInfoModel::toFormattedString()
     return sResult;
 }
 
-void XFileInfoModel::_toXML(QXmlStreamWriter *pXml, XFileInfoItem *pItem, qint32 nLevel)
+void XFileInfoModel::_toXML(QXmlStreamWriter *pXml,XFileInfoItem *pItem,qint32 nLevel)
 {
     if(nLevel)
     {
