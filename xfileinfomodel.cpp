@@ -128,7 +128,7 @@ int XFileInfoModel::columnCount(const QModelIndex &parent) const
     return nResult;
 }
 
-QVariant XFileInfoModel::data(const QModelIndex &index, int nRole) const
+QVariant XFileInfoModel::data(const QModelIndex &index,int nRole) const
 {
     QVariant result;
 
