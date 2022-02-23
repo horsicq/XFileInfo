@@ -43,7 +43,7 @@ QVariant XFileInfoModel::headerData(int nSection, Qt::Orientation orientation, i
     return result;
 }
 
-QModelIndex XFileInfoModel::index(int nRow, int nColumn, const QModelIndex &parent) const
+QModelIndex XFileInfoModel::index(int nRow,int nColumn,const QModelIndex &parent) const
 {
     QModelIndex result;
 
