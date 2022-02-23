@@ -47,7 +47,7 @@ QModelIndex XFileInfoModel::index(int nRow, int nColumn, const QModelIndex &pare
 {
     QModelIndex result;
 
-    if(hasIndex(nRow, nColumn, parent))
+    if(hasIndex(nRow,nColumn,parent))
     {
         XFileInfoItem *pParentItem=nullptr;
 
