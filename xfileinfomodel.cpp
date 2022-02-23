@@ -64,7 +64,7 @@ QModelIndex XFileInfoModel::index(int nRow,int nColumn,const QModelIndex &parent
 
         if(pChildItem)
         {
-            result=createIndex(nRow, nColumn, pChildItem);
+            result=createIndex(nRow,nColumn,pChildItem);
         }
     }
 
