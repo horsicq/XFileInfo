@@ -31,7 +31,7 @@ XFileInfoModel::~XFileInfoModel()
     delete g_pRootItem;
 }
 
-QVariant XFileInfoModel::headerData(int nSection, Qt::Orientation orientation, int nRole) const
+QVariant XFileInfoModel::headerData(int nSection,Qt::Orientation orientation,int nRole) const
 {
     QVariant result;
 
