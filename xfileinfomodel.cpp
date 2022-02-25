@@ -309,7 +309,7 @@ void XFileInfoModel::_toTSV(QString *pString, XFileInfoItem *pItem, qint32 nLeve
     }
 }
 
-void XFileInfoModel::_toFormattedString(QString *pString, XFileInfoItem *pItem, qint32 nLevel)
+void XFileInfoModel::_toFormattedString(QString *pString,XFileInfoItem *pItem,qint32 nLevel)
 {
     if(nLevel)
     {
