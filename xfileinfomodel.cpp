@@ -241,7 +241,7 @@ void XFileInfoModel::_toXML(QXmlStreamWriter *pXml,XFileInfoItem *pItem,qint32 n
     pXml->writeEndElement();
 }
 
-void XFileInfoModel::_toJSON(QJsonObject *pJsonObject, XFileInfoItem *pItem, qint32 nLevel)
+void XFileInfoModel::_toJSON(QJsonObject *pJsonObject,XFileInfoItem *pItem,qint32 nLevel)
 {
     if(nLevel)
     {
