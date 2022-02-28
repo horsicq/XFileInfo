@@ -294,7 +294,7 @@ void XFileInfoModel::_toCSV(QString *pString,XFileInfoItem *pItem,qint32 nLevel)
     }
 }
 
-void XFileInfoModel::_toTSV(QString *pString, XFileInfoItem *pItem, qint32 nLevel)
+void XFileInfoModel::_toTSV(QString *pString,XFileInfoItem *pItem,qint32 nLevel)
 {
     if(nLevel)
     {
