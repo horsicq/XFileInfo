@@ -108,6 +108,12 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
 
     if(XBinary::checkFileType(XBinary::FT_ELF,fileType))
     {
+        listResult.append("ident_mag");
+        listResult.append("ident_class");
+        listResult.append("ident_data");
+        listResult.append("ident_version");
+        listResult.append("ident_osabi");
+        listResult.append("ident_abiversion");
         // TODO
     }
     else if(XBinary::checkFileType(XBinary::FT_MACHO,fileType))
@@ -310,6 +316,13 @@ void XFileInfo::process()
                     if(check("Entry point(Bytes)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Bytes")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_FULL,N_SIGNATURECOUNT));
                     if(check("Entry point(Signature)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASK,N_SIGNATURECOUNT));
                     if(check("Entry point(Signature)(Rel)","Entry point")) appendRecord(0,QString("%1(%2)(Rel)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASKREL,N_SIGNATURECOUNT));
+
+                    if(check("ident_mag","ident_mag"))                          appendRecord(0,"ident_mag",XBinary::valueToHex(elf.getIdent_mag_LE()));
+                    if(check("ident_class","ident_class"))                      appendRecord(0,"ident_class",XBinary::valueToHex(elf.getIdent_class()));
+                    if(check("ident_data","ident_data"))                        appendRecord(0,"ident_data",XBinary::valueToHex(elf.getIdent_data()));
+                    if(check("ident_version","ident_version"))                  appendRecord(0,"ident_version",XBinary::valueToHex(elf.getIdent_version()));
+                    if(check("ident_osabi","ident_osabi"))                      appendRecord(0,"ident_osabi",XBinary::valueToHex(elf.getIdent_osabi()));
+                    if(check("ident_abiversion","ident_abiversion"))            appendRecord(0,"ident_abiversion",XBinary::valueToHex(elf.getIdent_abiversion()));
 
                     // TODO
                 }
