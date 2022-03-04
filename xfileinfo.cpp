@@ -236,7 +236,7 @@ bool XFileInfo::check(QString sString,QString sExtra)
     return bResult;
 }
 
-QString XFileInfo::addFlags(XBinary::MODE mode, quint64 nValue, QMap<quint64, QString> mapFlags, XBinary::VL_TYPE vlType)
+QString XFileInfo::addFlags(XBinary::MODE mode,quint64 nValue,QMap<quint64,QString> mapFlags,XBinary::VL_TYPE vlType)
 {
     QString sResult=XBinary::valueToHex(mode,nValue);
 
