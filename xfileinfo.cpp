@@ -108,6 +108,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
 
     if(XBinary::checkFileType(XBinary::FT_ELF,fileType))
     {
+        listResult.append("ident");
         listResult.append("ident_mag");
         listResult.append("ident_class");
         listResult.append("ident_data");
@@ -122,6 +123,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     }
     else if(XBinary::checkFileType(XBinary::FT_PE,fileType))
     {
+        listResult.append("IMAGE_FILE_HEADER");
         listResult.append("Machine");
         listResult.append("NumberOfSections");
         listResult.append("TimeDateStamp");
@@ -234,6 +236,18 @@ bool XFileInfo::check(QString sString,QString sExtra)
     return bResult;
 }
 
+QString XFileInfo::addFlags(XBinary::MODE mode, quint64 nValue, QMap<quint64, QString> mapFlags, XBinary::VL_TYPE vlType)
+{
+    QString sResult=XBinary::valueToHex(mode,nValue);
+
+    if(g_options.bComment)
+    {
+        sResult+=QString("(%1)").arg(XBinary::valueToFlagsString(nValue,mapFlags,vlType));
+    }
+
+    return sResult;
+}
+
 void XFileInfo::stop()
 {
     g_bIsStop=true;
@@ -317,12 +331,12 @@ void XFileInfo::process()
                     if(check("Entry point(Signature)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASK,N_SIGNATURECOUNT));
                     if(check("Entry point(Signature)(Rel)","Entry point")) appendRecord(0,QString("%1(%2)(Rel)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASKREL,N_SIGNATURECOUNT));
 
-                    if(check("ident_mag","ident_mag"))                          appendRecord(0,"ident_mag",XBinary::valueToHex(elf.getIdent_mag_LE()));
-                    if(check("ident_class","ident_class"))                      appendRecord(0,"ident_class",XBinary::valueToHex(elf.getIdent_class()));
-                    if(check("ident_data","ident_data"))                        appendRecord(0,"ident_data",XBinary::valueToHex(elf.getIdent_data()));
-                    if(check("ident_version","ident_version"))                  appendRecord(0,"ident_version",XBinary::valueToHex(elf.getIdent_version()));
-                    if(check("ident_osabi","ident_osabi"))                      appendRecord(0,"ident_osabi",XBinary::valueToHex(elf.getIdent_osabi()));
-                    if(check("ident_abiversion","ident_abiversion"))            appendRecord(0,"ident_abiversion",XBinary::valueToHex(elf.getIdent_abiversion()));
+                    if(check("ident_mag","ident"))                          appendRecord(0,"ident_mag",XBinary::valueToHex(elf.getIdent_mag_LE()));
+                    if(check("ident_class","ident"))                        appendRecord(0,"ident_class",XBinary::valueToHex(elf.getIdent_class()));
+                    if(check("ident_data","ident"))                         appendRecord(0,"ident_data",XBinary::valueToHex(elf.getIdent_data()));
+                    if(check("ident_version","ident"))                      appendRecord(0,"ident_version",XBinary::valueToHex(elf.getIdent_version()));
+                    if(check("ident_osabi","ident"))                        appendRecord(0,"ident_osabi",XBinary::valueToHex(elf.getIdent_osabi()));
+                    if(check("ident_abiversion","ident"))                   appendRecord(0,"ident_abiversion",XBinary::valueToHex(elf.getIdent_abiversion()));
 
                     // TODO
                 }
@@ -378,13 +392,13 @@ void XFileInfo::process()
                     if(check("Entry point(Signature)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASK,N_SIGNATURECOUNT));
                     if(check("Entry point(Signature)(Rel)","Entry point")) appendRecord(0,QString("%1(%2)(Rel)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASKREL,N_SIGNATURECOUNT));
 
-                    if(check("Machine","Machine"))                              appendRecord(0,"Machine",XBinary::valueToHex(pe.getFileHeader_Machine()));
-                    if(check("NumberOfSections","NumberOfSections"))            appendRecord(0,"NumberOfSections",XBinary::valueToHex(pe.getFileHeader_NumberOfSections()));
-                    if(check("TimeDateStamp","TimeDateStamp"))                  appendRecord(0,"TimeDateStamp",XBinary::valueToHex(pe.getFileHeader_TimeDateStamp()));
-                    if(check("PointerToSymbolTable","PointerToSymbolTable"))    appendRecord(0,"PointerToSymbolTable",XBinary::valueToHex(pe.getFileHeader_PointerToSymbolTable()));
-                    if(check("NumberOfSymbols","NumberOfSymbols"))              appendRecord(0,"NumberOfSymbols",XBinary::valueToHex(pe.getFileHeader_NumberOfSymbols()));
-                    if(check("SizeOfOptionalHeader","SizeOfOptionalHeader"))    appendRecord(0,"SizeOfOptionalHeader",XBinary::valueToHex(pe.getFileHeader_SizeOfOptionalHeader()));
-                    if(check("Characteristics","Characteristics"))              appendRecord(0,"Characteristics",XBinary::valueToHex(pe.getFileHeader_Characteristics()));
+                    if(check("Machine","IMAGE_FILE_HEADER"))                    appendRecord(0,"Machine",addFlags(XBinary::MODE_16,pe.getFileHeader_Machine(),XPE::getImageFileHeaderMachines(),XBinary::VL_TYPE_LIST));
+                    if(check("NumberOfSections","IMAGE_FILE_HEADER"))           appendRecord(0,"NumberOfSections",XBinary::valueToHex(pe.getFileHeader_NumberOfSections()));
+                    if(check("TimeDateStamp","IMAGE_FILE_HEADER"))              appendRecord(0,"TimeDateStamp",XBinary::valueToHex(pe.getFileHeader_TimeDateStamp()));
+                    if(check("PointerToSymbolTable","IMAGE_FILE_HEADER"))       appendRecord(0,"PointerToSymbolTable",XBinary::valueToHex(pe.getFileHeader_PointerToSymbolTable()));
+                    if(check("NumberOfSymbols","IMAGE_FILE_HEADER"))            appendRecord(0,"NumberOfSymbols",XBinary::valueToHex(pe.getFileHeader_NumberOfSymbols()));
+                    if(check("SizeOfOptionalHeader","IMAGE_FILE_HEADER"))       appendRecord(0,"SizeOfOptionalHeader",XBinary::valueToHex(pe.getFileHeader_SizeOfOptionalHeader()));
+                    if(check("Characteristics","IMAGE_FILE_HEADER"))            appendRecord(0,"Characteristics",addFlags(XBinary::MODE_16,pe.getFileHeader_Characteristics(),XPE::getImageFileHeaderCharacteristics(),XBinary::VL_TYPE_FLAGS));
 
                     // TODO
                 }

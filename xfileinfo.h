@@ -55,6 +55,7 @@ private:
     void setCurrentStatus(QString sStatus);
     void addOsInfo(XBinary::OSINFO osInfo);
     bool check(QString sString,QString sExtra);
+    QString addFlags(XBinary::MODE mode,quint64 nValue,QMap<quint64,QString> mapFlags,XBinary::VL_TYPE vlType);
 
 public slots:
     void stop();
