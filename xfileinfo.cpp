@@ -148,6 +148,31 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     }
     else if(XBinary::checkFileType(XBinary::FT_DEX,fileType))
     {
+        listResult.append("Header");
+        listResult.append("magic");
+        listResult.append("version");
+        listResult.append("checksum");
+        listResult.append("signature");
+        listResult.append("file_size");
+        listResult.append("header_size");
+        listResult.append("endian_tag");
+        listResult.append("link_size");
+        listResult.append("link_off");
+        listResult.append("map_off");
+        listResult.append("string_ids_size");
+        listResult.append("string_ids_off");
+        listResult.append("type_ids_size");
+        listResult.append("type_ids_off");
+        listResult.append("proto_ids_size");
+        listResult.append("proto_ids_off");
+        listResult.append("field_ids_size");
+        listResult.append("field_ids_off");
+        listResult.append("method_ids_size");
+        listResult.append("method_ids_off");
+        listResult.append("class_defs_size");
+        listResult.append("class_defs_off");
+        listResult.append("data_size");
+        listResult.append("data_off");
         // TODO
     }
     else if(XBinary::checkFileType(XBinary::FT_COM,fileType))
@@ -526,6 +551,30 @@ void XFileInfo::process()
 
                     addOsInfo(osInfo);
 
+                    if(check("magic","Header"))             appendRecord(0,"magic",XBinary::valueToHex(dex.getHeader_magic()));
+                    if(check("version","Header"))           appendRecord(0,"version",XBinary::valueToHex(dex.getHeader_version()));
+                    if(check("checksum","Header"))          appendRecord(0,"checksum",XBinary::valueToHex(dex.getHeader_checksum()));
+                    if(check("signature","Header"))         appendRecord(0,"signature",dex.getHeader_signature().toHex());
+                    if(check("file_size","Header"))         appendRecord(0,"file_size",XBinary::valueToHex(dex.getHeader_file_size()));
+                    if(check("header_size","Header"))       appendRecord(0,"header_size",XBinary::valueToHex(dex.getHeader_header_size()));
+                    if(check("endian_tag","Header"))        appendRecord(0,"endian_tag",XBinary::valueToHex(dex.getHeader_endian_tag()));
+                    if(check("link_size","Header"))         appendRecord(0,"link_size",XBinary::valueToHex(dex.getHeader_link_size()));
+                    if(check("link_off","Header"))          appendRecord(0,"link_off",XBinary::valueToHex(dex.getHeader_link_off()));
+                    if(check("map_off","Header"))           appendRecord(0,"map_off",XBinary::valueToHex(dex.getHeader_map_off()));
+                    if(check("string_ids_size","Header"))   appendRecord(0,"string_ids_size",XBinary::valueToHex(dex.getHeader_string_ids_size()));
+                    if(check("string_ids_off","Header"))    appendRecord(0,"string_ids_off",XBinary::valueToHex(dex.getHeader_string_ids_off()));
+                    if(check("type_ids_size","Header"))     appendRecord(0,"type_ids_size",XBinary::valueToHex(dex.getHeader_type_ids_size()));
+                    if(check("type_ids_off","Header"))      appendRecord(0,"type_ids_off",XBinary::valueToHex(dex.getHeader_type_ids_off()));
+                    if(check("proto_ids_size","Header"))    appendRecord(0,"proto_ids_size",XBinary::valueToHex(dex.getHeader_proto_ids_size()));
+                    if(check("proto_ids_off","Header"))     appendRecord(0,"proto_ids_off",XBinary::valueToHex(dex.getHeader_proto_ids_off()));
+                    if(check("field_ids_size","Header"))    appendRecord(0,"field_ids_size",XBinary::valueToHex(dex.getHeader_field_ids_size()));
+                    if(check("field_ids_off","Header"))     appendRecord(0,"field_ids_off",XBinary::valueToHex(dex.getHeader_field_ids_off()));
+                    if(check("method_ids_size","Header"))   appendRecord(0,"method_ids_size",XBinary::valueToHex(dex.getHeader_method_ids_size()));
+                    if(check("method_ids_off","Header"))    appendRecord(0,"method_ids_off",XBinary::valueToHex(dex.getHeader_method_ids_off()));
+                    if(check("class_defs_size","Header"))   appendRecord(0,"class_defs_size",XBinary::valueToHex(dex.getHeader_class_defs_size()));
+                    if(check("class_defs_off","Header"))    appendRecord(0,"class_defs_off",XBinary::valueToHex(dex.getHeader_class_defs_off()));
+                    if(check("data_size","Header"))         appendRecord(0,"data_size",XBinary::valueToHex(dex.getHeader_data_size()));
+                    if(check("data_off","Header"))          appendRecord(0,"data_off",XBinary::valueToHex(dex.getHeader_data_off()));
                     // TODO
                 }
             }
