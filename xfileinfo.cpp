@@ -115,6 +115,20 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
         listResult.append("ident_version");
         listResult.append("ident_osabi");
         listResult.append("ident_abiversion");
+        listResult.append("ehdr");
+        listResult.append("type");
+        listResult.append("machine");
+        listResult.append("version");
+        listResult.append("entry");
+        listResult.append("phoff");
+        listResult.append("shoff");
+        listResult.append("flags");
+        listResult.append("ehsize");
+        listResult.append("phentsize");
+        listResult.append("phnum");
+        listResult.append("shentsize");
+        listResult.append("shnum");
+        listResult.append("shstrndx");
         // TODO
     }
     else if(XBinary::checkFileType(XBinary::FT_MACHO,fileType))
@@ -341,6 +355,8 @@ void XFileInfo::process()
             {
                 if(!g_bIsStop)
                 {
+                    bool bIs64=elf.is64();
+
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(elf.getFileType()));
 
                     XBinary::OSINFO osInfo=elf.getOsInfo();
@@ -363,6 +379,38 @@ void XFileInfo::process()
                     if(check("ident_osabi","ident"))                        appendRecord(0,"ident_osabi",XBinary::valueToHex(elf.getIdent_osabi()));
                     if(check("ident_abiversion","ident"))                   appendRecord(0,"ident_abiversion",XBinary::valueToHex(elf.getIdent_abiversion()));
 
+                    if(bIs64)
+                    {
+                        if(check("type","ehdr"))                            appendRecord(0,"type",XBinary::valueToHex(elf.getHdr64_type()));
+                        if(check("machine","ehdr"))                         appendRecord(0,"machine",XBinary::valueToHex(elf.getHdr64_machine()));
+                        if(check("version","ehdr"))                         appendRecord(0,"version",XBinary::valueToHex(elf.getHdr64_version()));
+                        if(check("entry","ehdr"))                           appendRecord(0,"entry",XBinary::valueToHex(elf.getHdr64_entry()));
+                        if(check("phoff","ehdr"))                           appendRecord(0,"phoff",XBinary::valueToHex(elf.getHdr64_phoff()));
+                        if(check("shoff","ehdr"))                           appendRecord(0,"shoff",XBinary::valueToHex(elf.getHdr64_shoff()));
+                        if(check("flags","ehdr"))                           appendRecord(0,"flags",XBinary::valueToHex(elf.getHdr64_flags()));
+                        if(check("ehsize","ehdr"))                          appendRecord(0,"ehsize",XBinary::valueToHex(elf.getHdr64_ehsize()));
+                        if(check("phentsize","ehdr"))                       appendRecord(0,"phentsize",XBinary::valueToHex(elf.getHdr64_phentsize()));
+                        if(check("phnum","ehdr"))                           appendRecord(0,"phnum",XBinary::valueToHex(elf.getHdr64_phnum()));
+                        if(check("shentsize","ehdr"))                       appendRecord(0,"shentsize",XBinary::valueToHex(elf.getHdr64_shentsize()));
+                        if(check("shnum","ehdr"))                           appendRecord(0,"shnum",XBinary::valueToHex(elf.getHdr64_shnum()));
+                        if(check("shstrndx","ehdr"))                        appendRecord(0,"shstrndx",XBinary::valueToHex(elf.getHdr64_shstrndx()));
+                    }
+                    else
+                    {
+                        if(check("type","ehdr"))                            appendRecord(0,"type",XBinary::valueToHex(elf.getHdr32_type()));
+                        if(check("machine","ehdr"))                         appendRecord(0,"machine",XBinary::valueToHex(elf.getHdr32_machine()));
+                        if(check("version","ehdr"))                         appendRecord(0,"version",XBinary::valueToHex(elf.getHdr32_version()));
+                        if(check("entry","ehdr"))                           appendRecord(0,"entry",XBinary::valueToHex(elf.getHdr32_entry()));
+                        if(check("phoff","ehdr"))                           appendRecord(0,"phoff",XBinary::valueToHex(elf.getHdr32_phoff()));
+                        if(check("shoff","ehdr"))                           appendRecord(0,"shoff",XBinary::valueToHex(elf.getHdr32_shoff()));
+                        if(check("flags","ehdr"))                           appendRecord(0,"flags",XBinary::valueToHex(elf.getHdr32_flags()));
+                        if(check("ehsize","ehdr"))                          appendRecord(0,"ehsize",XBinary::valueToHex(elf.getHdr32_ehsize()));
+                        if(check("phentsize","ehdr"))                       appendRecord(0,"phentsize",XBinary::valueToHex(elf.getHdr32_phentsize()));
+                        if(check("phnum","ehdr"))                           appendRecord(0,"phnum",XBinary::valueToHex(elf.getHdr32_phnum()));
+                        if(check("shentsize","ehdr"))                       appendRecord(0,"shentsize",XBinary::valueToHex(elf.getHdr32_shentsize()));
+                        if(check("shnum","ehdr"))                           appendRecord(0,"shnum",XBinary::valueToHex(elf.getHdr32_shnum()));
+                        if(check("shstrndx","ehdr"))                        appendRecord(0,"shstrndx",XBinary::valueToHex(elf.getHdr32_shstrndx()));
+                    }
                     // TODO
                 }
             }
