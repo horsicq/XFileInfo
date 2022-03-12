@@ -86,7 +86,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
         listResult.append("Architecture");
         listResult.append("Mode");
         listResult.append("Type");
-        listResult.append("Endianess");
+        listResult.append("Endianness");
     }
 
     if( XBinary::checkFileType(XBinary::FT_ELF,fileType)||
@@ -241,7 +241,7 @@ void XFileInfo::addOsInfo(XBinary::OSINFO osInfo)
     if(check("Architecture","")) appendRecord(0,tr("Architecture"),osInfo.sArch);
     if(check("Mode","")) appendRecord(0,tr("Mode"),XBinary::modeIdToString(osInfo.mode));
     if(check("Type","")) appendRecord(0,tr("Type"),osInfo.sType);
-    if(check("Endianess","")) appendRecord(0,tr("Endianess"),XBinary::endiannessToString(osInfo.bIsBigEndian));
+    if(check("Endianness","")) appendRecord(0,tr("Endianness"),XBinary::endiannessToString(osInfo.bIsBigEndian));
 }
 
 bool XFileInfo::check(QString sString,QString sExtra)
