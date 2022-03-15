@@ -158,7 +158,21 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     }
     else if(XBinary::checkFileType(XBinary::FT_MSDOS,fileType))
     {
-        // TODO
+        listResult.append("IMAGE_DOS_HEADER");
+        listResult.append("e_magic");
+        listResult.append("e_cblp");
+        listResult.append("e_cp");
+        listResult.append("e_crlc");
+        listResult.append("e_cparhdr");
+        listResult.append("e_minalloc");
+        listResult.append("e_maxalloc");
+        listResult.append("e_ss");
+        listResult.append("e_sp");
+        listResult.append("e_csum");
+        listResult.append("e_ip");
+        listResult.append("e_cs");
+        listResult.append("e_lfarlc");
+        listResult.append("e_ovno");
     }
     else if(XBinary::checkFileType(XBinary::FT_DEX,fileType))
     {
@@ -547,12 +561,27 @@ void XFileInfo::process()
 
                     XBinary::_MEMORY_MAP memoryMap=msdos.getMemoryMap();
 
-                    if(check("Entry point(Address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(msdos.getEntryPointAddress(&memoryMap)));
-                    if(check("Entry point(Offset)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Offset")),XBinary::valueToHexEx(msdos.getEntryPointOffset(&memoryMap)));
-                    if(check("Entry point(Relative address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Relative address")),XBinary::valueToHexEx(msdos.getEntryPointRVA(&memoryMap)));
-                    if(check("Entry point(Bytes)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Bytes")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_FULL,N_SIGNATURECOUNT));
-                    if(check("Entry point(Signature)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASK,N_SIGNATURECOUNT));
-                    if(check("Entry point(Signature)(Rel)","Entry point")) appendRecord(0,QString("%1(%2)(Rel)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASKREL,N_SIGNATURECOUNT));
+                    if(check("Entry point(Address)","Entry point"))             appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(msdos.getEntryPointAddress(&memoryMap)));
+                    if(check("Entry point(Offset)","Entry point"))              appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Offset")),XBinary::valueToHexEx(msdos.getEntryPointOffset(&memoryMap)));
+                    if(check("Entry point(Relative address)","Entry point"))    appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Relative address")),XBinary::valueToHexEx(msdos.getEntryPointRVA(&memoryMap)));
+                    if(check("Entry point(Bytes)","Entry point"))               appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Bytes")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_FULL,N_SIGNATURECOUNT));
+                    if(check("Entry point(Signature)","Entry point"))           appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASK,N_SIGNATURECOUNT));
+                    if(check("Entry point(Signature)(Rel)","Entry point"))      appendRecord(0,QString("%1(%2)(Rel)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASKREL,N_SIGNATURECOUNT));
+
+                    if(check("e_magic","IMAGE_DOS_HEADER"))                     appendRecord(0,"e_magic",XBinary::valueToHex(msdos.get_e_magic()));
+                    if(check("e_cblp","IMAGE_DOS_HEADER"))                      appendRecord(0,"e_cblp",XBinary::valueToHex(msdos.get_e_cblp()));
+                    if(check("e_cp","IMAGE_DOS_HEADER"))                        appendRecord(0,"e_cp",XBinary::valueToHex(msdos.get_e_cp()));
+                    if(check("e_crlc","IMAGE_DOS_HEADER"))                      appendRecord(0,"e_crlc",XBinary::valueToHex(msdos.get_e_crlc()));
+                    if(check("e_cparhdr","IMAGE_DOS_HEADER"))                   appendRecord(0,"e_cparhdr",XBinary::valueToHex(msdos.get_e_cparhdr()));
+                    if(check("e_minalloc","IMAGE_DOS_HEADER"))                  appendRecord(0,"e_minalloc",XBinary::valueToHex(msdos.get_e_minalloc()));
+                    if(check("e_maxalloc","IMAGE_DOS_HEADER"))                  appendRecord(0,"e_maxalloc",XBinary::valueToHex(msdos.get_e_maxalloc()));
+                    if(check("e_ss","IMAGE_DOS_HEADER"))                        appendRecord(0,"e_ss",XBinary::valueToHex(msdos.get_e_ss()));
+                    if(check("e_sp","IMAGE_DOS_HEADER"))                        appendRecord(0,"e_sp",XBinary::valueToHex(msdos.get_e_sp()));
+                    if(check("e_csum","IMAGE_DOS_HEADER"))                      appendRecord(0,"e_csum",XBinary::valueToHex(msdos.get_e_csum()));
+                    if(check("e_ip","IMAGE_DOS_HEADER"))                        appendRecord(0,"e_ip",XBinary::valueToHex(msdos.get_e_ip()));
+                    if(check("e_cs","IMAGE_DOS_HEADER"))                        appendRecord(0,"e_cs",XBinary::valueToHex(msdos.get_e_cs()));
+                    if(check("e_lfarlc","IMAGE_DOS_HEADER"))                    appendRecord(0,"e_lfarlc",XBinary::valueToHex(msdos.get_e_lfarlc()));
+                    if(check("e_ovno","IMAGE_DOS_HEADER"))                      appendRecord(0,"e_ovno",XBinary::valueToHex(msdos.get_e_ovno()));
 
                     // TODO
                 }
