@@ -560,13 +560,24 @@ void XFileInfo::process()
                     if(check("Subsystem","IMAGE_OPTIONAL_HEADER"))                      appendRecord(0,"Subsystem",XBinary::valueToHex(pe.getOptionalHeader_Subsystem()));
                     if(check("DllCharacteristics","IMAGE_OPTIONAL_HEADER"))             appendRecord(0,"DllCharacteristics",XBinary::valueToHex(pe.getOptionalHeader_DllCharacteristics()));
 
-//                    qint64 SizeOfStackReserve;
-//                    qint64 SizeOfStackCommit;
-//                    qint64 SizeOfHeapReserve;
-//                    qint64 SizeOfHeapCommit;
+                    if(fileType==XBinary::FT_PE32)
+                    {
+                        if(check("SizeOfStackReserve","IMAGE_OPTIONAL_HEADER"))         appendRecord(0,"SizeOfStackReserve",XBinary::valueToHex((quint32)pe.getOptionalHeader_SizeOfStackReserve()));
+                        if(check("SizeOfStackCommit","IMAGE_OPTIONAL_HEADER"))          appendRecord(0,"SizeOfStackCommit",XBinary::valueToHex((quint32)pe.getOptionalHeader_SizeOfStackCommit()));
+                        if(check("SizeOfHeapReserve","IMAGE_OPTIONAL_HEADER"))          appendRecord(0,"SizeOfHeapReserve",XBinary::valueToHex((quint32)pe.getOptionalHeader_SizeOfHeapReserve()));
+                        if(check("SizeOfHeapCommit","IMAGE_OPTIONAL_HEADER"))           appendRecord(0,"SizeOfHeapCommit",XBinary::valueToHex((quint32)pe.getOptionalHeader_SizeOfHeapCommit()));
+                    }
+                    else if(fileType==XBinary::FT_PE64)
+                    {
+                        if(check("SizeOfStackReserve","IMAGE_OPTIONAL_HEADER"))         appendRecord(0,"SizeOfStackReserve",XBinary::valueToHex((quint64)pe.getOptionalHeader_SizeOfStackReserve()));
+                        if(check("SizeOfStackCommit","IMAGE_OPTIONAL_HEADER"))          appendRecord(0,"SizeOfStackCommit",XBinary::valueToHex((quint64)pe.getOptionalHeader_SizeOfStackCommit()));
+                        if(check("SizeOfHeapReserve","IMAGE_OPTIONAL_HEADER"))          appendRecord(0,"SizeOfHeapReserve",XBinary::valueToHex((quint64)pe.getOptionalHeader_SizeOfHeapReserve()));
+                        if(check("SizeOfHeapCommit","IMAGE_OPTIONAL_HEADER"))           appendRecord(0,"SizeOfHeapCommit",XBinary::valueToHex((quint64)pe.getOptionalHeader_SizeOfHeapCommit()));
+                    }
 
-//                    quint32 LoaderFlags;
-//                    quint32 NumberOfRvaAndSizes;
+                    if(check("LoaderFlags","IMAGE_OPTIONAL_HEADER"))                    appendRecord(0,"LoaderFlags",XBinary::valueToHex(pe.getOptionalHeader_LoaderFlags()));
+                    if(check("NumberOfRvaAndSizes","IMAGE_OPTIONAL_HEADER"))            appendRecord(0,"NumberOfRvaAndSizes",XBinary::valueToHex(pe.getOptionalHeader_NumberOfRvaAndSizes()));
+
                     // TODO
                 }
             }
