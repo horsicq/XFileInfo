@@ -340,6 +340,18 @@ QString XFileInfo::addFlags(XBinary::MODE mode,quint64 nValue,QMap<quint64,QStri
     return sResult;
 }
 
+QString XFileInfo::addDateTime(XBinary::MODE mode,XBinary::DT_TYPE dtType, quint64 nValue)
+{
+    QString sResult=XBinary::valueToHex(mode,nValue);
+
+    if(g_options.bComment)
+    {
+        sResult+=QString("(%1)").arg(XBinary::valueToTimeString(nValue,dtType));
+    }
+
+    return sResult;
+}
+
 void XFileInfo::stop()
 {
     g_bIsStop=true;
@@ -520,7 +532,7 @@ void XFileInfo::process()
 
                     if(check("Machine","IMAGE_FILE_HEADER"))                            appendRecord(0,"Machine",addFlags(XBinary::MODE_16,pe.getFileHeader_Machine(),XPE::getImageFileHeaderMachines(),XBinary::VL_TYPE_LIST));
                     if(check("NumberOfSections","IMAGE_FILE_HEADER"))                   appendRecord(0,"NumberOfSections",XBinary::valueToHex(pe.getFileHeader_NumberOfSections()));
-                    if(check("TimeDateStamp","IMAGE_FILE_HEADER"))                      appendRecord(0,"TimeDateStamp",XBinary::valueToHex(pe.getFileHeader_TimeDateStamp()));
+                    if(check("TimeDateStamp","IMAGE_FILE_HEADER"))                      appendRecord(0,"TimeDateStamp",addDateTime(XBinary::MODE_32,XBinary::DT_TYPE_POSIX,pe.getFileHeader_TimeDateStamp()));
                     if(check("PointerToSymbolTable","IMAGE_FILE_HEADER"))               appendRecord(0,"PointerToSymbolTable",XBinary::valueToHex(pe.getFileHeader_PointerToSymbolTable()));
                     if(check("NumberOfSymbols","IMAGE_FILE_HEADER"))                    appendRecord(0,"NumberOfSymbols",XBinary::valueToHex(pe.getFileHeader_NumberOfSymbols()));
                     if(check("SizeOfOptionalHeader","IMAGE_FILE_HEADER"))               appendRecord(0,"SizeOfOptionalHeader",XBinary::valueToHex(pe.getFileHeader_SizeOfOptionalHeader()));
