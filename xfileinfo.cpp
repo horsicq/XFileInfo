@@ -557,7 +557,7 @@ void XFileInfo::process()
                     if(check("SizeOfImage","IMAGE_OPTIONAL_HEADER"))                    appendRecord(0,"SizeOfImage",XBinary::valueToHex(pe.getOptionalHeader_SizeOfImage()));
                     if(check("SizeOfHeaders","IMAGE_OPTIONAL_HEADER"))                  appendRecord(0,"SizeOfHeaders",XBinary::valueToHex(pe.getOptionalHeader_SizeOfHeaders()));
                     if(check("CheckSum","IMAGE_OPTIONAL_HEADER"))                       appendRecord(0,"CheckSum",XBinary::valueToHex(pe.getOptionalHeader_CheckSum()));
-                    if(check("Subsystem","IMAGE_OPTIONAL_HEADER"))                      appendRecord(0,"Subsystem",XBinary::valueToHex(pe.getOptionalHeader_Subsystem()));
+                    if(check("Subsystem","IMAGE_OPTIONAL_HEADER"))                      appendRecord(0,"Subsystem",addFlags(XBinary::MODE_16,pe.getOptionalHeader_Subsystem(),XPE::getImageOptionalHeaderSubsystem(),XBinary::VL_TYPE_LIST));
                     if(check("DllCharacteristics","IMAGE_OPTIONAL_HEADER"))             appendRecord(0,"DllCharacteristics",addFlags(XBinary::MODE_16,pe.getOptionalHeader_DllCharacteristics(),XPE::getImageOptionalHeaderDllCharacteristics(),XBinary::VL_TYPE_FLAGS));
 
                     if(fileType==XBinary::FT_PE32)
