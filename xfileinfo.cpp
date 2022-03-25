@@ -591,6 +591,11 @@ void XFileInfo::process()
                     if(check("NumberOfRvaAndSizes","IMAGE_OPTIONAL_HEADER"))            appendRecord(0,"NumberOfRvaAndSizes",XBinary::valueToHex(pe.getOptionalHeader_NumberOfRvaAndSizes()));
 
                     // TODO
+                    // Directories
+                    // Sections
+                    // Resources
+                    // Import
+                    // Export
                 }
             }
         }
