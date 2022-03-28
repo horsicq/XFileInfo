@@ -42,7 +42,6 @@ public:
 
     void setData(QIODevice *pDevice,XFileInfoModel *pModel,OPTIONS options);
     static bool processFile(QString sFileName,XFileInfoModel *pModel,OPTIONS options);
-
     static QList<QString> getMethodNames(XBinary::FT fileType);
 
 signals:
