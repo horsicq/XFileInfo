@@ -340,7 +340,7 @@ QString XFileInfo::addFlags(XBinary::MODE mode,quint64 nValue,QMap<quint64,QStri
     return sResult;
 }
 
-QString XFileInfo::addDateTime(XBinary::MODE mode,XBinary::DT_TYPE dtType, quint64 nValue)
+QString XFileInfo::addDateTime(XBinary::MODE mode,XBinary::DT_TYPE dtType,quint64 nValue)
 {
     QString sResult=XBinary::valueToHex(mode,nValue);
 
