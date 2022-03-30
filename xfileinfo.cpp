@@ -772,6 +772,7 @@ void XFileInfo::process()
             {
                 if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(pdf.getFileType()));
                 if(check("Version","Version")) appendRecord(0,tr("Version"),pdf.getVersion());
+                // TODO
             }
         }
         else
