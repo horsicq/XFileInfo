@@ -21,9 +21,9 @@
 #ifndef XFILEINFO_H
 #define XFILEINFO_H
 
+#include "xcapstone.h"
 #include "xfileinfomodel.h"
 #include "xformats.h"
-#include "xcapstone.h"
 
 class XFileInfo : public QObject
 {
