@@ -55,7 +55,7 @@ private:
     void addOsInfo(XBinary::OSINFO osInfo);
     bool check(QString sString,QString sExtra);
     QString addFlags(XBinary::MODE mode,quint64 nValue,QMap<quint64,QString> mapFlags,XBinary::VL_TYPE vlType);
-    QString addDateTime(XBinary::MODE mode, XBinary::DT_TYPE dtType, quint64 nValue);
+    QString addDateTime(XBinary::MODE mode,XBinary::DT_TYPE dtType,quint64 nValue);
 
 public slots:
     void stop();
