@@ -28,7 +28,7 @@ XFileInfo::XFileInfo(QObject *pParent) : QObject(pParent)
 
 void XFileInfo::setData(QIODevice *pDevice,XFileInfoModel *pModel,OPTIONS options)
 {
-    // TODO XBinary for Hash Stop
+    // mb TODO XBinary for Hash Stop
     this->g_pDevice=pDevice;
     this->g_pModel=pModel;
     this->g_options=options;
