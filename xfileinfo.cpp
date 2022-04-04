@@ -538,7 +538,7 @@ void XFileInfo::process()
                     if(check("SizeOfOptionalHeader","IMAGE_FILE_HEADER"))               appendRecord(0,"SizeOfOptionalHeader",XBinary::valueToHex(pe.getFileHeader_SizeOfOptionalHeader()));
                     if(check("Characteristics","IMAGE_FILE_HEADER"))                    appendRecord(0,"Characteristics",addFlags(XBinary::MODE_16,pe.getFileHeader_Characteristics(),XPE::getImageFileHeaderCharacteristics(),XBinary::VL_TYPE_FLAGS));
 
-                    if(check("Magic","IMAGE_OPTIONAL_HEADER"))                          appendRecord(0,"Magic",XBinary::valueToHex(pe.getOptionalHeader_Magic()));
+                    if(check("Magic","IMAGE_OPTIONAL_HEADER"))                          appendRecord(0,"Magic",addFlags(XBinary::MODE_16,pe.getOptionalHeader_Magic(),XPE::getImageOptionalHeaderMagic(),XBinary::VL_TYPE_LIST));
                     if(check("MajorLinkerVersion","IMAGE_OPTIONAL_HEADER"))             appendRecord(0,"MajorLinkerVersion",XBinary::valueToHex(pe.getOptionalHeader_MajorLinkerVersion()));
                     if(check("MinorLinkerVersion","IMAGE_OPTIONAL_HEADER"))             appendRecord(0,"MinorLinkerVersion",XBinary::valueToHex(pe.getOptionalHeader_MinorLinkerVersion()));
                     if(check("SizeOfCode","IMAGE_OPTIONAL_HEADER"))                     appendRecord(0,"SizeOfCode",XBinary::valueToHex(pe.getOptionalHeader_SizeOfCode()));
