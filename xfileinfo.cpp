@@ -24,7 +24,7 @@ XFileInfo::XFileInfo(QObject *pParent) : QObject(pParent)
 {
     g_pDevice=nullptr;
     g_bIsStop=false;
-    g_options=nullptr;
+    g_options={};
 }
 
 void XFileInfo::setData(QIODevice *pDevice,XFileInfoModel *pModel,OPTIONS options)
