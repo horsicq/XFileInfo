@@ -134,7 +134,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     }
     else if(XBinary::checkFileType(XBinary::FT_MACHO,fileType))
     {
-        // TODO
+        // TODO !!!
     }
     else if(XBinary::checkFileType(XBinary::FT_PE,fileType))
     {
