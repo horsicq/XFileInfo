@@ -190,11 +190,11 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     }
     else if(XBinary::checkFileType(XBinary::FT_NE,fileType))
     {
-        // TODO
+        // TODO !!!
     }
     else if(XBinary::checkFileType(XBinary::FT_LE,fileType))
     {
-        // TODO
+        // TODO !!!
     }
     else if(XBinary::checkFileType(XBinary::FT_MSDOS,fileType))
     {
