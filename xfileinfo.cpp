@@ -135,6 +135,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     else if(XBinary::checkFileType(XBinary::FT_MACHO,fileType))
     {
         // TODO !!!
+        // Header
     }
     else if(XBinary::checkFileType(XBinary::FT_PE,fileType))
     {
