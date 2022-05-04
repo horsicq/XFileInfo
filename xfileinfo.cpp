@@ -130,7 +130,8 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
         listResult.append("shentsize");
         listResult.append("shnum");
         listResult.append("shstrndx");
-        // TODO
+        // TODO Sections
+        // TODO Programs
     }
     else if(XBinary::checkFileType(XBinary::FT_MACHO,fileType))
     {
@@ -478,7 +479,8 @@ void XFileInfo::process()
                         if(check("shnum","ehdr"))                           appendRecord(0,"shnum",XBinary::valueToHex(elf.getHdr32_shnum()));
                         if(check("shstrndx","ehdr"))                        appendRecord(0,"shstrndx",XBinary::valueToHex(elf.getHdr32_shstrndx()));
                     }
-                    // TODO
+                    // TODO Sections
+                    // TODO Programs
                 }
             }
         }
