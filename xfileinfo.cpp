@@ -794,6 +794,15 @@ void XFileInfo::process()
                 // TODO
             }
         }
+        else if(XBinary::checkFileType(XBinary::FT_MACHOFAT,fileType))
+        {
+            XMACHOFat machofat(g_pDevice);
+
+            if(machofat.isValid())
+            {
+                // TODO
+            }
+        }
         else
         {
             if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(XBinary::getPrefFileType(g_pDevice,true)));
