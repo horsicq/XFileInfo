@@ -415,7 +415,19 @@ void XFileInfo::process()
 
     if(!g_bIsStop)
     {
-        if(XBinary::checkFileType(XBinary::FT_ELF,fileType))
+        if(XBinary::checkFileType(XBinary::FT_BINARY,fileType))
+        {
+            XBinary binary(g_pDevice);
+
+            if(binary.isValid())
+            {
+                if(!g_bIsStop)
+                {
+                    if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(binary.getFileType()));
+                }
+            }
+        }
+        else if(XBinary::checkFileType(XBinary::FT_ELF,fileType))
         {
             XELF elf(g_pDevice);
 
