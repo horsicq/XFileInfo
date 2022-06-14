@@ -135,6 +135,18 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     }
     else if(XBinary::checkFileType(XBinary::FT_MACHO,fileType))
     {
+        listResult.append("header");
+        listResult.append("magic");
+        listResult.append("cputype");
+        listResult.append("cpusubtype");
+        listResult.append("filetype");
+        listResult.append("ncmds");
+        listResult.append("sizeofcmds");
+        listResult.append("flags");
+        listResult.append("reserved");
+    }
+    else if(XBinary::checkFileType(XBinary::FT_MACHOFAT,fileType))
+    {
         // TODO !!!
         // Header
     }
@@ -533,6 +545,18 @@ void XFileInfo::process()
                     {
                         if(check("reserved","header"))                      appendRecord(0,"reserved",XBinary::valueToHex(mach.getHeader_reserved()));
                     }
+                    // TODO
+                }
+            }
+        }
+        else if(XBinary::checkFileType(XBinary::FT_MACHOFAT,fileType))
+        {
+            XMACHOFat machofat(g_pDevice);
+
+            if(machofat.isValid())
+            {
+                if(!g_bIsStop)
+                {
                     // TODO
                 }
             }
