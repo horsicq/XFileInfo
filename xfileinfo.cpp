@@ -149,6 +149,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     {
         // TODO !!!
         // Header
+        // Archs
     }
     else if(XBinary::checkFileType(XBinary::FT_PE,fileType))
     {
