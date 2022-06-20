@@ -76,7 +76,7 @@ void XFileInfoWidget::reload()
 
         DialogXFileInfoProcess dip(XOptions::getMainWidget(this),g_pDevice,pModel,options);
 
-        if(dip.exec()==QDialog::Accepted)
+        if(dip.exec()==QDialog::Accepted) // TODO use status
         {
             QString sText=pModel->toFormattedString();
     //        QString sText=XFileInfo::toCSV(pModel);
