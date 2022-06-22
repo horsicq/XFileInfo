@@ -21,5 +21,10 @@ FORMS += \
     include($$PWD/xfileinfo.pri)
 }
 
+!contains(XCONFIG, xdialogprocess) {
+    XCONFIG += xdialogprocess
+    include($$PWD/../FormatDialogs/xdialogprocess.pri)
+}
+
 DISTFILES += \
     $$PWD/xfileinfowidget.cmake
