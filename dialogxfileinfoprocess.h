@@ -25,12 +25,13 @@
 #include <QThread>
 #include <QTimer>
 #include "xfileinfo.h"
+#include "xdialogprocess.h"
 
 namespace Ui {
 class DialogXFileInfoProcess;
 }
 
-class DialogXFileInfoProcess : public QDialog // TODO XDialogProcess
+class DialogXFileInfoProcess : public XDialogProcess
 {
     Q_OBJECT
 

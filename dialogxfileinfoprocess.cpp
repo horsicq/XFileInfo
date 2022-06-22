@@ -22,7 +22,7 @@
 #include "ui_dialogxfileinfoprocess.h"
 
 DialogXFileInfoProcess::DialogXFileInfoProcess(QWidget *pParent,QIODevice *pDevice,XFileInfoModel *pModel,XFileInfo::OPTIONS options) :
-    QDialog(pParent),
+    XDialogProcess(pParent),
     ui(new Ui::DialogXFileInfoProcess)
 {
     ui->setupUi(this);

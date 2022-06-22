@@ -415,7 +415,7 @@ void XFileInfo::process()
 
     if(check("Entropy",""))
     {
-        double dEntropy=XBinary::getEntropy(g_pDevice);
+        double dEntropy=XBinary::getEntropy(g_pDevice); // TODO ProcessData
         QString sEntropy=QString::number(dEntropy);
 
         if(g_options.bComment)
