@@ -40,7 +40,7 @@ public:
 
     explicit XFileInfo(QObject *pParent=nullptr);
 
-    void setData(QIODevice *pDevice,XFileInfoModel *pModel,OPTIONS options);
+    void setData(QIODevice *pDevice, XFileInfoModel *pModel, OPTIONS options, XBinary::PDSTRUCT *pPsStruct);
     static bool processFile(QString sFileName,XFileInfoModel *pModel,OPTIONS options);
     static QList<QString> getMethodNames(XBinary::FT fileType);
 
@@ -58,16 +58,13 @@ private:
     QString addDateTime(XBinary::MODE mode,XBinary::DT_TYPE dtType,quint64 nValue);
 
 public slots:
-    void stop();
     void process();
-    QString getCurrentStatus();
 
 private:
     QIODevice *g_pDevice;
     XFileInfoModel *g_pModel;
     OPTIONS g_options;
-    bool g_bIsStop;
-    QString g_sCurrentStatus;
+    XBinary::PDSTRUCT *g_pPsStruct;
 };
 
 #endif // XFILEINFO_H

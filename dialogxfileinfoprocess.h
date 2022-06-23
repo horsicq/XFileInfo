@@ -39,19 +39,16 @@ public:
     explicit DialogXFileInfoProcess(QWidget *pParent,QIODevice *pDevice,XFileInfoModel *pModel,XFileInfo::OPTIONS options);
     ~DialogXFileInfoProcess();
 
+protected:
+    void _timerSlot();
+
 private slots:
     void on_pushButtonCancel_clicked();
-    void onCompleted(qint64 nElapsed);
-    void errorMessage(QString sText);
-    void timerSlot();
 
 private:
-    static const qint32 N_REFRESH_DELAY=1000;
     Ui::DialogXFileInfoProcess *ui;
     XFileInfo *g_pFileInfo;
     QThread *g_pThread;
-    bool g_bIsStop;
-    QTimer *g_pTimer;
 };
 
 #endif // DIALOGXFILEINFOPROCESS_H

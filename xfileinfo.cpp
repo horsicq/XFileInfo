@@ -23,16 +23,16 @@
 XFileInfo::XFileInfo(QObject *pParent) : QObject(pParent)
 {
     g_pDevice=nullptr;
-    g_bIsStop=false;
     g_options={};
 }
 
-void XFileInfo::setData(QIODevice *pDevice,XFileInfoModel *pModel,OPTIONS options)
+void XFileInfo::setData(QIODevice *pDevice, XFileInfoModel *pModel, OPTIONS options, XBinary::PDSTRUCT *pPsStruct)
 {
     // mb TODO XBinary for Hash Stop
     this->g_pDevice=pDevice;
     this->g_pModel=pModel;
     this->g_options=options;
+    this->g_pPsStruct=pPsStruct;
 }
 
 bool XFileInfo::processFile(QString sFileName,XFileInfoModel *pModel,OPTIONS options)
@@ -46,7 +46,8 @@ bool XFileInfo::processFile(QString sFileName,XFileInfoModel *pModel,OPTIONS opt
     if(file.open(QIODevice::ReadOnly))
     {
         XFileInfo fileInfo;
-        fileInfo.setData(&file,pModel,options);
+        XBinary::PDSTRUCT pdStruct={};
+        fileInfo.setData(&file,pModel,options,&pdStruct);
         fileInfo.process();
 
         file.close();
@@ -290,7 +291,7 @@ XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pParent,QString sName,QVar
 
 void XFileInfo::setCurrentStatus(QString sStatus)
 {
-    g_sCurrentStatus=sStatus;
+    g_pPsStruct->pdRecordOpt.sStatus=sStatus;
 }
 
 void XFileInfo::addOsInfo(XBinary::OSINFO osInfo)
@@ -317,7 +318,7 @@ bool XFileInfo::check(QString sString,QString sExtra)
 {
     bool bResult=false;
 
-    if(!g_bIsStop)
+    if(!(g_pPsStruct->bIsStop))
     {
         if(g_options.sString!="")
         {
@@ -368,15 +369,12 @@ QString XFileInfo::addDateTime(XBinary::MODE mode,XBinary::DT_TYPE dtType,quint6
     return sResult;
 }
 
-void XFileInfo::stop()
-{
-    g_bIsStop=true;
-}
-
 void XFileInfo::process()
 {
     QElapsedTimer scanTimer;
     scanTimer.start();
+
+    g_pPsStruct->pdRecordOpt.bIsValid=true;
 
     XBinary::FT fileType=g_options.fileType;
 
@@ -399,23 +397,23 @@ void XFileInfo::process()
 
     if((g_options.bShowAll)||(g_options.sString!=""))
     {
-        if(check("MD4","Hash")) appendRecord(0,"MD4",XBinary::getHash(XBinary::HASH_MD4,g_pDevice));
+        if(check("MD4","Hash")) appendRecord(0,"MD4",XBinary::getHash(XBinary::HASH_MD4,g_pDevice,g_pPsStruct));
     }
 
-    if(check("MD5","Hash")) appendRecord(0,"MD5",XBinary::getHash(XBinary::HASH_MD5,g_pDevice));
-    if(check("SHA1","Hash")) appendRecord(0,"SHA1",XBinary::getHash(XBinary::HASH_SHA1,g_pDevice));
+    if(check("MD5","Hash")) appendRecord(0,"MD5",XBinary::getHash(XBinary::HASH_MD5,g_pDevice,g_pPsStruct));
+    if(check("SHA1","Hash")) appendRecord(0,"SHA1",XBinary::getHash(XBinary::HASH_SHA1,g_pDevice,g_pPsStruct));
 
     if((g_options.bShowAll)||(g_options.sString!=""))
     {
-        if(check("SHA224","Hash")) appendRecord(0,"SHA224",XBinary::getHash(XBinary::HASH_SHA224,g_pDevice));
-        if(check("SHA256","Hash")) appendRecord(0,"SHA256",XBinary::getHash(XBinary::HASH_SHA256,g_pDevice));
-        if(check("SHA384","Hash")) appendRecord(0,"SHA384",XBinary::getHash(XBinary::HASH_SHA384,g_pDevice));
-        if(check("SHA512","Hash")) appendRecord(0,"SHA512",XBinary::getHash(XBinary::HASH_SHA512,g_pDevice));
+        if(check("SHA224","Hash")) appendRecord(0,"SHA224",XBinary::getHash(XBinary::HASH_SHA224,g_pDevice,g_pPsStruct));
+        if(check("SHA256","Hash")) appendRecord(0,"SHA256",XBinary::getHash(XBinary::HASH_SHA256,g_pDevice,g_pPsStruct));
+        if(check("SHA384","Hash")) appendRecord(0,"SHA384",XBinary::getHash(XBinary::HASH_SHA384,g_pDevice,g_pPsStruct));
+        if(check("SHA512","Hash")) appendRecord(0,"SHA512",XBinary::getHash(XBinary::HASH_SHA512,g_pDevice,g_pPsStruct));
     }
 
     if(check("Entropy",""))
     {
-        double dEntropy=XBinary::getEntropy(g_pDevice); // TODO ProcessData
+        double dEntropy=XBinary::getEntropy(g_pDevice,g_pPsStruct); // TODO ProcessData
         QString sEntropy=QString::number(dEntropy);
 
         if(g_options.bComment)
@@ -426,7 +424,7 @@ void XFileInfo::process()
         appendRecord(0,tr("Entropy"),sEntropy);
     }
 
-    if(!g_bIsStop)
+    if(!(g_pPsStruct->bIsStop))
     {
         if(XBinary::checkFileType(XBinary::FT_BINARY,fileType))
         {
@@ -434,7 +432,7 @@ void XFileInfo::process()
 
             if(binary.isValid())
             {
-                if(!g_bIsStop)
+                if(!(g_pPsStruct->bIsStop))
                 {
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(binary.getFileType()));
                 }
@@ -446,7 +444,7 @@ void XFileInfo::process()
 
             if(elf.isValid())
             {
-                if(!g_bIsStop)
+                if(!(g_pPsStruct->bIsStop))
                 {
                     bool bIs64=elf.is64();
 
@@ -515,7 +513,7 @@ void XFileInfo::process()
 
             if(mach.isValid())
             {
-                if(!g_bIsStop)
+                if(!(g_pPsStruct->bIsStop))
                 {
                     bool bIs64=mach.is64();
 
@@ -556,7 +554,7 @@ void XFileInfo::process()
 
             if(machofat.isValid())
             {
-                if(!g_bIsStop)
+                if(!(g_pPsStruct->bIsStop))
                 {
                     // TODO
                 }
@@ -568,7 +566,7 @@ void XFileInfo::process()
 
             if(pe.isValid())
             {
-                if(!g_bIsStop)
+                if(!(g_pPsStruct->bIsStop))
                 {
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(pe.getFileType()));
 
@@ -661,7 +659,7 @@ void XFileInfo::process()
 
             if(ne.isValid())
             {
-                if(!g_bIsStop)
+                if(!(g_pPsStruct->bIsStop))
                 {
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(ne.getFileType()));
 
@@ -688,7 +686,7 @@ void XFileInfo::process()
 
             if(le.isValid())
             {
-                if(!g_bIsStop)
+                if(!(g_pPsStruct->bIsStop))
                 {
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(le.getFileType()));
 
@@ -715,7 +713,7 @@ void XFileInfo::process()
 
             if(msdos.isValid())
             {
-                if(!g_bIsStop)
+                if(!(g_pPsStruct->bIsStop))
                 {
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(msdos.getFileType()));
 
@@ -757,7 +755,7 @@ void XFileInfo::process()
 
             if(xcom.isValid())
             {
-                if(!g_bIsStop)
+                if(!(g_pPsStruct->bIsStop))
                 {
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(xcom.getFileType()));
 
@@ -784,7 +782,7 @@ void XFileInfo::process()
 
             if(dex.isValid())
             {
-                if(!g_bIsStop)
+                if(!(g_pPsStruct->bIsStop))
                 {
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(dex.getFileType()));
 
@@ -846,13 +844,13 @@ void XFileInfo::process()
         }
     }
 
-    g_bIsStop=false;
+    if(!(g_pPsStruct->bIsStop))
+    {
+        g_pPsStruct->pdRecordOpt.bSuccess=true;
+    }
+
+    g_pPsStruct->pdRecordOpt.bFinished=true;
 
     emit completed(scanTimer.elapsed());
-}
-
-QString XFileInfo::getCurrentStatus()
-{
-    return g_sCurrentStatus;
 }
 

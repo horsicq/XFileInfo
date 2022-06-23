@@ -36,20 +36,13 @@ DialogXFileInfoProcess::DialogXFileInfoProcess(QWidget *pParent,QIODevice *pDevi
     connect(g_pFileInfo,SIGNAL(completed(qint64)),this,SLOT(onCompleted(qint64)));
     connect(g_pFileInfo,SIGNAL(errorMessage(QString)),this,SLOT(errorMessage(QString)));
 
-    g_pFileInfo->setData(pDevice,pModel,options);
+    g_pFileInfo->setData(pDevice,pModel,options,getPdStruct());
     g_pThread->start();
-
-    g_pTimer=new QTimer(this);
-    connect(g_pTimer,SIGNAL(timeout()),this,SLOT(timerSlot()));
-    g_pTimer->start(N_REFRESH_DELAY);
-
-    g_bIsStop=false;
 }
 
 DialogXFileInfoProcess::~DialogXFileInfoProcess()
 {
-    g_pFileInfo->stop(); // mb TODO if g_bIsStop !!!
-    g_pTimer->stop();
+    stop();
 
     g_pThread->quit();
     g_pThread->wait();
@@ -62,34 +55,12 @@ DialogXFileInfoProcess::~DialogXFileInfoProcess()
 
 void DialogXFileInfoProcess::on_pushButtonCancel_clicked()
 {
-    g_bIsStop=true;
-
-    g_pFileInfo->stop();
+    stop();
 }
 
-void DialogXFileInfoProcess::onCompleted(qint64 nElapsed)
+void DialogXFileInfoProcess::_timerSlot()
 {
-    Q_UNUSED(nElapsed)
+    // TODO ProgresBar
 
-    if(!g_bIsStop)
-    {
-        accept();
-    }
-    else
-    {
-        reject();
-    }
-}
-
-void DialogXFileInfoProcess::errorMessage(QString sText)
-{
-    Q_UNUSED(sText)
-    // TODO
-}
-
-void DialogXFileInfoProcess::timerSlot()
-{
-    QString sStatus=g_pFileInfo->getCurrentStatus();
-
-    ui->labelStatus->setText(sStatus);
+    ui->labelStatus->setText(getPdStruct()->pdRecordOpt.sStatus);
 }
