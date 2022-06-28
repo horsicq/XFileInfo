@@ -19,14 +19,10 @@
  * SOFTWARE.
  */
 #include "dialogxfileinfoprocess.h"
-#include "ui_dialogxfileinfoprocess.h"
 
 DialogXFileInfoProcess::DialogXFileInfoProcess(QWidget *pParent,QIODevice *pDevice,XFileInfoModel *pModel,XFileInfo::OPTIONS options) :
-    XDialogProcess(pParent),
-    ui(new Ui::DialogXFileInfoProcess)
+    XDialogProcess(pParent)
 {
-    ui->setupUi(this);
-
     g_pFileInfo=new XFileInfo;
     g_pThread=new QThread;
 
@@ -47,20 +43,7 @@ DialogXFileInfoProcess::~DialogXFileInfoProcess()
     g_pThread->quit();
     g_pThread->wait();
 
-    delete ui;
-
     delete g_pThread;
     delete g_pFileInfo;
 }
 
-void DialogXFileInfoProcess::on_pushButtonCancel_clicked()
-{
-    stop();
-}
-
-void DialogXFileInfoProcess::_timerSlot()
-{
-    // TODO ProgresBar
-
-    ui->labelStatus->setText(getPdStruct()->pdRecordOpt.sStatus);
-}

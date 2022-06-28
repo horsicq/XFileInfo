@@ -27,10 +27,6 @@
 #include "xfileinfo.h"
 #include "xdialogprocess.h"
 
-namespace Ui {
-class DialogXFileInfoProcess;
-}
-
 class DialogXFileInfoProcess : public XDialogProcess
 {
     Q_OBJECT
@@ -39,14 +35,7 @@ public:
     explicit DialogXFileInfoProcess(QWidget *pParent,QIODevice *pDevice,XFileInfoModel *pModel,XFileInfo::OPTIONS options);
     ~DialogXFileInfoProcess();
 
-protected:
-    void _timerSlot();
-
-private slots:
-    void on_pushButtonCancel_clicked();
-
 private:
-    Ui::DialogXFileInfoProcess *ui;
     XFileInfo *g_pFileInfo;
     QThread *g_pThread;
 };
