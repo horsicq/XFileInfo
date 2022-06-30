@@ -40,7 +40,7 @@ public:
 
     explicit XFileInfo(QObject *pParent=nullptr);
 
-    void setData(QIODevice *pDevice, XFileInfoModel *pModel, OPTIONS options, XBinary::PDSTRUCT *pPsStruct);
+    void setData(QIODevice *pDevice,XFileInfoModel *pModel,OPTIONS options,XBinary::PDSTRUCT *pPdStruct);
     static bool processFile(QString sFileName,XFileInfoModel *pModel,OPTIONS options);
     static QList<QString> getMethodNames(XBinary::FT fileType);
 
@@ -64,7 +64,7 @@ private:
     QIODevice *g_pDevice;
     XFileInfoModel *g_pModel;
     OPTIONS g_options;
-    XBinary::PDSTRUCT *g_pPsStruct;
+    XBinary::PDSTRUCT *g_pPdStruct;
 };
 
 #endif // XFILEINFO_H

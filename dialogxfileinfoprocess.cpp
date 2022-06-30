@@ -39,6 +39,7 @@ DialogXFileInfoProcess::DialogXFileInfoProcess(QWidget *pParent,QIODevice *pDevi
 DialogXFileInfoProcess::~DialogXFileInfoProcess()
 {
     stop();
+    waitForFinished();
 
     g_pThread->quit();
     g_pThread->wait();
