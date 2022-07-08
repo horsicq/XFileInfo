@@ -21,7 +21,6 @@
 #ifndef DIALOGXFILEINFO_H
 #define DIALOGXFILEINFO_H
 
-#include <QDialog>
 #include "xfileinfowidget.h"
 #include "xshortcutsdialog.h"
 
@@ -36,6 +35,7 @@ class DialogXFileInfo : public XShortcutsDialog
 public:
     explicit DialogXFileInfo(QWidget *pParent=nullptr);
     ~DialogXFileInfo();
+
     virtual void setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions);
 
     void setData(QIODevice *pDevice,XBinary::FT fileType,bool bAuto=false);
