@@ -34,6 +34,8 @@ XFileInfoWidget::XFileInfoWidget(QWidget *pParent) :
     ui->checkBoxComment->setChecked(true);
 
     XOptions::setMonoFont(ui->plainTextEditFileInfo);
+
+    // TODO load all strings
 }
 
 XFileInfoWidget::~XFileInfoWidget()
@@ -41,8 +43,10 @@ XFileInfoWidget::~XFileInfoWidget()
     delete ui;
 }
 
-void XFileInfoWidget::setData(QIODevice *pDevice,XBinary::FT fileType,bool bAuto)
+void XFileInfoWidget::setData(QIODevice *pDevice,XBinary::FT fileType,bool bAuto,QString sString)
 {
+    // TODO sString setString
+
     this->g_pDevice=pDevice;
     g_nOffset=0;
     g_nSize=pDevice->size();
