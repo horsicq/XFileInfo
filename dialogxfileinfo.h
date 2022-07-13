@@ -38,7 +38,7 @@ public:
 
     virtual void setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions);
 
-    void setData(QIODevice *pDevice,XBinary::FT fileType,bool bAuto=false);
+    void setData(QIODevice *pDevice,XBinary::FT fileType,QString sString,bool bAuto=false);
 
 private slots:
     void on_pushButtonClose_clicked();

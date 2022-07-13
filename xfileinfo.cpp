@@ -62,34 +62,9 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
 {
     QList<QString> listResult;
 
-    listResult.append("File name");
-    listResult.append("Size");
+    listResult.append("Info");
     listResult.append("Hash");
-    listResult.append("MD4");
-    listResult.append("MD5");
-    listResult.append("SHA1");
-    listResult.append("SHA224");
-    listResult.append("SHA256");
-    listResult.append("SHA384");
-    listResult.append("SHA512");
     listResult.append("Entropy");
-    listResult.append("File type");
-
-    if( XBinary::checkFileType(XBinary::FT_ELF,fileType)||
-        XBinary::checkFileType(XBinary::FT_MACHO,fileType)||
-        XBinary::checkFileType(XBinary::FT_COM,fileType)||
-        XBinary::checkFileType(XBinary::FT_PE,fileType)||
-        XBinary::checkFileType(XBinary::FT_NE,fileType)||
-        XBinary::checkFileType(XBinary::FT_LE,fileType)||
-        XBinary::checkFileType(XBinary::FT_MSDOS,fileType)||
-        XBinary::checkFileType(XBinary::FT_DEX,fileType))
-    {
-        listResult.append("Operation system");
-        listResult.append("Architecture");
-        listResult.append("Mode");
-        listResult.append("Type");
-        listResult.append("Endianness");
-    }
 
     if( XBinary::checkFileType(XBinary::FT_ELF,fileType)||
         XBinary::checkFileType(XBinary::FT_MACHO,fileType)||
@@ -100,51 +75,16 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
         XBinary::checkFileType(XBinary::FT_MSDOS,fileType))
     {
         listResult.append("Entry point");
-        listResult.append("Entry point(Address)");
-        listResult.append("Entry point(Offset)");
-        listResult.append("Entry point(Relative address)");
-        listResult.append("Entry point(Bytes)");
-        listResult.append("Entry point(Signature)");
-        listResult.append("Entry point(Signature)(Rel)");
     }
 
     if(XBinary::checkFileType(XBinary::FT_ELF,fileType))
     {
         listResult.append("ident");
-        listResult.append("ident_mag");
-        listResult.append("ident_class");
-        listResult.append("ident_data");
-        listResult.append("ident_version");
-        listResult.append("ident_osabi");
-        listResult.append("ident_abiversion");
         listResult.append("ehdr");
-        listResult.append("type");
-        listResult.append("machine");
-        listResult.append("version");
-        listResult.append("entry");
-        listResult.append("phoff");
-        listResult.append("shoff");
-        listResult.append("flags");
-        listResult.append("ehsize");
-        listResult.append("phentsize");
-        listResult.append("phnum");
-        listResult.append("shentsize");
-        listResult.append("shnum");
-        listResult.append("shstrndx");
-        // TODO Sections
-        // TODO Programs
     }
     else if(XBinary::checkFileType(XBinary::FT_MACHO,fileType))
     {
         listResult.append("header");
-        listResult.append("magic");
-        listResult.append("cputype");
-        listResult.append("cpusubtype");
-        listResult.append("filetype");
-        listResult.append("ncmds");
-        listResult.append("sizeofcmds");
-        listResult.append("flags");
-        listResult.append("reserved");
     }
     else if(XBinary::checkFileType(XBinary::FT_MACHOFAT,fileType))
     {
@@ -155,50 +95,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     else if(XBinary::checkFileType(XBinary::FT_PE,fileType))
     {
         listResult.append("IMAGE_FILE_HEADER");
-        listResult.append("Machine");
-        listResult.append("NumberOfSections");
-        listResult.append("TimeDateStamp");
-        listResult.append("PointerToSymbolTable");
-        listResult.append("NumberOfSymbols");
-        listResult.append("SizeOfOptionalHeader");
-        listResult.append("Characteristics");
-
         listResult.append("IMAGE_OPTIONAL_HEADER");
-        listResult.append("Magic");
-        listResult.append("MajorLinkerVersion");
-        listResult.append("MinorLinkerVersion");
-        listResult.append("SizeOfCode");
-        listResult.append("SizeOfInitializedData");
-        listResult.append("SizeOfUninitializedData");
-        listResult.append("AddressOfEntryPoint");
-        listResult.append("BaseOfCode");
-
-        if(fileType==XBinary::FT_PE32)
-        {
-            listResult.append("BaseOfData");
-        }
-
-        listResult.append("ImageBase");
-        listResult.append("SectionAlignment");
-        listResult.append("FileAlignment");
-        listResult.append("MajorOperatingSystemVersion");
-        listResult.append("MinorOperatingSystemVersion");
-        listResult.append("MajorImageVersion");
-        listResult.append("MinorImageVersion");
-        listResult.append("MajorSubsystemVersion");
-        listResult.append("MinorSubsystemVersion");
-        listResult.append("Win32VersionValue");
-        listResult.append("SizeOfImage");
-        listResult.append("SizeOfHeaders");
-        listResult.append("CheckSum");
-        listResult.append("Subsystem");
-        listResult.append("DllCharacteristics");
-        listResult.append("SizeOfStackReserve");
-        listResult.append("SizeOfStackCommit");
-        listResult.append("SizeOfHeapReserve");
-        listResult.append("SizeOfHeapCommit");
-        listResult.append("LoaderFlags");
-        listResult.append("NumberOfRvaAndSizes");
 
         //TODO
         // TODO
@@ -215,48 +112,10 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     else if(XBinary::checkFileType(XBinary::FT_MSDOS,fileType))
     {
         listResult.append("IMAGE_DOS_HEADER");
-        listResult.append("e_magic");
-        listResult.append("e_cblp");
-        listResult.append("e_cp");
-        listResult.append("e_crlc");
-        listResult.append("e_cparhdr");
-        listResult.append("e_minalloc");
-        listResult.append("e_maxalloc");
-        listResult.append("e_ss");
-        listResult.append("e_sp");
-        listResult.append("e_csum");
-        listResult.append("e_ip");
-        listResult.append("e_cs");
-        listResult.append("e_lfarlc");
-        listResult.append("e_ovno");
     }
     else if(XBinary::checkFileType(XBinary::FT_DEX,fileType))
     {
         listResult.append("Header");
-        listResult.append("magic");
-        listResult.append("version");
-        listResult.append("checksum");
-        listResult.append("signature");
-        listResult.append("file_size");
-        listResult.append("header_size");
-        listResult.append("endian_tag");
-        listResult.append("link_size");
-        listResult.append("link_off");
-        listResult.append("map_off");
-        listResult.append("string_ids_size");
-        listResult.append("string_ids_off");
-        listResult.append("type_ids_size");
-        listResult.append("type_ids_off");
-        listResult.append("proto_ids_size");
-        listResult.append("proto_ids_off");
-        listResult.append("field_ids_size");
-        listResult.append("field_ids_off");
-        listResult.append("method_ids_size");
-        listResult.append("method_ids_off");
-        listResult.append("class_defs_size");
-        listResult.append("class_defs_off");
-        listResult.append("data_size");
-        listResult.append("data_off");
         // TODO
     }
     else if(XBinary::checkFileType(XBinary::FT_COM,fileType))
@@ -294,44 +153,17 @@ void XFileInfo::setCurrentStatus(QString sStatus)
     g_pPdStruct->pdRecordOpt.sStatus=sStatus;
 }
 
-void XFileInfo::addOsInfo(XBinary::OSINFO osInfo)
-{
-    if(check("Operation system",""))
-    {
-        QString sOperationSystem=XBinary::osNameIdToString(osInfo.osName);
-
-        if(osInfo.sOsVersion!="")
-        {
-            sOperationSystem+=QString("(%1)").arg(osInfo.sOsVersion);
-        }
-
-        appendRecord(0,tr("Operation system"),sOperationSystem);
-    }
-
-    if(check("Architecture","")) appendRecord(0,tr("Architecture"),osInfo.sArch);
-    if(check("Mode","")) appendRecord(0,tr("Mode"),XBinary::modeIdToString(osInfo.mode));
-    if(check("Type","")) appendRecord(0,tr("Type"),osInfo.sType);
-    if(check("Endianness","")) appendRecord(0,tr("Endianness"),XBinary::endiannessToString(osInfo.bIsBigEndian));
-}
-
-bool XFileInfo::check(QString sString,QString sExtra)
+bool XFileInfo::check(QString sString, QString sExtra)
 {
     bool bResult=false;
 
     if(!(g_pPdStruct->bIsStop))
     {
-        if(g_options.sString!="")
+        if(g_options.sString==sString)
         {
-            if(g_options.sString==sString)
-            {
-                bResult=true;
-            }
-            else if(g_options.sString==sExtra)
-            {
-                bResult=true;
-            }
+            bResult=true;
         }
-        else
+        else if(g_options.sString==sExtra)
         {
             bResult=true;
         }
@@ -383,35 +215,57 @@ void XFileInfo::process()
         fileType=XBinary::getPrefFileType(g_pDevice);
     }
 
-    if(check("File name","")) appendRecord(0,tr("File name"),XBinary::getDeviceFileName(g_pDevice));
-
-    qint64 nSize=g_pDevice->size();
-    QString sSize=QString::number(nSize);
-
-    if(g_options.bComment)
+    if(check("Info","All"))
     {
-        sSize+=QString("(%1)").arg(XBinary::bytesCountToString(nSize));
+        XFileInfoItem *pParent=appendRecord(0,tr("Info"),"");
+
+        appendRecord(pParent,tr("File name"),XBinary::getDeviceFileName(g_pDevice));
+
+        qint64 nSize=g_pDevice->size();
+        QString sSize=QString::number(nSize);
+
+        if(g_options.bComment)
+        {
+            sSize+=QString("(%1)").arg(XBinary::bytesCountToString(nSize));
+        }
+
+        appendRecord(pParent,tr("Size"),sSize);
+
+        if( XBinary::checkFileType(XBinary::FT_ELF,fileType)||
+            XBinary::checkFileType(XBinary::FT_PE,fileType))
+        {
+            XBinary::OSINFO osInfo=XFormats::getOsInfo(fileType,g_pDevice);
+
+            QString sOperationSystem=XBinary::osNameIdToString(osInfo.osName);
+
+            if(osInfo.sOsVersion!="")
+            {
+                sOperationSystem+=QString("(%1)").arg(osInfo.sOsVersion);
+            }
+
+            appendRecord(pParent,tr("Operation system"),sOperationSystem);
+
+            appendRecord(pParent,tr("Architecture"),osInfo.sArch);
+            appendRecord(pParent,tr("Mode"),XBinary::modeIdToString(osInfo.mode));
+            appendRecord(pParent,tr("Type"),osInfo.sType);
+            appendRecord(pParent,tr("Endianness"),XBinary::endiannessToString(osInfo.bIsBigEndian));
+        }
     }
 
-    if(check("Size","")) appendRecord(0,tr("Size"),sSize);
-
-    if((g_options.bShowAll)||(g_options.sString!=""))
+    if(check("Hash","All"))
     {
-        if(check("MD4","Hash")) appendRecord(0,"MD4",XBinary::getHash(XBinary::HASH_MD4,g_pDevice,g_pPdStruct));
+        XFileInfoItem *pParent=appendRecord(0,tr("Hash"),"");
+
+        appendRecord(pParent,"MD4",XBinary::getHash(XBinary::HASH_MD4,g_pDevice,g_pPdStruct));
+        appendRecord(pParent,"MD5",XBinary::getHash(XBinary::HASH_MD5,g_pDevice,g_pPdStruct));
+        appendRecord(pParent,"SHA1",XBinary::getHash(XBinary::HASH_SHA1,g_pDevice,g_pPdStruct));
+        appendRecord(pParent,"SHA224",XBinary::getHash(XBinary::HASH_SHA224,g_pDevice,g_pPdStruct));
+        appendRecord(pParent,"SHA256",XBinary::getHash(XBinary::HASH_SHA256,g_pDevice,g_pPdStruct));
+        appendRecord(pParent,"SHA384",XBinary::getHash(XBinary::HASH_SHA384,g_pDevice,g_pPdStruct));
+        appendRecord(pParent,"SHA512",XBinary::getHash(XBinary::HASH_SHA512,g_pDevice,g_pPdStruct));
     }
 
-    if(check("MD5","Hash")) appendRecord(0,"MD5",XBinary::getHash(XBinary::HASH_MD5,g_pDevice,g_pPdStruct));
-    if(check("SHA1","Hash")) appendRecord(0,"SHA1",XBinary::getHash(XBinary::HASH_SHA1,g_pDevice,g_pPdStruct));
-
-    if((g_options.bShowAll)||(g_options.sString!=""))
-    {
-        if(check("SHA224","Hash")) appendRecord(0,"SHA224",XBinary::getHash(XBinary::HASH_SHA224,g_pDevice,g_pPdStruct));
-        if(check("SHA256","Hash")) appendRecord(0,"SHA256",XBinary::getHash(XBinary::HASH_SHA256,g_pDevice,g_pPdStruct));
-        if(check("SHA384","Hash")) appendRecord(0,"SHA384",XBinary::getHash(XBinary::HASH_SHA384,g_pDevice,g_pPdStruct));
-        if(check("SHA512","Hash")) appendRecord(0,"SHA512",XBinary::getHash(XBinary::HASH_SHA512,g_pDevice,g_pPdStruct));
-    }
-
-    if(check("Entropy",""))
+    if(check("Entropy","All"))
     {
         double dEntropy=XBinary::getEntropy(g_pDevice,g_pPdStruct);
         QString sEntropy=QString::number(dEntropy);
@@ -449,10 +303,6 @@ void XFileInfo::process()
                     bool bIs64=elf.is64();
 
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(elf.getFileType()));
-
-                    XBinary::OSINFO osInfo=elf.getOsInfo();
-
-                    addOsInfo(osInfo);
 
                     XBinary::_MEMORY_MAP memoryMap=elf.getMemoryMap();
 
@@ -519,10 +369,6 @@ void XFileInfo::process()
 
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(mach.getFileType()));
 
-                    XBinary::OSINFO osInfo=mach.getOsInfo();
-
-                    addOsInfo(osInfo);
-
                     XBinary::_MEMORY_MAP memoryMap=mach.getMemoryMap();
 
                     if(check("Entry point(Address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(mach.getEntryPointAddress(&memoryMap)));
@@ -570,16 +416,12 @@ void XFileInfo::process()
                 {
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(pe.getFileType()));
 
-                    XBinary::OSINFO osInfo=pe.getOsInfo();
-
-                    addOsInfo(osInfo);
-
                     XBinary::_MEMORY_MAP memoryMap=pe.getMemoryMap();
 
                     {
                         XFileInfoItem *pParent=0;
 
-                        if(check("","Entry point"))
+                        if(check("Entry point",""))
                         {
                             pParent=appendRecord(0,tr("Entry point"),"");
                         }
@@ -695,10 +537,6 @@ void XFileInfo::process()
                 {
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(ne.getFileType()));
 
-                    XBinary::OSINFO osInfo=ne.getOsInfo();
-
-                    addOsInfo(osInfo);
-
                     XBinary::_MEMORY_MAP memoryMap=ne.getMemoryMap();
 
                     if(check("Entry point(Address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(ne.getEntryPointAddress(&memoryMap)));
@@ -722,10 +560,6 @@ void XFileInfo::process()
                 {
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(le.getFileType()));
 
-                    XBinary::OSINFO osInfo=le.getOsInfo();
-
-                    addOsInfo(osInfo);
-
                     XBinary::_MEMORY_MAP memoryMap=le.getMemoryMap();
 
                     if(check("Entry point(Address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(le.getEntryPointAddress(&memoryMap)));
@@ -748,10 +582,6 @@ void XFileInfo::process()
                 if(!(g_pPdStruct->bIsStop))
                 {
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(msdos.getFileType()));
-
-                    XBinary::OSINFO osInfo=msdos.getOsInfo();
-
-                    addOsInfo(osInfo);
 
                     XBinary::_MEMORY_MAP memoryMap=msdos.getMemoryMap();
 
@@ -791,10 +621,6 @@ void XFileInfo::process()
                 {
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(xcom.getFileType()));
 
-                    XBinary::OSINFO osInfo=xcom.getOsInfo();
-
-                    addOsInfo(osInfo);
-
                     XBinary::_MEMORY_MAP memoryMap=xcom.getMemoryMap();
 
                     if(check("Entry point(Address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(xcom.getEntryPointAddress(&memoryMap)));
@@ -817,10 +643,6 @@ void XFileInfo::process()
                 if(!(g_pPdStruct->bIsStop))
                 {
                     if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(dex.getFileType()));
-
-                    XBinary::OSINFO osInfo=dex.getOsInfo();
-
-                    addOsInfo(osInfo);
 
                     if(check("magic","Header"))             appendRecord(0,"magic",XBinary::valueToHex(dex.getHeader_magic()));
                     if(check("version","Header"))           appendRecord(0,"version",XBinary::valueToHex(dex.getHeader_version()));

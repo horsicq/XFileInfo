@@ -43,10 +43,8 @@ XFileInfoWidget::~XFileInfoWidget()
     delete ui;
 }
 
-void XFileInfoWidget::setData(QIODevice *pDevice,XBinary::FT fileType,bool bAuto,QString sString)
+void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, QString sString, bool bAuto)
 {
-    // TODO sString setString
-
     this->g_pDevice=pDevice;
     g_nOffset=0;
     g_nSize=pDevice->size();
@@ -75,6 +73,7 @@ void XFileInfoWidget::reload()
         options.fileType=(XBinary::FT)(ui->comboBoxType->currentData().toInt());
     //    options.bShowAll=ui->checkBoxShowAll->isChecked();
         options.bComment=ui->checkBoxComment->isChecked();
+        options.sString="Info";
 
         XFileInfoModel *pModel=new XFileInfoModel;
 
