@@ -42,7 +42,14 @@ public:
 
     void setData(QIODevice *pDevice,XFileInfoModel *pModel,OPTIONS options,XBinary::PDSTRUCT *pPdStruct);
     static bool processFile(QString sFileName,XFileInfoModel *pModel,OPTIONS options);
-    static QList<QString> getMethodNames(XBinary::FT fileType);
+
+    struct METHOD
+    {
+        QString sTranslated;
+        QString sName;
+    };
+
+    static QList<METHOD> getMethodNames(XBinary::FT fileType);
 
 signals:
     void errorMessage(QString sText);
@@ -55,6 +62,7 @@ private:
     bool check(QString sString, QString sExtra);
     QString addFlags(XBinary::MODE mode,quint64 nValue,QMap<quint64,QString> mapFlags,XBinary::VL_TYPE vlType);
     QString addDateTime(XBinary::MODE mode,XBinary::DT_TYPE dtType,quint64 nValue);
+    static void _addMethod(QList<METHOD> *pListMethods,QString sTranslated,QString sName);
 
 public slots:
     void process();

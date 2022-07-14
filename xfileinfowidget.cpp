@@ -54,10 +54,9 @@ void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, QString 
         this->g_nSize=(pDevice->size())-(this->g_nOffset);
     }
 
-    ui->lineEditOffset->setValue32_64(this->g_nOffset);
-    ui->lineEditSize->setValue32_64(this->g_nSize);
-
     XFormats::setFileTypeComboBox(fileType,g_pDevice,ui->comboBoxType);
+
+    reloadType();
 
     if(bAuto)
     {
@@ -73,7 +72,7 @@ void XFileInfoWidget::reload()
         options.fileType=(XBinary::FT)(ui->comboBoxType->currentData().toInt());
     //    options.bShowAll=ui->checkBoxShowAll->isChecked();
         options.bComment=ui->checkBoxComment->isChecked();
-        options.sString="Info";
+        options.sString=(ui->comboBoxMethod->currentData().toString());
 
         XFileInfoModel *pModel=new XFileInfoModel;
 
@@ -91,7 +90,6 @@ void XFileInfoWidget::reload()
 
         delete pModel;
     }
-
 }
 
 void XFileInfoWidget::registerShortcuts(bool bState)
@@ -127,5 +125,38 @@ void XFileInfoWidget::on_comboBoxType_currentIndexChanged(int nIndex)
 {
     Q_UNUSED(nIndex)
 
+    reloadType();
+
     reload();
+}
+
+void XFileInfoWidget::on_comboBoxMethod_currentIndexChanged(int nIndex)
+{
+    Q_UNUSED(nIndex)
+
+    reload();
+}
+
+void XFileInfoWidget::reloadType()
+{
+    XBinary::FT fileType=(XBinary::FT)(ui->comboBoxType->currentData().toInt());
+
+    QList<XFileInfo::METHOD> listMethods=XFileInfo::getMethodNames(fileType);
+
+#if QT_VERSION >= QT_VERSION_CHECK(5,3,0)
+    const QSignalBlocker blocker(ui->comboBoxMethod);
+#else
+    const bool bBlocked1=ui->comboBoxMethod->blockSignals(true);
+#endif
+
+    qint32 nNumberOfMethods=listMethods.count();
+
+    for(qint32 i=0;i<nNumberOfMethods;i++)
+    {
+        ui->comboBoxMethod->addItem(listMethods.at(i).sTranslated,listMethods.at(i).sName);
+    }
+
+#if QT_VERSION < QT_VERSION_CHECK(5,3,0)
+    ui->comboBoxMethod->blockSignals(bBlocked1);
+#endif
 }
