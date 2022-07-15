@@ -34,6 +34,13 @@ class XFileInfoWidget : public XShortcutsWidget
 {
     Q_OBJECT
 
+    enum SM
+    {
+        SM_TEXT=0,
+        SM_JSON,
+        SM_XML
+    };
+
 public:
     explicit XFileInfoWidget(QWidget *pParent=nullptr);
     ~XFileInfoWidget();
@@ -51,6 +58,7 @@ private slots:
     void on_comboBoxType_currentIndexChanged(int nIndex);
     void on_comboBoxMethod_currentIndexChanged(int nIndex);
     void reloadType();
+    void on_comboBoxShow_currentIndexChanged(int nIndex);
 
 private:
     Ui::XFileInfoWidget *ui;

@@ -23,7 +23,7 @@
 XFileInfoModel::XFileInfoModel(QObject *pParent)
     : QAbstractItemModel(pParent)
 {
-    g_pRootItem=new XFileInfoItem("","");
+    g_pRootItem=new XFileInfoItem("data","");
 }
 
 XFileInfoModel::~XFileInfoModel()
@@ -224,11 +224,15 @@ void XFileInfoModel::_toXML(QXmlStreamWriter *pXml,XFileInfoItem *pItem,qint32 n
     {
         pXml->writeStartElement("record");
         pXml->writeAttribute("name",pItem->getName());
-        pXml->writeAttribute("value",pItem->getValue().toString());
+
+        if(!(pItem->childCount()))
+        {
+            pXml->writeAttribute("value",pItem->getValue().toString());
+        }
     }
     else
     {
-        pXml->writeStartElement("info");
+        pXml->writeStartElement("data");
     }
 
     qint32 nNumberOfChildren=pItem->childCount();
@@ -243,39 +247,56 @@ void XFileInfoModel::_toXML(QXmlStreamWriter *pXml,XFileInfoItem *pItem,qint32 n
 
 void XFileInfoModel::_toJSON(QJsonObject *pJsonObject,XFileInfoItem *pItem,qint32 nLevel)
 {
-    if(nLevel)
-    {
-        pJsonObject->insert(pItem->getName(),pItem->getValue().toString());
-    }
+//    if(nLevel)
+//    {
+//        pJsonObject->insert(pItem->getName(),pItem->getValue().toString());
+//    }
 
+//    if(pItem->childCount())
+//    {
+//        if(nLevel)
+//        {
+//            QJsonArray jsArray;
+
+//            qint32 nNumberOfChildren=pItem->childCount();
+
+//            for(qint32 i=0;i<nNumberOfChildren;i++)
+//            {
+//                QJsonObject jsRecord;
+
+//                _toJSON(&jsRecord,pItem->child(i),nLevel+1);
+
+//                jsArray.append(jsRecord);
+//            }
+
+//            pJsonObject->insert("records",jsArray);
+//        }
+//        else
+//        {
+//            qint32 nNumberOfChildren=pItem->childCount();
+
+//            for(qint32 i=0;i<nNumberOfChildren;i++)
+//            {
+//                _toJSON(pJsonObject,pItem->child(i),nLevel+1);
+//            }
+//        }
+//    }
     if(pItem->childCount())
     {
-        if(nLevel)
+        QJsonObject jsObject;
+
+        qint32 nNumberOfChildren=pItem->childCount();
+
+        for(qint32 i=0;i<nNumberOfChildren;i++)
         {
-            QJsonArray jsArray;
-
-            qint32 nNumberOfChildren=pItem->childCount();
-
-            for(qint32 i=0;i<nNumberOfChildren;i++)
-            {
-                QJsonObject jsRecord;
-
-                _toJSON(&jsRecord,pItem->child(i),nLevel+1);
-
-                jsArray.append(jsRecord);
-            }
-
-            pJsonObject->insert("records",jsArray);
+            _toJSON(&jsObject,pItem->child(i),nLevel+1);
         }
-        else
-        {
-            qint32 nNumberOfChildren=pItem->childCount();
 
-            for(qint32 i=0;i<nNumberOfChildren;i++)
-            {
-                _toJSON(pJsonObject,pItem->child(i),nLevel+1);
-            }
-        }
+        pJsonObject->insert(pItem->getName(),jsObject);
+    }
+    else
+    {
+        pJsonObject->insert(pItem->getName(),pItem->getValue().toString());
     }
 }
 
