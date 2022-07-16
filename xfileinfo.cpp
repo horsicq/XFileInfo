@@ -196,7 +196,7 @@ QString XFileInfo::addDateTime(XBinary::MODE mode,XBinary::DT_TYPE dtType,quint6
     return sResult;
 }
 
-void XFileInfo::_addMethod(QList<METHOD> *pListMethods, QString sTranslated, QString sName)
+void XFileInfo::_addMethod(QList<METHOD> *pListMethods,QString sTranslated,QString sName)
 {
     METHOD method={};
 
