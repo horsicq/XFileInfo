@@ -148,7 +148,7 @@ void XFileInfo::setCurrentStatus(QString sStatus)
     g_pPdStruct->pdRecordOpt.sStatus=sStatus;
 }
 
-bool XFileInfo::check(QString sString, QString sExtra)
+bool XFileInfo::check(QString sString,QString sExtra)
 {
     bool bResult=false;
 
