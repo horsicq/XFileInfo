@@ -55,8 +55,9 @@ XFileInfoWidget::~XFileInfoWidget()
     delete ui;
 }
 
-void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, QString sString, bool bAuto)
+void XFileInfoWidget::setData(QIODevice *pDevice,XBinary::FT fileType,QString sString,bool bAuto)
 {
+    // TODO sString
     this->g_pDevice=pDevice;
     g_nOffset=0;
     g_nSize=pDevice->size();
