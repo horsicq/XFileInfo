@@ -59,7 +59,7 @@ private:
     const int N_SIGNATURECOUNT=10;
     XFileInfoItem *appendRecord(XFileInfoItem *pParent,QString sName,QVariant varData);
     void setCurrentStatus(QString sStatus);
-    bool check(QString sString, QString sExtra);
+    bool check(QString sString,QString sExtra);
     QString addFlags(XBinary::MODE mode,quint64 nValue,QMap<quint64,QString> mapFlags,XBinary::VL_TYPE vlType);
     QString addDateTime(XBinary::MODE mode,XBinary::DT_TYPE dtType,quint64 nValue);
     static void _addMethod(QList<METHOD> *pListMethods,QString sTranslated,QString sName);

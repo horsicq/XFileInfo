@@ -378,24 +378,34 @@ void XFileInfo::process()
 
                     XBinary::_MEMORY_MAP memoryMap=mach.getMemoryMap();
 
-                    if(check("Entry point(Address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(mach.getEntryPointAddress(&memoryMap)));
-                    if(check("Entry point(Offset)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Offset")),XBinary::valueToHexEx(mach.getEntryPointOffset(&memoryMap)));
-                    if(check("Entry point(Relative address)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Relative address")),XBinary::valueToHexEx(mach.getEntryPointRVA(&memoryMap)));
-                    if(check("Entry point(Bytes)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Bytes")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_FULL,N_SIGNATURECOUNT));
-                    if(check("Entry point(Signature)","Entry point")) appendRecord(0,QString("%1(%2)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASK,N_SIGNATURECOUNT));
-                    if(check("Entry point(Signature)(Rel)","Entry point")) appendRecord(0,QString("%1(%2)(Rel)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASKREL,N_SIGNATURECOUNT));
-
-                    if(check("magic","header"))                             appendRecord(0,"magic",XBinary::valueToHex(mach.getHeader_magic()));
-                    if(check("cputype","header"))                           appendRecord(0,"cputype",XBinary::valueToHex(mach.getHeader_cputype()));
-                    if(check("cpusubtype","header"))                        appendRecord(0,"cpusubtype",XBinary::valueToHex(mach.getHeader_cpusubtype()));
-                    if(check("filetype","header"))                          appendRecord(0,"filetype",XBinary::valueToHex(mach.getHeader_filetype()));
-                    if(check("ncmds","header"))                             appendRecord(0,"ncmds",XBinary::valueToHex(mach.getHeader_ncmds()));
-                    if(check("sizeofcmds","header"))                        appendRecord(0,"sizeofcmds",XBinary::valueToHex(mach.getHeader_sizeofcmds()));
-                    if(check("flags","header"))                             appendRecord(0,"flags",XBinary::valueToHex(mach.getHeader_flags()));
-
-                    if(bIs64)
+                    if(check("Entry point","All"))
                     {
-                        if(check("reserved","header"))                      appendRecord(0,"reserved",XBinary::valueToHex(mach.getHeader_reserved()));
+                        XFileInfoItem *pParent=appendRecord(0,tr("Entry point"),"");
+
+                        appendRecord(pParent,QString("%1(%2)").arg(tr("Entry point"),tr("Address")),XBinary::valueToHexEx(mach.getEntryPointAddress(&memoryMap)));
+                        appendRecord(pParent,QString("%1(%2)").arg(tr("Entry point"),tr("Offset")),XBinary::valueToHexEx(mach.getEntryPointOffset(&memoryMap)));
+                        appendRecord(pParent,QString("%1(%2)").arg(tr("Entry point"),tr("Relative address")),XBinary::valueToHexEx(mach.getEntryPointRVA(&memoryMap)));
+                        appendRecord(pParent,QString("%1(%2)").arg(tr("Entry point"),tr("Bytes")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_FULL,N_SIGNATURECOUNT));
+                        appendRecord(pParent,QString("%1(%2)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASK,N_SIGNATURECOUNT));
+                        appendRecord(pParent,QString("%1(%2)(Rel)").arg(tr("Entry point"),tr("Signature")),XCapstone::getSignature(g_pDevice,&memoryMap,memoryMap.nEntryPointAddress,XCapstone::ST_MASKREL,N_SIGNATURECOUNT));
+                    }
+
+                    if(check("Header","All"))
+                    {
+                        XFileInfoItem *pParent=appendRecord(0,tr("Header"),"");
+
+                        appendRecord(pParent,"magic",XBinary::valueToHex(mach.getHeader_magic()));
+                        appendRecord(pParent,"cputype",XBinary::valueToHex(mach.getHeader_cputype()));
+                        appendRecord(pParent,"cpusubtype",XBinary::valueToHex(mach.getHeader_cpusubtype()));
+                        appendRecord(pParent,"filetype",XBinary::valueToHex(mach.getHeader_filetype()));
+                        appendRecord(pParent,"ncmds",XBinary::valueToHex(mach.getHeader_ncmds()));
+                        appendRecord(pParent,"sizeofcmds",XBinary::valueToHex(mach.getHeader_sizeofcmds()));
+                        appendRecord(pParent,"flags",XBinary::valueToHex(mach.getHeader_flags()));
+
+                        if(bIs64)
+                        {
+                            appendRecord(pParent,"reserved",XBinary::valueToHex(mach.getHeader_reserved()));
+                        }
                     }
                     // TODO
                 }
