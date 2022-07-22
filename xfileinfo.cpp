@@ -237,7 +237,8 @@ void XFileInfo::process()
         appendRecord(pParent,tr("Size"),sSize);
 
         if( XBinary::checkFileType(XBinary::FT_ELF,fileType)||
-            XBinary::checkFileType(XBinary::FT_PE,fileType))
+            XBinary::checkFileType(XBinary::FT_PE,fileType)||
+            XBinary::checkFileType(XBinary::FT_MACHO,fileType))
         {
             XBinary::OSINFO osInfo=XFormats::getOsInfo(fileType,g_pDevice);
 
