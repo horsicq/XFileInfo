@@ -177,6 +177,8 @@ void XFileInfoWidget::reloadType()
     const bool bBlocked1=ui->comboBoxMethod->blockSignals(true);
 #endif
 
+    ui->comboBoxMethod->clear();
+
     qint32 nNumberOfMethods=listMethods.count();
 
     for(qint32 i=0;i<nNumberOfMethods;i++)
