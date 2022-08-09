@@ -117,10 +117,10 @@ QList<XFileInfo::METHOD> XFileInfo::getMethodNames(XBinary::FT fileType)
     {
         // TODO
     }
-    else if(XBinary::checkFileType(XBinary::FT_PDF,fileType))
-    {
-        _addMethod(&listResult,tr("Version"),"Version");
-    }
+//    else if(XBinary::checkFileType(XBinary::FT_PDF,fileType))
+//    {
+//        _addMethod(&listResult,tr("Header"),"Header");
+//    }
 
     return listResult;
 }
@@ -724,7 +724,7 @@ void XFileInfo::process()
             if(pdf.isValid())
             {
                 if(check("File type","File type")) appendRecord(0,tr("File type"),XBinary::fileTypeIdToString(pdf.getFileType()));
-                if(check("Version","Version")) appendRecord(0,tr("Version"),pdf.getVersion());
+//                if(check("Version","Version")) appendRecord(0,tr("Version"),pdf.getVersion());
                 // TODO
             }
         }
