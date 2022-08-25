@@ -56,7 +56,6 @@ signals:
     void completed(qint64 nElapsed);
 
 private:
-    const int N_SIGNATURECOUNT=10;
     XFileInfoItem *appendRecord(XFileInfoItem *pParent,QString sName,QVariant varData);
     void setCurrentStatus(QString sStatus);
     bool check(QString sString,QString sExtra);
@@ -68,6 +67,7 @@ public slots:
     void process();
 
 private:
+    const int N_SIGNATURECOUNT=10;
     QIODevice *g_pDevice;
     XFileInfoModel *g_pModel;
     OPTIONS g_options;
