@@ -23,6 +23,7 @@
 XFileInfo::XFileInfo(QObject *pParent) : QObject(pParent)
 {
     g_pDevice=nullptr;
+    g_pPdStruct=nullptr;
     g_options={};
 }
 
