@@ -31,5 +31,7 @@ contains(XCONFIG, use_capstone_x86) {
 }
 
 DISTFILES += \
+    $$PWD/LICENSE \
+    $$PWD/README.md \
     $$PWD/xfileinfo.cmake
 
