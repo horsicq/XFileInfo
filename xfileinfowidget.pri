@@ -27,4 +27,6 @@ FORMS += \
 }
 
 DISTFILES += \
+    $$PWD/LICENSE \
+    $$PWD/README.md \
     $$PWD/xfileinfowidget.cmake
