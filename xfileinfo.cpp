@@ -25,6 +25,7 @@ XFileInfo::XFileInfo(QObject *pParent) : QObject(pParent)
     g_pDevice=nullptr;
     g_pPdStruct=nullptr;
     g_options={};
+    g_nFreeIndex=-1;
 }
 
 void XFileInfo::setData(QIODevice *pDevice,XFileInfoModel *pModel,OPTIONS options,XBinary::PDSTRUCT *pPdStruct)
@@ -145,7 +146,7 @@ XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pParent,QString sName,QVar
 
 void XFileInfo::setCurrentStatus(QString sStatus)
 {
-    g_pPdStruct->pdRecordOpt.sStatus=sStatus;
+    XBinary::setPdStructStatus(g_pPdStruct,g_nFreeIndex,sStatus);
 }
 
 bool XFileInfo::check(QString sString,QString sExtra)
@@ -211,7 +212,8 @@ void XFileInfo::process()
     QElapsedTimer scanTimer;
     scanTimer.start();
 
-    g_pPdStruct->pdRecordOpt.bIsValid=true;
+    g_nFreeIndex=XBinary::getFreeIndex(g_pPdStruct);
+    XBinary::setPdStructInit(g_pPdStruct,g_nFreeIndex,0);
 
     XBinary::FT fileType=g_options.fileType;
 
@@ -745,12 +747,7 @@ void XFileInfo::process()
         }
     }
 
-    if(!(g_pPdStruct->bIsStop))
-    {
-        g_pPdStruct->pdRecordOpt.bSuccess=true;
-    }
-
-    g_pPdStruct->pdRecordOpt.bFinished=true;
+    XBinary::setPdStructFinished(g_pPdStruct,g_nFreeIndex);
 
     emit completed(scanTimer.elapsed());
 }

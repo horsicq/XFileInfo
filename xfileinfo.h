@@ -71,6 +71,7 @@ private:
     XFileInfoModel *g_pModel;
     OPTIONS g_options;
     XBinary::PDSTRUCT *g_pPdStruct;
+    qint32 g_nFreeIndex;
 };
 
 #endif // XFILEINFO_H
