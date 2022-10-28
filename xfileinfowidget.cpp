@@ -35,19 +35,13 @@ XFileInfoWidget::XFileInfoWidget(QWidget *pParent) :
 
     XOptions::setMonoFont(ui->plainTextEditFileInfo);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5,3,0)
-    const QSignalBlocker blocker(ui->comboBoxShow);
-#else
     const bool bBlocked1=ui->comboBoxShow->blockSignals(true);
-#endif
 
     ui->comboBoxShow->addItem(tr("Text"),SM_TEXT);
     ui->comboBoxShow->addItem(QString("json"),SM_JSON);
     ui->comboBoxShow->addItem(QString("XML"),SM_XML);
 
-#if QT_VERSION < QT_VERSION_CHECK(5,3,0)
     ui->comboBoxShow->blockSignals(bBlocked1);
-#endif
 }
 
 XFileInfoWidget::~XFileInfoWidget()
