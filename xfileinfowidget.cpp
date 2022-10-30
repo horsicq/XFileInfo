@@ -165,11 +165,7 @@ void XFileInfoWidget::reloadType()
 
     QList<XFileInfo::METHOD> listMethods=XFileInfo::getMethodNames(fileType);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5,3,0)
-    const QSignalBlocker blocker(ui->comboBoxMethod);
-#else
     const bool bBlocked1=ui->comboBoxMethod->blockSignals(true);
-#endif
 
     ui->comboBoxMethod->clear();
 
@@ -180,9 +176,7 @@ void XFileInfoWidget::reloadType()
         ui->comboBoxMethod->addItem(listMethods.at(i).sTranslated,listMethods.at(i).sName);
     }
 
-#if QT_VERSION < QT_VERSION_CHECK(5,3,0)
     ui->comboBoxMethod->blockSignals(bBlocked1);
-#endif
 }
 
 void XFileInfoWidget::on_comboBoxShow_currentIndexChanged(int nIndex)
