@@ -37,7 +37,6 @@ public:
     ~DialogXFileInfo();
 
     virtual void setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions);
-
     void setData(QIODevice *pDevice,XBinary::FT fileType,QString sString,bool bAuto=false);
 
 private slots:
