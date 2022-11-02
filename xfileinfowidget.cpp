@@ -110,7 +110,7 @@ void XFileInfoWidget::reload()
             ui->plainTextEditFileInfo->setPlainText(sText);
         }
 
-        delete pModel;
+        delete pModel; // mb TODO in thread
     }
 }
 
