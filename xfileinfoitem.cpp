@@ -32,9 +32,9 @@ XFileInfoItem::~XFileInfoItem()
     qDeleteAll(g_listChildItems);
 }
 
-void XFileInfoItem::appendChild(XFileInfoItem *pChild)
+void XFileInfoItem::appendChild(XFileInfoItem *pItemChild)
 {
-    g_listChildItems.append(pChild);
+    g_listChildItems.append(pItemChild);
 }
 
 XFileInfoItem *XFileInfoItem::child(int nRow)

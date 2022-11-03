@@ -31,7 +31,7 @@ public:
     XFileInfoItem(const QString &sName,const QVariant &varValue,XFileInfoItem *pParentItem=nullptr);
     ~XFileInfoItem();
 
-    void appendChild(XFileInfoItem *pChild);
+    void appendChild(XFileInfoItem *pItemChild);
     XFileInfoItem *child(int nRow);
     int childCount() const;
     int columnCount() const;
