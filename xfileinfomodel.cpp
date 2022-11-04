@@ -49,18 +49,18 @@ QModelIndex XFileInfoModel::index(int nRow,int nColumn,const QModelIndex &parent
 
     if(hasIndex(nRow,nColumn,parent))
     {
-        XFileInfoItem *pParentItem=nullptr;
+        XFileInfoItem *pItemParent=nullptr;
 
         if(!parent.isValid())
         {
-            pParentItem=g_pRootItem;
+            pItemParent=g_pRootItem;
         }
         else
         {
-            pParentItem=static_cast<XFileInfoItem *>(parent.internalPointer());
+            pItemParent=static_cast<XFileInfoItem *>(parent.internalPointer());
         }
 
-        XFileInfoItem *pChildItem=pParentItem->child(nRow);
+        XFileInfoItem *pChildItem=pItemParent->child(nRow);
 
         if(pChildItem)
         {
