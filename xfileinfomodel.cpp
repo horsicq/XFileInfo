@@ -77,8 +77,8 @@ QModelIndex XFileInfoModel::parent(const QModelIndex &index) const
 
     if(index.isValid())
     {
-        XFileInfoItem *pChildItem=static_cast<XFileInfoItem *>(index.internalPointer());
-        XFileInfoItem *pParentItem=pChildItem->getParentItem();
+        XFileInfoItem *pItemChild=static_cast<XFileInfoItem *>(index.internalPointer());
+        XFileInfoItem *pParentItem=pItemChild->getParentItem();
 
         if(pParentItem!=g_pRootItem)
         {
