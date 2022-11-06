@@ -60,11 +60,11 @@ QModelIndex XFileInfoModel::index(int nRow,int nColumn,const QModelIndex &parent
             pItemParent=static_cast<XFileInfoItem *>(parent.internalPointer());
         }
 
-        XFileInfoItem *pChildItem=pItemParent->child(nRow);
+        XFileInfoItem *pItemChild=pItemParent->child(nRow);
 
-        if(pChildItem)
+        if(pItemChild)
         {
-            result=createIndex(nRow,nColumn,pChildItem);
+            result=createIndex(nRow,nColumn,pItemChild);
         }
     }
 
