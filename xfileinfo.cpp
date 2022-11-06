@@ -224,9 +224,9 @@ void XFileInfo::process()
 
     if(check("Info","All"))
     {
-        XFileInfoItem *pParent=appendRecord(0,tr("Info"),"");
+        XFileInfoItem *pItemParent=appendRecord(0,tr("Info"),"");
 
-        appendRecord(pParent,tr("File name"),XBinary::getDeviceFileName(g_pDevice));
+        appendRecord(pItemParent,tr("File name"),XBinary::getDeviceFileName(g_pDevice));
 
         qint64 nSize=g_pDevice->size();
         QString sSize=QString::number(nSize);
@@ -236,7 +236,7 @@ void XFileInfo::process()
             sSize+=QString("(%1)").arg(XBinary::bytesCountToString(nSize));
         }
 
-        appendRecord(pParent,tr("Size"),sSize);
+        appendRecord(pItemParent,tr("Size"),sSize);
 
         if( XBinary::checkFileType(XBinary::FT_ELF,fileType)||
             XBinary::checkFileType(XBinary::FT_PE,fileType)||
@@ -254,12 +254,12 @@ void XFileInfo::process()
                 sOperationSystem+=QString("(%1)").arg(osInfo.sOsVersion);
             }
 
-            appendRecord(pParent,tr("Operation system"),sOperationSystem);
+            appendRecord(pItemParent,tr("Operation system"),sOperationSystem);
 
-            appendRecord(pParent,tr("Architecture"),osInfo.sArch);
-            appendRecord(pParent,tr("Mode"),XBinary::modeIdToString(osInfo.mode));
-            appendRecord(pParent,tr("Type"),osInfo.sType);
-            appendRecord(pParent,tr("Endianness"),XBinary::endiannessToString(osInfo.bIsBigEndian));
+            appendRecord(pItemParent,tr("Architecture"),osInfo.sArch);
+            appendRecord(pItemParent,tr("Mode"),XBinary::modeIdToString(osInfo.mode));
+            appendRecord(pItemParent,tr("Type"),osInfo.sType);
+            appendRecord(pItemParent,tr("Endianness"),XBinary::endiannessToString(osInfo.bIsBigEndian));
         }
     }
 
