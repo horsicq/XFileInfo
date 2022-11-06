@@ -126,15 +126,15 @@ QList<XFileInfo::METHOD> XFileInfo::getMethodNames(XBinary::FT fileType)
     return listResult;
 }
 
-XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pParent,QString sName,QVariant varData)
+XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pItemParent,QString sName,QVariant varData)
 {
     XFileInfoItem *pResult=0;
 
     pResult=new XFileInfoItem(sName,varData);
 
-    if(pParent)
+    if(pItemParent)
     {
-        pParent->appendChild(pResult);
+        pItemParent->appendChild(pResult);
     }
     else
     {
