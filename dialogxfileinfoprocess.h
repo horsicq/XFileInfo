@@ -27,6 +27,7 @@
 #include "xfileinfo.h"
 #include "xdialogprocess.h"
 
+// TODO setData
 class DialogXFileInfoProcess : public XDialogProcess
 {
     Q_OBJECT
