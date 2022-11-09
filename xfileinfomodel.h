@@ -43,7 +43,7 @@ public:
     QVariant data(const QModelIndex &index,int nRole=Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    void appendChild(XFileInfoItem *pChild);
+    void appendChild(XFileInfoItem *pItemChild);
 
     QString toXML();
     QString toJSON();

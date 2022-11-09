@@ -157,9 +157,9 @@ Qt::ItemFlags XFileInfoModel::flags(const QModelIndex &index) const
     return result;
 }
 
-void XFileInfoModel::appendChild(XFileInfoItem *pChild)
+void XFileInfoModel::appendChild(XFileInfoItem *pItemChild)
 {
-    g_pRootItem->appendChild(pChild);
+    g_pRootItem->appendChild(pItemChild);
 }
 
 QString XFileInfoModel::toXML()
