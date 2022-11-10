@@ -7,8 +7,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -19,132 +19,115 @@
  * SOFTWARE.
  */
 #include "xfileinfowidget.h"
+
 #include "ui_xfileinfowidget.h"
 
-XFileInfoWidget::XFileInfoWidget(QWidget *pParent) :
-    XShortcutsWidget(pParent),
-    ui(new Ui::XFileInfoWidget)
-{
+XFileInfoWidget::XFileInfoWidget(QWidget *pParent)
+    : XShortcutsWidget(pParent), ui(new Ui::XFileInfoWidget) {
     ui->setupUi(this);
 
-    g_pDevice=nullptr;
-    g_nOffset=0;
-    g_nSize=0;
+    g_pDevice = nullptr;
+    g_nOffset = 0;
+    g_nSize = 0;
 
     ui->checkBoxComment->setChecked(true);
 
     XOptions::setMonoFont(ui->plainTextEditFileInfo);
 
-    const bool bBlocked1=ui->comboBoxShow->blockSignals(true);
+    const bool bBlocked1 = ui->comboBoxShow->blockSignals(true);
 
-    ui->comboBoxShow->addItem(tr("Text"),SM_TEXT);
-    ui->comboBoxShow->addItem(QString("json"),SM_JSON);
-    ui->comboBoxShow->addItem(QString("XML"),SM_XML);
+    ui->comboBoxShow->addItem(tr("Text"), SM_TEXT);
+    ui->comboBoxShow->addItem(QString("json"), SM_JSON);
+    ui->comboBoxShow->addItem(QString("XML"), SM_XML);
 
     ui->comboBoxShow->blockSignals(bBlocked1);
 }
 
-XFileInfoWidget::~XFileInfoWidget()
-{
-    delete ui;
-}
+XFileInfoWidget::~XFileInfoWidget() { delete ui; }
 
-void XFileInfoWidget::setData(QIODevice *pDevice,XBinary::FT fileType,QString sString,bool bAuto)
-{
+void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType,
+                              QString sString, bool bAuto) {
     // TODO sString !!!
-    this->g_pDevice=pDevice;
-    g_nOffset=0;
-    g_nSize=pDevice->size();
+    this->g_pDevice = pDevice;
+    g_nOffset = 0;
+    g_nSize = pDevice->size();
 
-    if(this->g_nSize==-1)
-    {
-        this->g_nSize=(pDevice->size())-(this->g_nOffset);
+    if (this->g_nSize == -1) {
+        this->g_nSize = (pDevice->size()) - (this->g_nOffset);
     }
 
-    XFormats::setFileTypeComboBox(fileType,g_pDevice,ui->comboBoxType);
+    XFormats::setFileTypeComboBox(fileType, g_pDevice, ui->comboBoxType);
 
     reloadType();
 
-    if(bAuto)
-    {
+    if (bAuto) {
         reload();
     }
 }
 
-void XFileInfoWidget::reload()
-{
-    if(g_pDevice)
-    {
-        XFileInfo::OPTIONS options={};
-        options.fileType=(XBinary::FT)(ui->comboBoxType->currentData().toInt());
-    //    options.bShowAll=ui->checkBoxShowAll->isChecked();
-        options.bComment=ui->checkBoxComment->isChecked();
-        options.sString=(ui->comboBoxMethod->currentData().toString());
+void XFileInfoWidget::reload() {
+    if (g_pDevice) {
+        XFileInfo::OPTIONS options = {};
+        options.fileType =
+            (XBinary::FT)(ui->comboBoxType->currentData().toInt());
+        //    options.bShowAll=ui->checkBoxShowAll->isChecked();
+        options.bComment = ui->checkBoxComment->isChecked();
+        options.sString = (ui->comboBoxMethod->currentData().toString());
 
-        XFileInfoModel *pModel=new XFileInfoModel;
+        XFileInfoModel *pModel = new XFileInfoModel;
 
-        DialogXFileInfoProcess dip(XOptions::getMainWidget(this),g_pDevice,pModel,options);
+        DialogXFileInfoProcess dip(XOptions::getMainWidget(this), g_pDevice,
+                                   pModel, options);
 
         dip.showDialogDelay(1000);
 
-        if(dip.isSuccess())
-        {
+        if (dip.isSuccess()) {
             QString sText;
 
-            SM showMode=(SM)(ui->comboBoxShow->currentData().toInt());
+            SM showMode = (SM)(ui->comboBoxShow->currentData().toInt());
 
-            if(showMode==SM_TEXT)
-            {
-                sText=pModel->toFormattedString();
+            if (showMode == SM_TEXT) {
+                sText = pModel->toFormattedString();
+            } else if (showMode == SM_JSON) {
+                sText = pModel->toJSON();
+            } else if (showMode == SM_XML) {
+                sText = pModel->toXML();
             }
-            else if(showMode==SM_JSON)
-            {
-                sText=pModel->toJSON();
-            }
-            else if(showMode==SM_XML)
-            {
-                sText=pModel->toXML();
-            }
-    //        QString sText=XFileInfo::toCSV(pModel);
+            //        QString sText=XFileInfo::toCSV(pModel);
 
             ui->plainTextEditFileInfo->setPlainText(sText);
         }
 
-        delete pModel; // mb TODO in thread
+        delete pModel;  // mb TODO in thread
     }
 }
 
-void XFileInfoWidget::registerShortcuts(bool bState)
-{
+void XFileInfoWidget::registerShortcuts(bool bState) {
     Q_UNUSED(bState)
     // TODO !!!
 }
 
-void XFileInfoWidget::on_pushButtonSave_clicked()
-{
-    QString sFileName=XBinary::getResultFileName(g_pDevice,QString("%1.txt").arg(tr("Info")));
-    sFileName=QFileDialog::getSaveFileName(this,tr("Save file"),sFileName,QString("%1 (*.txt);;%2 (*)").arg(tr("Text files"),tr("All files")));
+void XFileInfoWidget::on_pushButtonSave_clicked() {
+    QString sFileName = XBinary::getResultFileName(
+        g_pDevice, QString("%1.txt").arg(tr("Info")));
+    sFileName = QFileDialog::getSaveFileName(
+        this, tr("Save file"), sFileName,
+        QString("%1 (*.txt);;%2 (*)").arg(tr("Text files"), tr("All files")));
 
-    if(!sFileName.isEmpty())
-    {
-        XOptions::savePlainTextEdit(ui->plainTextEditFileInfo,sFileName);
+    if (!sFileName.isEmpty()) {
+        XOptions::savePlainTextEdit(ui->plainTextEditFileInfo, sFileName);
     }
 }
 
-void XFileInfoWidget::on_pushButtonReload_clicked()
-{
-    reload();
-}
+void XFileInfoWidget::on_pushButtonReload_clicked() { reload(); }
 
-void XFileInfoWidget::on_checkBoxComment_toggled(bool bChecked)
-{
+void XFileInfoWidget::on_checkBoxComment_toggled(bool bChecked) {
     Q_UNUSED(bChecked)
 
     reload();
 }
 
-void XFileInfoWidget::on_comboBoxType_currentIndexChanged(int nIndex)
-{
+void XFileInfoWidget::on_comboBoxType_currentIndexChanged(int nIndex) {
     Q_UNUSED(nIndex)
 
     reloadType();
@@ -152,35 +135,33 @@ void XFileInfoWidget::on_comboBoxType_currentIndexChanged(int nIndex)
     reload();
 }
 
-void XFileInfoWidget::on_comboBoxMethod_currentIndexChanged(int nIndex)
-{
+void XFileInfoWidget::on_comboBoxMethod_currentIndexChanged(int nIndex) {
     Q_UNUSED(nIndex)
 
     reload();
 }
 
-void XFileInfoWidget::reloadType()
-{
-    XBinary::FT fileType=(XBinary::FT)(ui->comboBoxType->currentData().toInt());
+void XFileInfoWidget::reloadType() {
+    XBinary::FT fileType =
+        (XBinary::FT)(ui->comboBoxType->currentData().toInt());
 
-    QList<XFileInfo::METHOD> listMethods=XFileInfo::getMethodNames(fileType);
+    QList<XFileInfo::METHOD> listMethods = XFileInfo::getMethodNames(fileType);
 
-    const bool bBlocked1=ui->comboBoxMethod->blockSignals(true);
+    const bool bBlocked1 = ui->comboBoxMethod->blockSignals(true);
 
     ui->comboBoxMethod->clear();
 
-    qint32 nNumberOfMethods=listMethods.count();
+    qint32 nNumberOfMethods = listMethods.count();
 
-    for(qint32 i=0;i<nNumberOfMethods;i++)
-    {
-        ui->comboBoxMethod->addItem(listMethods.at(i).sTranslated,listMethods.at(i).sName);
+    for (qint32 i = 0; i < nNumberOfMethods; i++) {
+        ui->comboBoxMethod->addItem(listMethods.at(i).sTranslated,
+                                    listMethods.at(i).sName);
     }
 
     ui->comboBoxMethod->blockSignals(bBlocked1);
 }
 
-void XFileInfoWidget::on_comboBoxShow_currentIndexChanged(int nIndex)
-{
+void XFileInfoWidget::on_comboBoxShow_currentIndexChanged(int nIndex) {
     Q_UNUSED(nIndex)
 
     reload();

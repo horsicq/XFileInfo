@@ -7,8 +7,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -26,21 +26,24 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QXmlStreamWriter>
+
 #include "xfileinfoitem.h"
 
-class XFileInfoModel : public QAbstractItemModel
-{
+class XFileInfoModel : public QAbstractItemModel {
     Q_OBJECT
-public:
-    explicit XFileInfoModel(QObject *pParent=nullptr);
+   public:
+    explicit XFileInfoModel(QObject *pParent = nullptr);
     ~XFileInfoModel() override;
 
-    QVariant headerData(int nSection,Qt::Orientation orientation,int nRole=Qt::DisplayRole) const override;
-    QModelIndex index(int nRow,int nColumn,const QModelIndex &parent=QModelIndex()) const override;
+    QVariant headerData(int nSection, Qt::Orientation orientation,
+                        int nRole = Qt::DisplayRole) const override;
+    QModelIndex index(int nRow, int nColumn,
+                      const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &index) const override;
-    int rowCount(const QModelIndex &parent=QModelIndex()) const override;
-    int columnCount(const QModelIndex &parent=QModelIndex()) const override;
-    QVariant data(const QModelIndex &index,int nRole=Qt::DisplayRole) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index,
+                  int nRole = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     void appendChild(XFileInfoItem *pItemChild);
@@ -51,15 +54,16 @@ public:
     QString toTSV();
     QString toFormattedString();
 
-private:
-    void _toXML(QXmlStreamWriter *pXml,XFileInfoItem *pItem,qint32 nLevel);
-    void _toJSON(QJsonObject *pJsonObject,XFileInfoItem *pItem,qint32 nLevel);
-    void _toCSV(QString *pString,XFileInfoItem *pItem,qint32 nLevel);
-    void _toTSV(QString *pString,XFileInfoItem *pItem,qint32 nLevel);
-    void _toFormattedString(QString *pString,XFileInfoItem *pItem,qint32 nLevel);
+   private:
+    void _toXML(QXmlStreamWriter *pXml, XFileInfoItem *pItem, qint32 nLevel);
+    void _toJSON(QJsonObject *pJsonObject, XFileInfoItem *pItem, qint32 nLevel);
+    void _toCSV(QString *pString, XFileInfoItem *pItem, qint32 nLevel);
+    void _toTSV(QString *pString, XFileInfoItem *pItem, qint32 nLevel);
+    void _toFormattedString(QString *pString, XFileInfoItem *pItem,
+                            qint32 nLevel);
 
-private:
+   private:
     XFileInfoItem *g_pRootItem;
 };
 
-#endif // XFILEINFOMODEL_H
+#endif  // XFILEINFOMODEL_H

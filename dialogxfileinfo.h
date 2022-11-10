@@ -7,8 +7,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -28,22 +28,22 @@ namespace Ui {
 class DialogXFileInfo;
 }
 
-class DialogXFileInfo : public XShortcutsDialog
-{
+class DialogXFileInfo : public XShortcutsDialog {
     Q_OBJECT
 
-public:
-    explicit DialogXFileInfo(QWidget *pParent=nullptr);
+   public:
+    explicit DialogXFileInfo(QWidget *pParent = nullptr);
     ~DialogXFileInfo();
 
-    virtual void setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions);
-    void setData(QIODevice *pDevice,XBinary::FT fileType,QString sString,bool bAuto=false);
+    virtual void setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions);
+    void setData(QIODevice *pDevice, XBinary::FT fileType, QString sString,
+                 bool bAuto = false);
 
-private slots:
+   private slots:
     void on_pushButtonClose_clicked();
 
-private:
+   private:
     Ui::DialogXFileInfo *ui;
 };
 
-#endif // DIALOGXFILEINFO_H
+#endif  // DIALOGXFILEINFO_H

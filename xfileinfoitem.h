@@ -7,8 +7,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -21,14 +21,14 @@
 #ifndef XFILEINFOITEM_H
 #define XFILEINFOITEM_H
 
-#include <QString>
 #include <QObject>
+#include <QString>
 #include <QVariant>
 
-class XFileInfoItem
-{
-public:
-    XFileInfoItem(const QString &sName,const QVariant &varValue,XFileInfoItem *pParentItem=nullptr);
+class XFileInfoItem {
+   public:
+    XFileInfoItem(const QString &sName, const QVariant &varValue,
+                  XFileInfoItem *pParentItem = nullptr);
     ~XFileInfoItem();
 
     void appendChild(XFileInfoItem *pItemChild);
@@ -42,11 +42,11 @@ public:
     int row() const;
     XFileInfoItem *getParentItem();
 
-private:
+   private:
     QList<XFileInfoItem *> g_listChildItems;
     QString g_sName;
     QVariant g_varValue;
     XFileInfoItem *g_pParentItem;
 };
 
-#endif // XFILEINFOITEM_H
+#endif  // XFILEINFOITEM_H

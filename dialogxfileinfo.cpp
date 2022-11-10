@@ -7,8 +7,8 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -19,32 +19,23 @@
  * SOFTWARE.
  */
 #include "dialogxfileinfo.h"
+
 #include "ui_dialogxfileinfo.h"
 
-DialogXFileInfo::DialogXFileInfo(QWidget *pParent) :
-    XShortcutsDialog(pParent),
-    ui(new Ui::DialogXFileInfo)
-{
+DialogXFileInfo::DialogXFileInfo(QWidget *pParent)
+    : XShortcutsDialog(pParent), ui(new Ui::DialogXFileInfo) {
     ui->setupUi(this);
 }
 
-DialogXFileInfo::~DialogXFileInfo()
-{
-    delete ui;
+DialogXFileInfo::~DialogXFileInfo() { delete ui; }
+
+void DialogXFileInfo::setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions) {
+    ui->widget->setGlobal(pShortcuts, pXOptions);
 }
 
-void DialogXFileInfo::setGlobal(XShortcuts *pShortcuts,XOptions *pXOptions)
-{
-    ui->widget->setGlobal(pShortcuts,pXOptions);
+void DialogXFileInfo::setData(QIODevice *pDevice, XBinary::FT fileType,
+                              QString sString, bool bAuto) {
+    ui->widget->setData(pDevice, fileType, sString, bAuto);
 }
 
-void DialogXFileInfo::setData(QIODevice *pDevice,XBinary::FT fileType,QString sString,bool bAuto)
-{
-    ui->widget->setData(pDevice,fileType,sString,bAuto);
-}
-
-void DialogXFileInfo::on_pushButtonClose_clicked()
-{
-    this->close();
-}
-
+void DialogXFileInfo::on_pushButtonClose_clicked() { this->close(); }
