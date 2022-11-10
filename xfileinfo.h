@@ -28,7 +28,7 @@
 class XFileInfo : public QObject {
     Q_OBJECT
 
-   public:
+public:
     struct OPTIONS {
         XBinary::FT fileType;
         //        bool bShowAll;
@@ -43,32 +43,26 @@ class XFileInfo : public QObject {
 
     explicit XFileInfo(QObject *pParent = nullptr);
 
-    void setData(QIODevice *pDevice, XFileInfoModel *pModel, OPTIONS options,
-                 XBinary::PDSTRUCT *pPdStruct);
-    static bool processFile(QString sFileName, XFileInfoModel *pModel,
-                            OPTIONS options);
+    void setData(QIODevice *pDevice, XFileInfoModel *pModel, OPTIONS options, XBinary::PDSTRUCT *pPdStruct);
+    static bool processFile(QString sFileName, XFileInfoModel *pModel, OPTIONS options);
     static QList<METHOD> getMethodNames(XBinary::FT fileType);
 
-   signals:
+signals:
     void errorMessage(QString sText);
     void completed(qint64 nElapsed);
 
-   private:
-    XFileInfoItem *appendRecord(XFileInfoItem *pItemParent, QString sName,
-                                QVariant varData);
+private:
+    XFileInfoItem *appendRecord(XFileInfoItem *pItemParent, QString sName, QVariant varData);
     void setCurrentStatus(QString sStatus);
     bool check(QString sString, QString sExtra);
-    QString addFlags(XBinary::MODE mode, quint64 nValue,
-                     QMap<quint64, QString> mapFlags, XBinary::VL_TYPE vlType);
-    QString addDateTime(XBinary::MODE mode, XBinary::DT_TYPE dtType,
-                        quint64 nValue);
-    static void _addMethod(QList<METHOD> *pListMethods, QString sTranslated,
-                           QString sName);
+    QString addFlags(XBinary::MODE mode, quint64 nValue, QMap<quint64, QString> mapFlags, XBinary::VL_TYPE vlType);
+    QString addDateTime(XBinary::MODE mode, XBinary::DT_TYPE dtType, quint64 nValue);
+    static void _addMethod(QList<METHOD> *pListMethods, QString sTranslated, QString sName);
 
-   public slots:
+public slots:
     void process();
 
-   private:
+private:
     const int N_SIGNATURECOUNT = 10;  // TODO Set/Get
     QIODevice *g_pDevice;
     XFileInfoModel *g_pModel;

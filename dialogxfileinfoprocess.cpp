@@ -20,10 +20,7 @@
  */
 #include "dialogxfileinfoprocess.h"
 
-DialogXFileInfoProcess::DialogXFileInfoProcess(QWidget *pParent,
-                                               QIODevice *pDevice,
-                                               XFileInfoModel *pModel,
-                                               XFileInfo::OPTIONS options)
+DialogXFileInfoProcess::DialogXFileInfoProcess(QWidget *pParent, QIODevice *pDevice, XFileInfoModel *pModel, XFileInfo::OPTIONS options)
     : XDialogProcess(pParent) {
     g_pFileInfo = new XFileInfo;
     g_pThread = new QThread;
@@ -31,10 +28,8 @@ DialogXFileInfoProcess::DialogXFileInfoProcess(QWidget *pParent,
     g_pFileInfo->moveToThread(g_pThread);
 
     connect(g_pThread, SIGNAL(started()), g_pFileInfo, SLOT(process()));
-    connect(g_pFileInfo, SIGNAL(completed(qint64)), this,
-            SLOT(onCompleted(qint64)));
-    connect(g_pFileInfo, SIGNAL(errorMessage(QString)), this,
-            SLOT(errorMessage(QString)));
+    connect(g_pFileInfo, SIGNAL(completed(qint64)), this, SLOT(onCompleted(qint64)));
+    connect(g_pFileInfo, SIGNAL(errorMessage(QString)), this, SLOT(errorMessage(QString)));
 
     g_pFileInfo->setData(pDevice, pModel, options, getPdStruct());
     g_pThread->start();

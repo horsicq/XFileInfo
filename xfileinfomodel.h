@@ -31,19 +31,16 @@
 
 class XFileInfoModel : public QAbstractItemModel {
     Q_OBJECT
-   public:
+public:
     explicit XFileInfoModel(QObject *pParent = nullptr);
     ~XFileInfoModel() override;
 
-    QVariant headerData(int nSection, Qt::Orientation orientation,
-                        int nRole = Qt::DisplayRole) const override;
-    QModelIndex index(int nRow, int nColumn,
-                      const QModelIndex &parent = QModelIndex()) const override;
+    QVariant headerData(int nSection, Qt::Orientation orientation, int nRole = Qt::DisplayRole) const override;
+    QModelIndex index(int nRow, int nColumn, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &index) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex &index,
-                  int nRole = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex &index, int nRole = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     void appendChild(XFileInfoItem *pItemChild);
@@ -54,15 +51,14 @@ class XFileInfoModel : public QAbstractItemModel {
     QString toTSV();
     QString toFormattedString();
 
-   private:
+private:
     void _toXML(QXmlStreamWriter *pXml, XFileInfoItem *pItem, qint32 nLevel);
     void _toJSON(QJsonObject *pJsonObject, XFileInfoItem *pItem, qint32 nLevel);
     void _toCSV(QString *pString, XFileInfoItem *pItem, qint32 nLevel);
     void _toTSV(QString *pString, XFileInfoItem *pItem, qint32 nLevel);
-    void _toFormattedString(QString *pString, XFileInfoItem *pItem,
-                            qint32 nLevel);
+    void _toFormattedString(QString *pString, XFileInfoItem *pItem, qint32 nLevel);
 
-   private:
+private:
     XFileInfoItem *g_pRootItem;
 };
 

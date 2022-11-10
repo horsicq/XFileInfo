@@ -22,8 +22,7 @@
 
 #include "ui_xfileinfowidget.h"
 
-XFileInfoWidget::XFileInfoWidget(QWidget *pParent)
-    : XShortcutsWidget(pParent), ui(new Ui::XFileInfoWidget) {
+XFileInfoWidget::XFileInfoWidget(QWidget *pParent) : XShortcutsWidget(pParent), ui(new Ui::XFileInfoWidget) {
     ui->setupUi(this);
 
     g_pDevice = nullptr;
@@ -43,10 +42,11 @@ XFileInfoWidget::XFileInfoWidget(QWidget *pParent)
     ui->comboBoxShow->blockSignals(bBlocked1);
 }
 
-XFileInfoWidget::~XFileInfoWidget() { delete ui; }
+XFileInfoWidget::~XFileInfoWidget() {
+    delete ui;
+}
 
-void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType,
-                              QString sString, bool bAuto) {
+void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, QString sString, bool bAuto) {
     // TODO sString !!!
     this->g_pDevice = pDevice;
     g_nOffset = 0;
@@ -68,16 +68,14 @@ void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType,
 void XFileInfoWidget::reload() {
     if (g_pDevice) {
         XFileInfo::OPTIONS options = {};
-        options.fileType =
-            (XBinary::FT)(ui->comboBoxType->currentData().toInt());
+        options.fileType = (XBinary::FT)(ui->comboBoxType->currentData().toInt());
         //    options.bShowAll=ui->checkBoxShowAll->isChecked();
         options.bComment = ui->checkBoxComment->isChecked();
         options.sString = (ui->comboBoxMethod->currentData().toString());
 
         XFileInfoModel *pModel = new XFileInfoModel;
 
-        DialogXFileInfoProcess dip(XOptions::getMainWidget(this), g_pDevice,
-                                   pModel, options);
+        DialogXFileInfoProcess dip(XOptions::getMainWidget(this), g_pDevice, pModel, options);
 
         dip.showDialogDelay(1000);
 
@@ -108,18 +106,17 @@ void XFileInfoWidget::registerShortcuts(bool bState) {
 }
 
 void XFileInfoWidget::on_pushButtonSave_clicked() {
-    QString sFileName = XBinary::getResultFileName(
-        g_pDevice, QString("%1.txt").arg(tr("Info")));
-    sFileName = QFileDialog::getSaveFileName(
-        this, tr("Save file"), sFileName,
-        QString("%1 (*.txt);;%2 (*)").arg(tr("Text files"), tr("All files")));
+    QString sFileName = XBinary::getResultFileName(g_pDevice, QString("%1.txt").arg(tr("Info")));
+    sFileName = QFileDialog::getSaveFileName(this, tr("Save file"), sFileName, QString("%1 (*.txt);;%2 (*)").arg(tr("Text files"), tr("All files")));
 
     if (!sFileName.isEmpty()) {
         XOptions::savePlainTextEdit(ui->plainTextEditFileInfo, sFileName);
     }
 }
 
-void XFileInfoWidget::on_pushButtonReload_clicked() { reload(); }
+void XFileInfoWidget::on_pushButtonReload_clicked() {
+    reload();
+}
 
 void XFileInfoWidget::on_checkBoxComment_toggled(bool bChecked) {
     Q_UNUSED(bChecked)
@@ -142,8 +139,7 @@ void XFileInfoWidget::on_comboBoxMethod_currentIndexChanged(int nIndex) {
 }
 
 void XFileInfoWidget::reloadType() {
-    XBinary::FT fileType =
-        (XBinary::FT)(ui->comboBoxType->currentData().toInt());
+    XBinary::FT fileType = (XBinary::FT)(ui->comboBoxType->currentData().toInt());
 
     QList<XFileInfo::METHOD> listMethods = XFileInfo::getMethodNames(fileType);
 
@@ -154,8 +150,7 @@ void XFileInfoWidget::reloadType() {
     qint32 nNumberOfMethods = listMethods.count();
 
     for (qint32 i = 0; i < nNumberOfMethods; i++) {
-        ui->comboBoxMethod->addItem(listMethods.at(i).sTranslated,
-                                    listMethods.at(i).sName);
+        ui->comboBoxMethod->addItem(listMethods.at(i).sTranslated, listMethods.at(i).sName);
     }
 
     ui->comboBoxMethod->blockSignals(bBlocked1);

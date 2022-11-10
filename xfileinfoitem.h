@@ -26,9 +26,8 @@
 #include <QVariant>
 
 class XFileInfoItem {
-   public:
-    XFileInfoItem(const QString &sName, const QVariant &varValue,
-                  XFileInfoItem *pParentItem = nullptr);
+public:
+    XFileInfoItem(const QString &sName, const QVariant &varValue, XFileInfoItem *pParentItem = nullptr);
     ~XFileInfoItem();
 
     void appendChild(XFileInfoItem *pItemChild);
@@ -42,7 +41,7 @@ class XFileInfoItem {
     int row() const;
     XFileInfoItem *getParentItem();
 
-   private:
+private:
     QList<XFileInfoItem *> g_listChildItems;
     QString g_sName;
     QVariant g_varValue;

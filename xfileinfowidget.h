@@ -34,20 +34,23 @@ class XFileInfoWidget;
 class XFileInfoWidget : public XShortcutsWidget {
     Q_OBJECT
 
-    enum SM { SM_TEXT = 0, SM_JSON, SM_XML };
+    enum SM {
+        SM_TEXT = 0,
+        SM_JSON,
+        SM_XML
+    };
 
-   public:
+public:
     explicit XFileInfoWidget(QWidget *pParent = nullptr);
     ~XFileInfoWidget();
 
-    void setData(QIODevice *pDevice, XBinary::FT fileType, QString sString,
-                 bool bAuto = false);
+    void setData(QIODevice *pDevice, XBinary::FT fileType, QString sString, bool bAuto = false);
     void reload();
 
-   protected:
+protected:
     virtual void registerShortcuts(bool bState);
 
-   private slots:
+private slots:
     void on_pushButtonSave_clicked();
     void on_pushButtonReload_clicked();
     void on_checkBoxComment_toggled(bool bChecked);
@@ -56,7 +59,7 @@ class XFileInfoWidget : public XShortcutsWidget {
     void reloadType();
     void on_comboBoxShow_currentIndexChanged(int nIndex);
 
-   private:
+private:
     Ui::XFileInfoWidget *ui;
     QIODevice *g_pDevice;
     qint64 g_nOffset;

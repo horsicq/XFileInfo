@@ -32,13 +32,11 @@
 class DialogXFileInfoProcess : public XDialogProcess {
     Q_OBJECT
 
-   public:
-    explicit DialogXFileInfoProcess(QWidget *pParent, QIODevice *pDevice,
-                                    XFileInfoModel *pModel,
-                                    XFileInfo::OPTIONS options);
+public:
+    explicit DialogXFileInfoProcess(QWidget *pParent, QIODevice *pDevice, XFileInfoModel *pModel, XFileInfo::OPTIONS options);
     ~DialogXFileInfoProcess();
 
-   private:
+private:
     XFileInfo *g_pFileInfo;
     QThread *g_pThread;
 };
