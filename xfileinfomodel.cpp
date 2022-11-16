@@ -20,15 +20,18 @@
  */
 #include "xfileinfomodel.h"
 
-XFileInfoModel::XFileInfoModel(QObject *pParent) : QAbstractItemModel(pParent) {
+XFileInfoModel::XFileInfoModel(QObject *pParent) : QAbstractItemModel(pParent)
+{
     g_pRootItem = new XFileInfoItem("data", "");
 }
 
-XFileInfoModel::~XFileInfoModel() {
+XFileInfoModel::~XFileInfoModel()
+{
     delete g_pRootItem;
 }
 
-QVariant XFileInfoModel::headerData(int nSection, Qt::Orientation orientation, int nRole) const {
+QVariant XFileInfoModel::headerData(int nSection, Qt::Orientation orientation, int nRole) const
+{
     QVariant result;
 
     if ((orientation == Qt::Horizontal) && (nRole == Qt::DisplayRole)) {
@@ -38,7 +41,8 @@ QVariant XFileInfoModel::headerData(int nSection, Qt::Orientation orientation, i
     return result;
 }
 
-QModelIndex XFileInfoModel::index(int nRow, int nColumn, const QModelIndex &parent) const {
+QModelIndex XFileInfoModel::index(int nRow, int nColumn, const QModelIndex &parent) const
+{
     QModelIndex result;
 
     if (hasIndex(nRow, nColumn, parent)) {
@@ -60,7 +64,8 @@ QModelIndex XFileInfoModel::index(int nRow, int nColumn, const QModelIndex &pare
     return result;
 }
 
-QModelIndex XFileInfoModel::parent(const QModelIndex &index) const {
+QModelIndex XFileInfoModel::parent(const QModelIndex &index) const
+{
     QModelIndex result;
 
     if (index.isValid()) {
@@ -75,7 +80,8 @@ QModelIndex XFileInfoModel::parent(const QModelIndex &index) const {
     return result;
 }
 
-int XFileInfoModel::rowCount(const QModelIndex &parent) const {
+int XFileInfoModel::rowCount(const QModelIndex &parent) const
+{
     int nResult = 0;
 
     if (parent.column() <= 0) {
@@ -93,7 +99,8 @@ int XFileInfoModel::rowCount(const QModelIndex &parent) const {
     return nResult;
 }
 
-int XFileInfoModel::columnCount(const QModelIndex &parent) const {
+int XFileInfoModel::columnCount(const QModelIndex &parent) const
+{
     int nResult = 0;
 
     if (parent.isValid()) {
@@ -105,7 +112,8 @@ int XFileInfoModel::columnCount(const QModelIndex &parent) const {
     return nResult;
 }
 
-QVariant XFileInfoModel::data(const QModelIndex &index, int nRole) const {
+QVariant XFileInfoModel::data(const QModelIndex &index, int nRole) const
+{
     QVariant result;
 
     if (index.isValid()) {
@@ -119,7 +127,8 @@ QVariant XFileInfoModel::data(const QModelIndex &index, int nRole) const {
     return result;
 }
 
-Qt::ItemFlags XFileInfoModel::flags(const QModelIndex &index) const {
+Qt::ItemFlags XFileInfoModel::flags(const QModelIndex &index) const
+{
     Qt::ItemFlags result = Qt::NoItemFlags;
 
     if (index.isValid()) {
@@ -129,11 +138,13 @@ Qt::ItemFlags XFileInfoModel::flags(const QModelIndex &index) const {
     return result;
 }
 
-void XFileInfoModel::appendChild(XFileInfoItem *pItemChild) {
+void XFileInfoModel::appendChild(XFileInfoItem *pItemChild)
+{
     g_pRootItem->appendChild(pItemChild);
 }
 
-QString XFileInfoModel::toXML() {
+QString XFileInfoModel::toXML()
+{
     QString sResult;
     QXmlStreamWriter xml(&sResult);
 
@@ -144,7 +155,8 @@ QString XFileInfoModel::toXML() {
     return sResult;
 }
 
-QString XFileInfoModel::toJSON() {
+QString XFileInfoModel::toJSON()
+{
     QString sResult;
 
     QJsonObject jsonResult;
@@ -160,7 +172,8 @@ QString XFileInfoModel::toJSON() {
     return sResult;
 }
 
-QString XFileInfoModel::toCSV() {
+QString XFileInfoModel::toCSV()
+{
     QString sResult;
 
     _toCSV(&sResult, g_pRootItem, 0);
@@ -168,7 +181,8 @@ QString XFileInfoModel::toCSV() {
     return sResult;
 }
 
-QString XFileInfoModel::toTSV() {
+QString XFileInfoModel::toTSV()
+{
     QString sResult;
 
     _toTSV(&sResult, g_pRootItem, 0);
@@ -176,7 +190,8 @@ QString XFileInfoModel::toTSV() {
     return sResult;
 }
 
-QString XFileInfoModel::toFormattedString() {
+QString XFileInfoModel::toFormattedString()
+{
     QString sResult;
 
     _toFormattedString(&sResult, g_pRootItem, 0);
@@ -184,7 +199,8 @@ QString XFileInfoModel::toFormattedString() {
     return sResult;
 }
 
-void XFileInfoModel::_toXML(QXmlStreamWriter *pXml, XFileInfoItem *pItem, qint32 nLevel) {
+void XFileInfoModel::_toXML(QXmlStreamWriter *pXml, XFileInfoItem *pItem, qint32 nLevel)
+{
     if (nLevel) {
         pXml->writeStartElement("record");
         pXml->writeAttribute("name", pItem->getName());
@@ -205,7 +221,8 @@ void XFileInfoModel::_toXML(QXmlStreamWriter *pXml, XFileInfoItem *pItem, qint32
     pXml->writeEndElement();
 }
 
-void XFileInfoModel::_toJSON(QJsonObject *pJsonObject, XFileInfoItem *pItem, qint32 nLevel) {
+void XFileInfoModel::_toJSON(QJsonObject *pJsonObject, XFileInfoItem *pItem, qint32 nLevel)
+{
     //    if(nLevel)
     //    {
     //        pJsonObject->insert(pItem->getName(),pItem->getValue().toString());
@@ -255,7 +272,8 @@ void XFileInfoModel::_toJSON(QJsonObject *pJsonObject, XFileInfoItem *pItem, qin
     }
 }
 
-void XFileInfoModel::_toCSV(QString *pString, XFileInfoItem *pItem, qint32 nLevel) {
+void XFileInfoModel::_toCSV(QString *pString, XFileInfoItem *pItem, qint32 nLevel)
+{
     if (nLevel) {
         pString->append(QString("%1;%2\n").arg(pItem->getName(), pItem->getValue().toString()));
     }
@@ -267,7 +285,8 @@ void XFileInfoModel::_toCSV(QString *pString, XFileInfoItem *pItem, qint32 nLeve
     }
 }
 
-void XFileInfoModel::_toTSV(QString *pString, XFileInfoItem *pItem, qint32 nLevel) {
+void XFileInfoModel::_toTSV(QString *pString, XFileInfoItem *pItem, qint32 nLevel)
+{
     if (nLevel) {
         pString->append(QString("%1\t%2\n").arg(pItem->getName(), pItem->getValue().toString()));
     }
@@ -279,7 +298,8 @@ void XFileInfoModel::_toTSV(QString *pString, XFileInfoItem *pItem, qint32 nLeve
     }
 }
 
-void XFileInfoModel::_toFormattedString(QString *pString, XFileInfoItem *pItem, qint32 nLevel) {
+void XFileInfoModel::_toFormattedString(QString *pString, XFileInfoItem *pItem, qint32 nLevel)
+{
     if (nLevel) {
         QString sResult;
         sResult = sResult.leftJustified(4 * (nLevel - 1), ' ');  // TODO a function

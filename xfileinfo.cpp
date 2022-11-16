@@ -20,21 +20,24 @@
  */
 #include "xfileinfo.h"
 
-XFileInfo::XFileInfo(QObject *pParent) : QObject(pParent) {
+XFileInfo::XFileInfo(QObject *pParent) : QObject(pParent)
+{
     g_pDevice = nullptr;
     g_pPdStruct = nullptr;
     g_options = {};
     g_nFreeIndex = -1;
 }
 
-void XFileInfo::setData(QIODevice *pDevice, XFileInfoModel *pModel, OPTIONS options, XBinary::PDSTRUCT *pPdStruct) {
+void XFileInfo::setData(QIODevice *pDevice, XFileInfoModel *pModel, OPTIONS options, XBinary::PDSTRUCT *pPdStruct)
+{
     this->g_pDevice = pDevice;
     this->g_pModel = pModel;
     this->g_options = options;
     this->g_pPdStruct = pPdStruct;
 }
 
-bool XFileInfo::processFile(QString sFileName, XFileInfoModel *pModel, OPTIONS options) {
+bool XFileInfo::processFile(QString sFileName, XFileInfoModel *pModel, OPTIONS options)
+{
     bool bResult = false;
 
     QFile file;
@@ -55,7 +58,8 @@ bool XFileInfo::processFile(QString sFileName, XFileInfoModel *pModel, OPTIONS o
     return bResult;
 }
 
-QList<XFileInfo::METHOD> XFileInfo::getMethodNames(XBinary::FT fileType) {
+QList<XFileInfo::METHOD> XFileInfo::getMethodNames(XBinary::FT fileType)
+{
     QList<METHOD> listResult;
 
     _addMethod(&listResult, tr("Info"), "Info");
@@ -99,7 +103,8 @@ QList<XFileInfo::METHOD> XFileInfo::getMethodNames(XBinary::FT fileType) {
     return listResult;
 }
 
-XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pItemParent, QString sName, QVariant varData) {
+XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pItemParent, QString sName, QVariant varData)
+{
     XFileInfoItem *pResult = nullptr;
 
     pResult = new XFileInfoItem(sName, varData);
@@ -113,11 +118,13 @@ XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pItemParent, QString sName
     return pResult;
 }
 
-void XFileInfo::setCurrentStatus(QString sStatus) {
+void XFileInfo::setCurrentStatus(QString sStatus)
+{
     XBinary::setPdStructStatus(g_pPdStruct, g_nFreeIndex, sStatus);
 }
 
-bool XFileInfo::check(QString sString, QString sExtra) {
+bool XFileInfo::check(QString sString, QString sExtra)
+{
     bool bResult = false;
 
     if (!(g_pPdStruct->bIsStop)) {
@@ -135,7 +142,8 @@ bool XFileInfo::check(QString sString, QString sExtra) {
     return bResult;
 }
 
-QString XFileInfo::addFlags(XBinary::MODE mode, quint64 nValue, QMap<quint64, QString> mapFlags, XBinary::VL_TYPE vlType) {
+QString XFileInfo::addFlags(XBinary::MODE mode, quint64 nValue, QMap<quint64, QString> mapFlags, XBinary::VL_TYPE vlType)
+{
     QString sResult = XBinary::valueToHex(mode, nValue);
 
     if (g_options.bComment) {
@@ -145,7 +153,8 @@ QString XFileInfo::addFlags(XBinary::MODE mode, quint64 nValue, QMap<quint64, QS
     return sResult;
 }
 
-QString XFileInfo::addDateTime(XBinary::MODE mode, XBinary::DT_TYPE dtType, quint64 nValue) {
+QString XFileInfo::addDateTime(XBinary::MODE mode, XBinary::DT_TYPE dtType, quint64 nValue)
+{
     QString sResult = XBinary::valueToHex(mode, nValue);
 
     if (g_options.bComment) {
@@ -155,7 +164,8 @@ QString XFileInfo::addDateTime(XBinary::MODE mode, XBinary::DT_TYPE dtType, quin
     return sResult;
 }
 
-void XFileInfo::_addMethod(QList<METHOD> *pListMethods, QString sTranslated, QString sName) {
+void XFileInfo::_addMethod(QList<METHOD> *pListMethods, QString sTranslated, QString sName)
+{
     METHOD method = {};
 
     method.sTranslated = sTranslated;
@@ -164,7 +174,8 @@ void XFileInfo::_addMethod(QList<METHOD> *pListMethods, QString sTranslated, QSt
     pListMethods->append(method);
 }
 
-void XFileInfo::process() {
+void XFileInfo::process()
+{
     QElapsedTimer scanTimer;
     scanTimer.start();
 
