@@ -20,7 +20,8 @@
  */
 #include "xfileinfomodel.h"
 
-XFileInfoModel::XFileInfoModel(QObject *pParent) : QAbstractItemModel(pParent)
+XFileInfoModel::XFileInfoModel(QObject *pParent)
+    : QAbstractItemModel(pParent)
 {
     g_pRootItem = new XFileInfoItem("data", "");
 }

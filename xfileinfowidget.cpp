@@ -22,7 +22,8 @@
 
 #include "ui_xfileinfowidget.h"
 
-XFileInfoWidget::XFileInfoWidget(QWidget *pParent) : XShortcutsWidget(pParent), ui(new Ui::XFileInfoWidget)
+XFileInfoWidget::XFileInfoWidget(QWidget *pParent)
+    : XShortcutsWidget(pParent), ui(new Ui::XFileInfoWidget)
 {
     ui->setupUi(this);
 

@@ -20,7 +20,8 @@
  */
 #include "dialogxfileinfoprocess.h"
 
-DialogXFileInfoProcess::DialogXFileInfoProcess(QWidget *pParent, QIODevice *pDevice, XFileInfoModel *pModel, XFileInfo::OPTIONS options) : XDialogProcess(pParent)
+DialogXFileInfoProcess::DialogXFileInfoProcess(QWidget *pParent, QIODevice *pDevice, XFileInfoModel *pModel, XFileInfo::OPTIONS options)
+    : XDialogProcess(pParent)
 {
     g_pFileInfo = new XFileInfo;
     g_pThread = new QThread;
