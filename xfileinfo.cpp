@@ -20,8 +20,7 @@
  */
 #include "xfileinfo.h"
 
-XFileInfo::XFileInfo(QObject *pParent)
-    : QObject(pParent)
+XFileInfo::XFileInfo(QObject *pParent) : QObject(pParent)
 {
     g_pDevice = nullptr;
     g_pPdStruct = nullptr;
@@ -389,10 +388,8 @@ void XFileInfo::process()
                         appendRecord(pParent, QString("%1").arg(tr("Address")), XBinary::valueToHexEx(pe.getEntryPointAddress(&memoryMap)));
                         appendRecord(pParent, QString("%1").arg(tr("Offset")), XBinary::valueToHexEx(pe.getEntryPointOffset(&memoryMap)));
                         appendRecord(pParent, QString("%1").arg(tr("Relative address")), XBinary::valueToHexEx(pe.getEntryPointRVA(&memoryMap)));
-                        appendRecord(pParent, QString("%1").arg(tr("Bytes")),
-                                     XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
-                        appendRecord(pParent, QString("%1").arg(tr("Signature")),
-                                     XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
+                        appendRecord(pParent, QString("%1").arg(tr("Bytes")), XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
+                        appendRecord(pParent, QString("%1").arg(tr("Signature")), XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
                         appendRecord(pParent, QString("%1(Rel)").arg(tr("Signature")),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
                     }
@@ -429,8 +426,7 @@ void XFileInfo::process()
                         appendRecord(pParentFH, "PointerToSymbolTable", XBinary::valueToHex(pe.getFileHeader_PointerToSymbolTable()));
                         appendRecord(pParentFH, "NumberOfSymbols", XBinary::valueToHex(pe.getFileHeader_NumberOfSymbols()));
                         appendRecord(pParentFH, "SizeOfOptionalHeader", XBinary::valueToHex(pe.getFileHeader_SizeOfOptionalHeader()));
-                        appendRecord(pParentFH, "Characteristics",
-                                     addFlags(XBinary::MODE_16, pe.getFileHeader_Characteristics(), XPE::getImageFileHeaderCharacteristics(), XBinary::VL_TYPE_FLAGS));
+                        appendRecord(pParentFH, "Characteristics", addFlags(XBinary::MODE_16, pe.getFileHeader_Characteristics(), XPE::getImageFileHeaderCharacteristics(), XBinary::VL_TYPE_FLAGS));
 
                         XFileInfoItem *pParentOH = appendRecord(pParent, "IMAGE_OPTIONAL_HEADER", "");
 
@@ -462,11 +458,9 @@ void XFileInfo::process()
                         appendRecord(pParentOH, "SizeOfImage", XBinary::valueToHex(pe.getOptionalHeader_SizeOfImage()));
                         appendRecord(pParentOH, "SizeOfHeaders", XBinary::valueToHex(pe.getOptionalHeader_SizeOfHeaders()));
                         appendRecord(pParentOH, "CheckSum", XBinary::valueToHex(pe.getOptionalHeader_CheckSum()));
-                        appendRecord(pParentOH, "Subsystem",
-                                     addFlags(XBinary::MODE_16, pe.getOptionalHeader_Subsystem(), XPE::getImageOptionalHeaderSubsystem(), XBinary::VL_TYPE_LIST));
-                        appendRecord(
-                            pParentOH, "DllCharacteristics",
-                            addFlags(XBinary::MODE_16, pe.getOptionalHeader_DllCharacteristics(), XPE::getImageOptionalHeaderDllCharacteristics(), XBinary::VL_TYPE_FLAGS));
+                        appendRecord(pParentOH, "Subsystem", addFlags(XBinary::MODE_16, pe.getOptionalHeader_Subsystem(), XPE::getImageOptionalHeaderSubsystem(), XBinary::VL_TYPE_LIST));
+                        appendRecord(pParentOH, "DllCharacteristics",
+                                     addFlags(XBinary::MODE_16, pe.getOptionalHeader_DllCharacteristics(), XPE::getImageOptionalHeaderDllCharacteristics(), XBinary::VL_TYPE_FLAGS));
 
                         if (fileType == XBinary::FT_PE32) {
                             appendRecord(pParentOH, "SizeOfStackReserve", XBinary::valueToHex((quint32)pe.getOptionalHeader_SizeOfStackReserve()));
@@ -517,8 +511,7 @@ void XFileInfo::process()
 
                     if (check("Entry point(Address)", "Entry point"))
                         appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Address")), XBinary::valueToHexEx(ne.getEntryPointAddress(&memoryMap)));
-                    if (check("Entry point(Offset)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Offset")), XBinary::valueToHexEx(ne.getEntryPointOffset(&memoryMap)));
+                    if (check("Entry point(Offset)", "Entry point")) appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Offset")), XBinary::valueToHexEx(ne.getEntryPointOffset(&memoryMap)));
                     if (check("Entry point(Relative address)", "Entry point"))
                         appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Relative address")), XBinary::valueToHexEx(ne.getEntryPointRVA(&memoryMap)));
                     if (check("Entry point(Bytes)", "Entry point"))
@@ -545,8 +538,7 @@ void XFileInfo::process()
 
                     if (check("Entry point(Address)", "Entry point"))
                         appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Address")), XBinary::valueToHexEx(le.getEntryPointAddress(&memoryMap)));
-                    if (check("Entry point(Offset)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Offset")), XBinary::valueToHexEx(le.getEntryPointOffset(&memoryMap)));
+                    if (check("Entry point(Offset)", "Entry point")) appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Offset")), XBinary::valueToHexEx(le.getEntryPointOffset(&memoryMap)));
                     if (check("Entry point(Relative address)", "Entry point"))
                         appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Relative address")), XBinary::valueToHexEx(le.getEntryPointRVA(&memoryMap)));
                     if (check("Entry point(Bytes)", "Entry point"))
@@ -575,10 +567,8 @@ void XFileInfo::process()
                         appendRecord(pParent, QString("%1").arg(tr("Address")), XBinary::valueToHexEx(msdos.getEntryPointAddress(&memoryMap)));
                         appendRecord(pParent, QString("%1").arg(tr("Offset")), XBinary::valueToHexEx(msdos.getEntryPointOffset(&memoryMap)));
                         appendRecord(pParent, QString("%1").arg(tr("Relative address")), XBinary::valueToHexEx(msdos.getEntryPointRVA(&memoryMap)));
-                        appendRecord(pParent, QString("%1").arg(tr("Bytes")),
-                                     XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
-                        appendRecord(pParent, QString("%1").arg(tr("Signature")),
-                                     XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
+                        appendRecord(pParent, QString("%1").arg(tr("Bytes")), XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
+                        appendRecord(pParent, QString("%1").arg(tr("Signature")), XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
                         appendRecord(pParent, QString("%1(Rel)").arg(tr("Signature")),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
                     }
