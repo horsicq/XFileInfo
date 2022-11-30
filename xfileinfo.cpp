@@ -202,8 +202,9 @@ void XFileInfo::process()
 
         appendRecord(pItemParent, tr("Size"), sSize);
 
-        if (XBinary::checkFileType(XBinary::FT_ELF, fileType) || XBinary::checkFileType(XBinary::FT_PE, fileType) || XBinary::checkFileType(XBinary::FT_MACHO, fileType) ||
-            XBinary::checkFileType(XBinary::FT_MSDOS, fileType) || XBinary::checkFileType(XBinary::FT_NE, fileType) || XBinary::checkFileType(XBinary::FT_LE, fileType)) {
+        if (XBinary::checkFileType(XBinary::FT_ELF, fileType) || XBinary::checkFileType(XBinary::FT_PE, fileType) ||
+            XBinary::checkFileType(XBinary::FT_MACHO, fileType) || XBinary::checkFileType(XBinary::FT_MSDOS, fileType) ||
+            XBinary::checkFileType(XBinary::FT_NE, fileType) || XBinary::checkFileType(XBinary::FT_LE, fileType)) {
             XBinary::OSINFO osInfo = XFormats::getOsInfo(fileType, g_pDevice);
 
             QString sOperationSystem = XBinary::osNameIdToString(osInfo.osName);
@@ -418,11 +419,13 @@ void XFileInfo::process()
                     if (check("IMAGE_NT_HEADERS", "All")) {
                         XFileInfoItem *pParent = appendRecord(0, "IMAGE_NT_HEADERS", "");
 
-                        appendRecord(pParent, "Signature", addFlags(XBinary::MODE_16, pe.getNtHeaders_Signature(), XPE::getImageNtHeadersSignatures(), XBinary::VL_TYPE_LIST));
+                        appendRecord(pParent, "Signature",
+                                     addFlags(XBinary::MODE_16, pe.getNtHeaders_Signature(), XPE::getImageNtHeadersSignatures(), XBinary::VL_TYPE_LIST));
 
                         XFileInfoItem *pParentFH = appendRecord(pParent, "IMAGE_FILE_HEADER", "");
 
-                        appendRecord(pParentFH, "Machine", addFlags(XBinary::MODE_16, pe.getFileHeader_Machine(), XPE::getImageFileHeaderMachines(), XBinary::VL_TYPE_LIST));
+                        appendRecord(pParentFH, "Machine",
+                                     addFlags(XBinary::MODE_16, pe.getFileHeader_Machine(), XPE::getImageFileHeaderMachines(), XBinary::VL_TYPE_LIST));
                         appendRecord(pParentFH, "NumberOfSections", XBinary::valueToHex(pe.getFileHeader_NumberOfSections()));
                         appendRecord(pParentFH, "TimeDateStamp", addDateTime(XBinary::MODE_32, XBinary::DT_TYPE_POSIX, pe.getFileHeader_TimeDateStamp()));
                         appendRecord(pParentFH, "PointerToSymbolTable", XBinary::valueToHex(pe.getFileHeader_PointerToSymbolTable()));
@@ -433,7 +436,8 @@ void XFileInfo::process()
 
                         XFileInfoItem *pParentOH = appendRecord(pParent, "IMAGE_OPTIONAL_HEADER", "");
 
-                        appendRecord(pParentOH, "Magic", addFlags(XBinary::MODE_16, pe.getOptionalHeader_Magic(), XPE::getImageOptionalHeaderMagic(), XBinary::VL_TYPE_LIST));
+                        appendRecord(pParentOH, "Magic",
+                                     addFlags(XBinary::MODE_16, pe.getOptionalHeader_Magic(), XPE::getImageOptionalHeaderMagic(), XBinary::VL_TYPE_LIST));
                         appendRecord(pParentOH, "MajorLinkerVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorLinkerVersion()));
                         appendRecord(pParentOH, "MinorLinkerVersion", XBinary::valueToHex(pe.getOptionalHeader_MinorLinkerVersion()));
                         appendRecord(pParentOH, "SizeOfCode", XBinary::valueToHex(pe.getOptionalHeader_SizeOfCode()));
@@ -463,9 +467,9 @@ void XFileInfo::process()
                         appendRecord(pParentOH, "CheckSum", XBinary::valueToHex(pe.getOptionalHeader_CheckSum()));
                         appendRecord(pParentOH, "Subsystem",
                                      addFlags(XBinary::MODE_16, pe.getOptionalHeader_Subsystem(), XPE::getImageOptionalHeaderSubsystem(), XBinary::VL_TYPE_LIST));
-                        appendRecord(
-                            pParentOH, "DllCharacteristics",
-                            addFlags(XBinary::MODE_16, pe.getOptionalHeader_DllCharacteristics(), XPE::getImageOptionalHeaderDllCharacteristics(), XBinary::VL_TYPE_FLAGS));
+                        appendRecord(pParentOH, "DllCharacteristics",
+                                     addFlags(XBinary::MODE_16, pe.getOptionalHeader_DllCharacteristics(), XPE::getImageOptionalHeaderDllCharacteristics(),
+                                              XBinary::VL_TYPE_FLAGS));
 
                         if (fileType == XBinary::FT_PE32) {
                             appendRecord(pParentOH, "SizeOfStackReserve", XBinary::valueToHex((quint32)pe.getOptionalHeader_SizeOfStackReserve()));
