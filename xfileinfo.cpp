@@ -46,7 +46,7 @@ bool XFileInfo::processFile(QString sFileName, XFileInfoModel *pModel, OPTIONS o
 
     if (file.open(QIODevice::ReadOnly)) {
         XFileInfo fileInfo;
-        XBinary::PDSTRUCT pdStruct = {};
+        XBinary::PDSTRUCT pdStruct = XBinary::createPdStruct();
         fileInfo.setData(&file, pModel, options, &pdStruct);
         fileInfo.process();
 
