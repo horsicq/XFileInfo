@@ -37,7 +37,6 @@ public:
     QVariant data(int nColumn) const;
     QString getName();
     QVariant getValue();
-
     int row() const;
     XFileInfoItem *getParentItem();
 
