@@ -81,7 +81,7 @@ void XFileInfoWidget::reload()
 
         DialogXFileInfoProcess dip(XOptions::getMainWidget(this), g_pDevice, pModel, options);
 
-        dip.showDialogDelay(1000);
+        dip.showDialogDelay();
 
         if (dip.isSuccess()) {
             QString sText;
