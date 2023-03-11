@@ -321,6 +321,8 @@ void XFileInfo::process()
                     }
                     // TODO Sections
                     // TODO Programs
+                    // TODO rels
+                    // TODO libraries
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_MACHO, fileType)) {
