@@ -55,7 +55,7 @@ void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, QString 
     g_nOffset = 0;
     g_nSize = pDevice->size();
 
-    if (this->g_nSize == -1) {
+    if (this->g_nSize == -1) { // TODO Check
         this->g_nSize = (pDevice->size()) - (this->g_nOffset);
     }
 
