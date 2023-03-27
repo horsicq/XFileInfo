@@ -302,7 +302,7 @@ void XFileInfoModel::_toFormattedString(QString *pString, XFileInfoItem *pItem, 
 {
     if (nLevel) {
         QString sResult;
-        sResult = sResult.leftJustified(4 * (nLevel - 1), ' ');  // TODO a function
+        sResult = sResult.leftJustified(4 * (nLevel - 1), ' ');  // TODO a function !!!
         sResult.append(QString("%1: %2\n").arg(pItem->getName(), pItem->getValue().toString()));
         pString->append(sResult);
     }
