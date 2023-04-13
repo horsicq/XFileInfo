@@ -83,6 +83,7 @@ QList<XFileInfo::METHOD> XFileInfo::getMethodNames(XBinary::FT fileType)
     } else if (XBinary::checkFileType(XBinary::FT_PE, fileType)) {
         _addMethod(&listResult, "IMAGE_DOS_HEADER", "IMAGE_DOS_HEADER");
         _addMethod(&listResult, "IMAGE_NT_HEADERS", "IMAGE_NT_HEADERS");
+        // TODO !!!
     } else if (XBinary::checkFileType(XBinary::FT_NE, fileType)) {
         // TODO !!!
     } else if (XBinary::checkFileType(XBinary::FT_LE, fileType)) {
