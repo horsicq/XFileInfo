@@ -36,7 +36,7 @@ void XFileInfo::setData(QIODevice *pDevice, XFileInfoModel *pModel, OPTIONS opti
     this->g_pPdStruct = pPdStruct;
 }
 
-bool XFileInfo::processFile(QString sFileName, XFileInfoModel *pModel, OPTIONS options)
+bool XFileInfo::processFile(const QString &sFileName, XFileInfoModel *pModel, OPTIONS options)
 {
     bool bResult = false;
 
