@@ -44,7 +44,7 @@ public:
     explicit XFileInfoWidget(QWidget *pParent = nullptr);
     ~XFileInfoWidget();
 
-    void setData(QIODevice *pDevice, XBinary::FT fileType, QString sString, bool bAuto = false);
+    void setData(QIODevice *pDevice, XBinary::FT fileType, const QString &sString, bool bAuto = false);
     void reload();
 
 protected:
