@@ -37,7 +37,7 @@ void DialogXFileInfo::setGlobal(XShortcuts *pShortcuts, XOptions *pXOptions)
     ui->widget->setGlobal(pShortcuts, pXOptions);
 }
 
-void DialogXFileInfo::setData(QIODevice *pDevice, XBinary::FT fileType, QString sString, bool bAuto)
+void DialogXFileInfo::setData(QIODevice *pDevice, XBinary::FT fileType, const QString &sString, bool bAuto)
 {
     ui->widget->setData(pDevice, fileType, sString, bAuto);
 }
