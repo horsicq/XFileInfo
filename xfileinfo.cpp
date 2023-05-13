@@ -119,7 +119,7 @@ XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pItemParent, const QString
     return pResult;
 }
 
-void XFileInfo::setCurrentStatus(QString sStatus)
+void XFileInfo::setCurrentStatus(const QString &sStatus)
 {
     XBinary::setPdStructStatus(g_pPdStruct, g_nFreeIndex, sStatus);
 }
