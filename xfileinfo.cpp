@@ -124,7 +124,7 @@ void XFileInfo::setCurrentStatus(const QString &sStatus)
     XBinary::setPdStructStatus(g_pPdStruct, g_nFreeIndex, sStatus);
 }
 
-bool XFileInfo::check(const QString &sString, QString sExtra)
+bool XFileInfo::check(const QString &sString, const QString &sExtra)
 {
     bool bResult = false;
 
