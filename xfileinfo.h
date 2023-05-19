@@ -57,7 +57,7 @@ private:
     bool check(const QString &sString, const QString &sExtra);
     QString addFlags(XBinary::MODE mode, quint64 nValue, QMap<quint64, QString> mapFlags, XBinary::VL_TYPE vlType);
     QString addDateTime(XBinary::MODE mode, XBinary::DT_TYPE dtType, quint64 nValue);
-    static void _addMethod(QList<METHOD> *pListMethods, const QString &sTranslated, QString sName);
+    static void _addMethod(QList<METHOD> *pListMethods, const QString &sTranslated, const QString &sName);
 
 public slots:
     void process();
