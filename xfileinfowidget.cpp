@@ -50,6 +50,7 @@ XFileInfoWidget::~XFileInfoWidget()
 
 void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, const QString &sString, bool bAuto)
 {
+    Q_UNUSED(sString)
     // TODO sString !!!
     this->g_pDevice = pDevice;
     g_nOffset = 0;
