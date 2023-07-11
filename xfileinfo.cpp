@@ -504,8 +504,7 @@ void XFileInfo::process()
                     }
 
                     // TODO
-                    // Sizes
-                    // Directories
+                    // Sizes !!!
                     // Sections
                     // Resources
                     // Import
