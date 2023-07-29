@@ -41,7 +41,6 @@ bool XFileInfo::processFile(const QString &sFileName, XFileInfoModel *pModel, OP
     bool bResult = false;
 
     QFile file;
-
     file.setFileName(sFileName);
 
     if (file.open(QIODevice::ReadOnly)) {
