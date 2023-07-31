@@ -48,9 +48,7 @@ bool XFileInfo::processFile(const QString &sFileName, XFileInfoModel *pModel, OP
         XBinary::PDSTRUCT pdStruct = XBinary::createPdStruct();
         fileInfo.setData(&file, pModel, options, &pdStruct);
         fileInfo.process();
-
         file.close();
-
         bResult = true;
     }
 
