@@ -38,6 +38,7 @@ class XFileInfoWidget : public XShortcutsWidget {
         SM_TEXT = 0,
         SM_JSON,
         SM_XML
+        // mb CSV, TSV
     };
 
 public:

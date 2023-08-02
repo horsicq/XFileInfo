@@ -63,7 +63,7 @@ public slots:
     void process();
 
 private:
-    const int N_SIGNATURECOUNT = 10;  // TODO Set/Get
+    const qint32 N_SIGNATURECOUNT = 10;  // TODO Set/Get
     QIODevice *g_pDevice;
     XFileInfoModel *g_pModel;
     OPTIONS g_options;

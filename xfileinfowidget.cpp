@@ -96,7 +96,6 @@ void XFileInfoWidget::reload()
             } else if (showMode == SM_XML) {
                 sText = pModel->toXML();
             }
-            //        QString sText=XFileInfo::toCSV(pModel);
 
             ui->plainTextEditFileInfo->setPlainText(sText);
         }
