@@ -33,7 +33,7 @@ class DialogXFileInfoProcess : public XDialogProcess {
     Q_OBJECT
 
 public:
-    explicit DialogXFileInfoProcess(QWidget *pParent, QIODevice *pDevice, XFileInfoModel *pModel, XFileInfo::OPTIONS options);
+    explicit DialogXFileInfoProcess(QWidget *pParent, QIODevice *pDevice, XFileInfoModel *pModel, const XFileInfo::OPTIONS &options);
     ~DialogXFileInfoProcess();
 
 private:
