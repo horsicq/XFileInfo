@@ -28,7 +28,7 @@ XFileInfo::XFileInfo(QObject *pParent) : QObject(pParent)
     g_nFreeIndex = -1;
 }
 
-void XFileInfo::setData(QIODevice *pDevice, XFileInfoModel *pModel, OPTIONS options, XBinary::PDSTRUCT *pPdStruct)
+void XFileInfo::setData(QIODevice *pDevice, XFileInfoModel *pModel, const OPTIONS &options, XBinary::PDSTRUCT *pPdStruct)
 {
     this->g_pDevice = pDevice;
     this->g_pModel = pModel;
