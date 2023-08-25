@@ -44,7 +44,7 @@ public:
     explicit XFileInfo(QObject *pParent = nullptr);
 
     void setData(QIODevice *pDevice, XFileInfoModel *pModel, const OPTIONS &options, XBinary::PDSTRUCT *pPdStruct);
-    static bool processFile(const QString &sFileName, XFileInfoModel *pModel, OPTIONS options);
+    static bool processFile(const QString &sFileName, XFileInfoModel *pModel, const OPTIONS &options);
     static QList<METHOD> getMethodNames(XBinary::FT fileType);
 
 signals:
