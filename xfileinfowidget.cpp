@@ -152,7 +152,7 @@ void XFileInfoWidget::reloadType()
 {
     XBinary::FT fileType = (XBinary::FT)(ui->comboBoxType->currentData().toInt());
 
-    QList<XFileInfo::METHOD> listMethods = XFileInfo::getMethodNames(fileType);
+    QList<XFileInfo::METHOD_DATA> listMethods = XFileInfo::getMethodNames(fileType);
 
     const bool bBlocked1 = ui->comboBoxMethod->blockSignals(true);
 

@@ -36,7 +36,7 @@ public:
         QString sString;
     };
 
-    struct METHOD {
+    struct METHOD_DATA {
         QString sTranslated;
         QString sName;
     };
@@ -45,7 +45,7 @@ public:
 
     void setData(QIODevice *pDevice, XFileInfoModel *pModel, const OPTIONS &options, XBinary::PDSTRUCT *pPdStruct);
     static bool processFile(const QString &sFileName, XFileInfoModel *pModel, const OPTIONS &options);
-    static QList<METHOD> getMethodNames(XBinary::FT fileType);
+    static QList<METHOD_DATA> getMethodNames(XBinary::FT fileType);
 
 signals:
     void errorMessage(const QString &sText);
@@ -57,7 +57,7 @@ private:
     bool check(const QString &sString, const QString &sExtra);
     QString addFlags(XBinary::MODE mode, quint64 nValue, QMap<quint64, QString> mapFlags, XBinary::VL_TYPE vlType);
     QString addDateTime(XBinary::MODE mode, XBinary::DT_TYPE dtType, quint64 nValue);
-    static void _addMethod(QList<METHOD> *pListMethods, const QString &sTranslated, const QString &sName);
+    static void _addMethod(QList<METHOD_DATA> *pListMethods, const QString &sTranslated, const QString &sName);
 
 public slots:
     void process();

@@ -55,9 +55,9 @@ bool XFileInfo::processFile(const QString &sFileName, XFileInfoModel *pModel, co
     return bResult;
 }
 
-QList<XFileInfo::METHOD> XFileInfo::getMethodNames(XBinary::FT fileType)
+QList<XFileInfo::METHOD_DATA> XFileInfo::getMethodNames(XBinary::FT fileType)
 {
-    QList<METHOD> listResult;
+    QList<METHOD_DATA> listResult;
 
     _addMethod(&listResult, tr("Info"), "Info");
     _addMethod(&listResult, tr("Hash"), "Hash");
@@ -162,9 +162,9 @@ QString XFileInfo::addDateTime(XBinary::MODE mode, XBinary::DT_TYPE dtType, quin
     return sResult;
 }
 
-void XFileInfo::_addMethod(QList<METHOD> *pListMethods, const QString &sTranslated, const QString &sName)
+void XFileInfo::_addMethod(QList<METHOD_DATA> *pListMethods, const QString &sTranslated, const QString &sName)
 {
-    METHOD method = {};
+    METHOD_DATA method = {};
 
     method.sTranslated = sTranslated;
     method.sName = sName;
