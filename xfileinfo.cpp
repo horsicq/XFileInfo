@@ -334,7 +334,7 @@ void XFileInfo::process()
                     if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(mach.getFileType()));
 
 //                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(g_options.mapMode, g_pPdStruct);
-                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(XBinary::MAPMODE_SEGMENTS, g_pPdStruct);
 
                     if (check("Entry point", "All")) {
                         XFileInfoItem *pParent = appendRecord(0, tr("Entry point"), "");
