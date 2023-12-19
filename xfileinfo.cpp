@@ -263,7 +263,8 @@ void XFileInfo::process()
 
                     if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(elf.getFileType()));
 
-                    XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap();
+//                    XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(g_options.mapMode, g_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     if (check("Entry point(Address)", "Entry point"))
                         appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Address")), XBinary::valueToHexEx(elf.getEntryPointAddress(&memoryMap)));
@@ -332,7 +333,8 @@ void XFileInfo::process()
 
                     if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(mach.getFileType()));
 
-                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap();
+//                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(g_options.mapMode, g_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     if (check("Entry point", "All")) {
                         XFileInfoItem *pParent = appendRecord(0, tr("Entry point"), "");
@@ -381,7 +383,8 @@ void XFileInfo::process()
                 if (!(g_pPdStruct->bIsStop)) {
                     if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(pe.getFileType()));
 
-                    XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap();
+//                    XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(g_options.mapMode, g_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     if (check("Entry point", "All")) {
                         XFileInfoItem *pParent = appendRecord(0, tr("Entry point"), "");
@@ -515,7 +518,8 @@ void XFileInfo::process()
                 if (!(g_pPdStruct->bIsStop)) {
                     if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(ne.getFileType()));
 
-                    XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap();
+//                    XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(g_options.mapMode, g_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     if (check("Entry point(Address)", "Entry point"))
                         appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Address")), XBinary::valueToHexEx(ne.getEntryPointAddress(&memoryMap)));
@@ -543,7 +547,8 @@ void XFileInfo::process()
                 if (!(g_pPdStruct->bIsStop)) {
                     if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(le.getFileType()));
 
-                    XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap();
+//                    XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(g_options.mapMode, g_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     if (check("Entry point(Address)", "Entry point"))
                         appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Address")), XBinary::valueToHexEx(le.getEntryPointAddress(&memoryMap)));
@@ -569,7 +574,8 @@ void XFileInfo::process()
 
             if (msdos.isValid()) {
                 if (!(g_pPdStruct->bIsStop)) {
-                    XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap();
+//                    XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(g_options.mapMode, g_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     if (check("Entry point", "All")) {
                         XFileInfoItem *pParent = appendRecord(0, tr("Entry point"), "");
@@ -614,7 +620,8 @@ void XFileInfo::process()
                 if (!(g_pPdStruct->bIsStop)) {
                     if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(xcom.getFileType()));
 
-                    XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap();
+//                    XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(g_options.mapMode, g_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     if (check("Entry point(Address)", "Entry point"))
                         appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Address")), XBinary::valueToHexEx(xcom.getEntryPointAddress(&memoryMap)));

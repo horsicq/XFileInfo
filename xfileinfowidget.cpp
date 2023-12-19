@@ -74,6 +74,7 @@ void XFileInfoWidget::reload()
     if (g_pDevice) {
         XFileInfo::OPTIONS options = {};
         options.fileType = (XBinary::FT)(ui->comboBoxType->currentData().toInt());
+        //    options.mapMode = (XBinary::MAPMODE)(ui->comboBoxMapMode->currentData().toInt());
         //    options.bShowAll=ui->checkBoxShowAll->isChecked();
         options.bComment = ui->checkBoxComment->isChecked();
         options.sString = (ui->comboBoxMethod->currentData().toString());

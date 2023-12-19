@@ -31,6 +31,7 @@ class XFileInfo : public QObject {
 public:
     struct OPTIONS {
         XBinary::FT fileType;
+//        XBinary::MAPMODE mapMode;
         //        bool bShowAll;
         bool bComment;
         QString sString;
