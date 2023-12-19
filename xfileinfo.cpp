@@ -264,7 +264,7 @@ void XFileInfo::process()
                     if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(elf.getFileType()));
 
 //                    XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(g_options.mapMode, g_pPdStruct);
-                    XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(XBinary::MAPMODE_SEGMENTS, g_pPdStruct);
 
                     if (check("Entry point(Address)", "Entry point"))
                         appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Address")), XBinary::valueToHexEx(elf.getEntryPointAddress(&memoryMap)));
