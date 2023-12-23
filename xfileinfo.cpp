@@ -263,7 +263,7 @@ void XFileInfo::process()
 
                     if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(elf.getFileType()));
 
-//                    XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(g_options.mapMode, g_pPdStruct);
+                    //                    XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(XBinary::MAPMODE_SEGMENTS, g_pPdStruct);
 
                     if (check("Entry point(Address)", "Entry point"))
@@ -333,7 +333,7 @@ void XFileInfo::process()
 
                     if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(mach.getFileType()));
 
-//                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(g_options.mapMode, g_pPdStruct);
+                    //                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(XBinary::MAPMODE_SEGMENTS, g_pPdStruct);
 
                     if (check("Entry point", "All")) {
@@ -383,7 +383,7 @@ void XFileInfo::process()
                 if (!(g_pPdStruct->bIsStop)) {
                     if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(pe.getFileType()));
 
-//                    XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(g_options.mapMode, g_pPdStruct);
+                    //                    XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     if (check("Entry point", "All")) {
@@ -518,7 +518,7 @@ void XFileInfo::process()
                 if (!(g_pPdStruct->bIsStop)) {
                     if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(ne.getFileType()));
 
-//                    XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(g_options.mapMode, g_pPdStruct);
+                    //                    XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     if (check("Entry point(Address)", "Entry point"))
@@ -547,7 +547,7 @@ void XFileInfo::process()
                 if (!(g_pPdStruct->bIsStop)) {
                     if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(le.getFileType()));
 
-//                    XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(g_options.mapMode, g_pPdStruct);
+                    //                    XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     if (check("Entry point(Address)", "Entry point"))
@@ -574,7 +574,7 @@ void XFileInfo::process()
 
             if (msdos.isValid()) {
                 if (!(g_pPdStruct->bIsStop)) {
-//                    XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(g_options.mapMode, g_pPdStruct);
+                    //                    XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     if (check("Entry point", "All")) {
@@ -620,7 +620,7 @@ void XFileInfo::process()
                 if (!(g_pPdStruct->bIsStop)) {
                     if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(xcom.getFileType()));
 
-//                    XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(g_options.mapMode, g_pPdStruct);
+                    //                    XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     if (check("Entry point(Address)", "Entry point"))
