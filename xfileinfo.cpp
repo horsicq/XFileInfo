@@ -216,7 +216,7 @@ void XFileInfo::process()
             appendRecord(pItemParent, tr("Architecture"), osInfo.sArch);
             appendRecord(pItemParent, tr("Mode"), XBinary::modeIdToString(osInfo.mode));
             appendRecord(pItemParent, tr("Type"), osInfo.sType);
-            appendRecord(pItemParent, tr("Endianness"), XBinary::endiannessToString(osInfo.endian));
+            appendRecord(pItemParent, tr("Endianness"), XBinary::endianToString(osInfo.endian));
         }
     }
 
