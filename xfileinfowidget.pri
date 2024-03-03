@@ -13,7 +13,6 @@ SOURCES += \
 
 FORMS += \
     $$PWD/dialogxfileinfo.ui \
-    $$PWD/dialogxfileinfoprocess.ui \
     $$PWD/xfileinfowidget.ui
 
 !contains(XCONFIG, xfileinfo) {
