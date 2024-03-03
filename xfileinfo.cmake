@@ -11,6 +11,9 @@ set(XFILEINFO_SOURCES
     ${XPDF_SOURCES}
     ${XARCHIVES_SOURCES}
     ${CMAKE_CURRENT_LIST_DIR}/xfileinfo.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/xfileinfo.h
     ${CMAKE_CURRENT_LIST_DIR}/xfileinfoitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/xfileinfoitem.h
     ${CMAKE_CURRENT_LIST_DIR}/xfileinfomodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/xfileinfomodel.h
 )
