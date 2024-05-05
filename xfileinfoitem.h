@@ -21,8 +21,6 @@
 #ifndef XFILEINFOITEM_H
 #define XFILEINFOITEM_H
 
-#include <QObject>
-#include <QString>
 #include <QVariant>
 
 class XFileInfoItem {
