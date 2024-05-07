@@ -153,7 +153,7 @@ void XFileInfoWidget::reloadType()
 {
     XBinary::FT fileType = (XBinary::FT)(ui->comboBoxType->currentData().toInt());
 
-    QList<XFileInfo::METHOD_DATA> listMethods = XFileInfo::getMethodNames(fileType);
+    QList<QString> listMethods = XFileInfo::getMethodNames(fileType);
 
     const bool bBlocked1 = ui->comboBoxMethod->blockSignals(true);
 
@@ -162,7 +162,7 @@ void XFileInfoWidget::reloadType()
     qint32 nNumberOfMethods = listMethods.count();
 
     for (qint32 i = 0; i < nNumberOfMethods; i++) {
-        ui->comboBoxMethod->addItem(listMethods.at(i).sTranslated, listMethods.at(i).sName);
+        ui->comboBoxMethod->addItem(listMethods.at(i), listMethods.at(i)); // TODO Translate here
     }
 
     ui->comboBoxMethod->blockSignals(bBlocked1);

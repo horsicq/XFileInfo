@@ -55,49 +55,49 @@ bool XFileInfo::processFile(const QString &sFileName, XFileInfoModel *pModel, co
     return bResult;
 }
 
-QList<XFileInfo::METHOD_DATA> XFileInfo::getMethodNames(XBinary::FT fileType)
+QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
 {
-    QList<METHOD_DATA> listResult;
+    QList<QString> listResult;
 
-    _addMethod(&listResult, tr("Info"), "Info");
-    _addMethod(&listResult, tr("Hash"), "Hash");
-    _addMethod(&listResult, tr("Entropy"), "Entropy");
+    _addMethod(&listResult, "Info");
+    _addMethod(&listResult, "Hash");
+    _addMethod(&listResult, "Entropy");
 
     if (XBinary::checkFileType(XBinary::FT_ELF, fileType) || XBinary::checkFileType(XBinary::FT_MACHO, fileType) || XBinary::checkFileType(XBinary::FT_COM, fileType) ||
         XBinary::checkFileType(XBinary::FT_PE, fileType) || XBinary::checkFileType(XBinary::FT_NE, fileType) || XBinary::checkFileType(XBinary::FT_LE, fileType) ||
         XBinary::checkFileType(XBinary::FT_MSDOS, fileType)) {
-        _addMethod(&listResult, tr("Entry point"), "Entry point");
+        _addMethod(&listResult, "Entry point");
     }
 
     if (XBinary::checkFileType(XBinary::FT_ELF, fileType)) {
-        _addMethod(&listResult, "ehdr", "ehdr");
+        _addMethod(&listResult, "ehdr");
     } else if (XBinary::checkFileType(XBinary::FT_MACHO, fileType)) {
-        _addMethod(&listResult, tr("Header"), "Header");
+        _addMethod(&listResult, "Header");
     } else if (XBinary::checkFileType(XBinary::FT_MACHOFAT, fileType)) {
         // TODO !!!
         // Header
         // Archs
     } else if (XBinary::checkFileType(XBinary::FT_PE, fileType)) {
-        _addMethod(&listResult, "IMAGE_DOS_HEADER", "IMAGE_DOS_HEADER");
-        _addMethod(&listResult, "IMAGE_NT_HEADERS", "IMAGE_NT_HEADERS");
+        _addMethod(&listResult, "IMAGE_DOS_HEADER");
+        _addMethod(&listResult, "IMAGE_NT_HEADERS");
         // TODO !!!
     } else if (XBinary::checkFileType(XBinary::FT_NE, fileType)) {
-        _addMethod(&listResult, "IMAGE_DOS_HEADER", "IMAGE_DOS_HEADER");
+        _addMethod(&listResult, "IMAGE_DOS_HEADER");
         // TODO !!!
     } else if (XBinary::checkFileType(XBinary::FT_LE, fileType)) {
-        _addMethod(&listResult, "IMAGE_DOS_HEADER", "IMAGE_DOS_HEADER");
+        _addMethod(&listResult, "IMAGE_DOS_HEADER");
         // TODO !!!
     } else if (XBinary::checkFileType(XBinary::FT_MSDOS, fileType)) {
-        _addMethod(&listResult, "IMAGE_DOS_HEADER", "IMAGE_DOS_HEADER");
+        _addMethod(&listResult, "IMAGE_DOS_HEADER");
     } else if (XBinary::checkFileType(XBinary::FT_DEX, fileType)) {
-        _addMethod(&listResult, tr("Header"), "Header");
+        _addMethod(&listResult, "Header");
         // TODO
     } else if (XBinary::checkFileType(XBinary::FT_COM, fileType)) {
         // TODO
     }
     //    else if(XBinary::checkFileType(XBinary::FT_PDF,fileType))
     //    {
-    //        _addMethod(&listResult,tr("Header"),"Header");
+    //        _addMethod(&listResult,"Header"),"Header");
     //    }
 
     return listResult;
@@ -107,12 +107,22 @@ XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pItemParent, const QString
 {
     XFileInfoItem *pResult = nullptr;
 
-    pResult = new XFileInfoItem(sName, varData);
+    QString _sName;
 
     if (pItemParent) {
-        pItemParent->appendChild(pResult);
-    } else {
-        g_pModel->appendChild(pResult);
+        _sName = pItemParent->getName() + "#";
+    }
+
+    _sName += sName;
+
+    if (check(_sName)) {
+        pResult = new XFileInfoItem(sName, varData);
+
+        if (pItemParent) {
+            pItemParent->appendChild(pResult);
+        } else {
+            g_pModel->appendChild(pResult);
+        }
     }
 
     return pResult;
@@ -123,15 +133,17 @@ void XFileInfo::setCurrentStatus(const QString &sStatus)
     XBinary::setPdStructStatus(g_pPdStruct, g_nFreeIndex, sStatus);
 }
 
-bool XFileInfo::check(const QString &sString, const QString &sExtra)
+bool XFileInfo::check(const QString &sString)
 {
-    bool bResult = false;
+    bool bResult = true;
 
-    if (!(g_pPdStruct->bIsStop)) {
-        if (g_options.sString == sString) {
-            bResult = true;
-        } else if (g_options.sString == sExtra) {
-            bResult = true;
+    qint32 nNumberOfSections = g_options.sString.count("#") + 1;
+
+    for (qint32 i = 0; i < nNumberOfSections; i++) {
+        QString sOptionString = g_options.sString.section("#",i,i).toUpper();
+        QString _sString = sString.section("#",i,i).toUpper();
+        if ((sOptionString != _sString) && (_sString != "")) {
+            bResult = false;
         }
     }
 
@@ -164,14 +176,9 @@ QString XFileInfo::addDateTime(XBinary::MODE mode, XBinary::DT_TYPE dtType, quin
     return sResult;
 }
 
-void XFileInfo::_addMethod(QList<METHOD_DATA> *pListMethods, const QString &sTranslated, const QString &sName)
+void XFileInfo::_addMethod(QList<QString> *pListMethods, const QString &sName)
 {
-    METHOD_DATA method = {};
-
-    method.sTranslated = sTranslated;
-    method.sName = sName;
-
-    pListMethods->append(method);
+    pListMethods->append(sName);
 }
 
 void XFileInfo::process()
@@ -188,10 +195,9 @@ void XFileInfo::process()
         fileType = XBinary::getPrefFileType(g_pDevice);
     }
 
-    if (check("Info", "All")) {
-        XFileInfoItem *pItemParent = appendRecord(0, tr("Info"), "");
-
-        appendRecord(pItemParent, tr("File name"), XBinary::getDeviceFileName(g_pDevice));
+    {
+        XFileInfoItem *pItemParent = appendRecord(0, "Info", "");
+        appendRecord(pItemParent, "File name", XBinary::getDeviceFileName(g_pDevice));
 
         qint64 nSize = g_pDevice->size();
         QString sSize = QString::number(nSize);
@@ -200,7 +206,7 @@ void XFileInfo::process()
             sSize += QString("(%1)").arg(XBinary::bytesCountToString(nSize));
         }
 
-        appendRecord(pItemParent, tr("Size"), sSize);
+        appendRecord(pItemParent, "Size", sSize);
 
         if (XBinary::checkFileType(XBinary::FT_ELF, fileType) || XBinary::checkFileType(XBinary::FT_PE, fileType) ||
             XBinary::checkFileType(XBinary::FT_MACHO, fileType) || XBinary::checkFileType(XBinary::FT_MSDOS, fileType) ||
@@ -212,17 +218,16 @@ void XFileInfo::process()
                 sOperationSystem += QString("(%1)").arg(osInfo.sOsVersion);
             }
 
-            appendRecord(pItemParent, tr("Operation system"), sOperationSystem);
-
-            appendRecord(pItemParent, tr("Architecture"), osInfo.sArch);
-            appendRecord(pItemParent, tr("Mode"), XBinary::modeIdToString(osInfo.mode));
-            appendRecord(pItemParent, tr("Type"), osInfo.sType);
-            appendRecord(pItemParent, tr("Endianness"), XBinary::endianToString(osInfo.endian));
+            appendRecord(pItemParent, "Operation system", sOperationSystem);
+            appendRecord(pItemParent, "Architecture", osInfo.sArch);
+            appendRecord(pItemParent, "Mode", XBinary::modeIdToString(osInfo.mode));
+            appendRecord(pItemParent, "Type", osInfo.sType);
+            appendRecord(pItemParent, "Endianness", XBinary::endianToString(osInfo.endian));
         }
     }
 
-    if (check("Hash", "All")) {
-        XFileInfoItem *pParent = appendRecord(0, tr("Hash"), "");
+    if (check("Hash")) {
+        XFileInfoItem *pParent = appendRecord(0, "Hash", "");
 
         appendRecord(pParent, "MD4", XBinary::getHash(XBinary::HASH_MD4, g_pDevice, g_pPdStruct));
         appendRecord(pParent, "MD5", XBinary::getHash(XBinary::HASH_MD5, g_pDevice, g_pPdStruct));
@@ -233,17 +238,17 @@ void XFileInfo::process()
         appendRecord(pParent, "SHA512", XBinary::getHash(XBinary::HASH_SHA512, g_pDevice, g_pPdStruct));
     }
 
-    if (check("Entropy", "All")) {
-        XFileInfoItem *pParent = appendRecord(0, tr("Entropy"), "");
+    if (check("Entropy")) {
+        XFileInfoItem *pParent = appendRecord(0, "Entropy", "");
 
         double dEntropy = XBinary::getEntropy(g_pDevice, g_pPdStruct);
         QString sEntropy = QString::number(dEntropy);
 
         if (g_options.bComment) {
-            sEntropy += QString("(%1)").arg(XBinary::isPacked(dEntropy) ? (tr("packed")) : (tr("not packed")));
+            sEntropy += QString("(%1)").arg(XBinary::isPacked(dEntropy) ? ("packed") : ("not packed"));
         }
 
-        appendRecord(pParent, tr("Entropy"), sEntropy);
+        appendRecord(pParent, "Entropy", sEntropy);
     }
 
     if (!(g_pPdStruct->bIsStop)) {
@@ -252,7 +257,7 @@ void XFileInfo::process()
 
             if (binary.isValid()) {
                 if (!(g_pPdStruct->bIsStop)) {
-                    if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(binary.getFileType()));
+                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(binary.getFileType()));
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_ELF, fileType)) {
@@ -262,62 +267,62 @@ void XFileInfo::process()
                 if (!(g_pPdStruct->bIsStop)) {
                     bool bIs64 = elf.is64();
 
-                    if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(elf.getFileType()));
+                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(elf.getFileType()));
 
                     //                    XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(XBinary::MAPMODE_SEGMENTS, g_pPdStruct);
 
-                    if (check("Entry point(Address)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Address")), XBinary::valueToHexEx(elf.getEntryPointAddress(&memoryMap)));
-                    if (check("Entry point(Offset)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Offset")), XBinary::valueToHexEx(elf.getEntryPointOffset(&memoryMap)));
-                    if (check("Entry point(Relative address)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Relative address")), XBinary::valueToHexEx(elf.getEntryPointRVA(&memoryMap)));
-                    if (check("Entry point(Bytes)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Bytes")),
+                    if (check("Entry point(Address)"))
+                        appendRecord(0, QString("%1(%2)").arg("Entry point", "Address"), XBinary::valueToHexEx(elf.getEntryPointAddress(&memoryMap)));
+                    if (check("Entry point(Offset)"))
+                        appendRecord(0, QString("%1(%2)").arg("Entry point", "Offset"), XBinary::valueToHexEx(elf.getEntryPointOffset(&memoryMap)));
+                    if (check("Entry point(Relative address)"))
+                        appendRecord(0, QString("%1(%2)").arg("Entry point", "Relative address"), XBinary::valueToHexEx(elf.getEntryPointRVA(&memoryMap)));
+                    if (check("Entry point(Bytes)"))
+                        appendRecord(0, QString("%1(%2)").arg("Entry point", "Bytes"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
-                    if (check("Entry point(Signature)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Signature")),
+                    if (check("Entry point(Signature)"))
+                        appendRecord(0, QString("%1(%2)").arg("Entry point", "Signature"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
-                    if (check("Entry point(Signature)(Rel)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)(Rel)").arg(tr("Entry point"), tr("Signature")),
+                    if (check("Entry point(Signature)(Rel)"))
+                        appendRecord(0, QString("%1(%2)(Rel)").arg("Entry point", "Signature"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
 
-                    if (check("ident_mag", "ident")) appendRecord(0, "ident_mag", XBinary::valueToHex(elf.getIdent_mag_LE()));
-                    if (check("ident_class", "ident")) appendRecord(0, "ident_class", XBinary::valueToHex(elf.getIdent_class()));
-                    if (check("ident_data", "ident")) appendRecord(0, "ident_data", XBinary::valueToHex(elf.getIdent_data()));
-                    if (check("ident_version", "ident")) appendRecord(0, "ident_version", XBinary::valueToHex(elf.getIdent_version()));
-                    if (check("ident_osabi", "ident")) appendRecord(0, "ident_osabi", XBinary::valueToHex(elf.getIdent_osabi()));
-                    if (check("ident_abiversion", "ident")) appendRecord(0, "ident_abiversion", XBinary::valueToHex(elf.getIdent_abiversion()));
+                    if (check("ident_mag")) appendRecord(0, "ident_mag", XBinary::valueToHex(elf.getIdent_mag_LE()));
+                    if (check("ident_class")) appendRecord(0, "ident_class", XBinary::valueToHex(elf.getIdent_class()));
+                    if (check("ident_data")) appendRecord(0, "ident_data", XBinary::valueToHex(elf.getIdent_data()));
+                    if (check("ident_version")) appendRecord(0, "ident_version", XBinary::valueToHex(elf.getIdent_version()));
+                    if (check("ident_osabi")) appendRecord(0, "ident_osabi", XBinary::valueToHex(elf.getIdent_osabi()));
+                    if (check("ident_abiversion")) appendRecord(0, "ident_abiversion", XBinary::valueToHex(elf.getIdent_abiversion()));
 
                     if (bIs64) {
-                        if (check("type", "ehdr")) appendRecord(0, "type", XBinary::valueToHex(elf.getHdr64_type()));
-                        if (check("machine", "ehdr")) appendRecord(0, "machine", XBinary::valueToHex(elf.getHdr64_machine()));
-                        if (check("version", "ehdr")) appendRecord(0, "version", XBinary::valueToHex(elf.getHdr64_version()));
-                        if (check("entry", "ehdr")) appendRecord(0, "entry", XBinary::valueToHex(elf.getHdr64_entry()));
-                        if (check("phoff", "ehdr")) appendRecord(0, "phoff", XBinary::valueToHex(elf.getHdr64_phoff()));
-                        if (check("shoff", "ehdr")) appendRecord(0, "shoff", XBinary::valueToHex(elf.getHdr64_shoff()));
-                        if (check("flags", "ehdr")) appendRecord(0, "flags", XBinary::valueToHex(elf.getHdr64_flags()));
-                        if (check("ehsize", "ehdr")) appendRecord(0, "ehsize", XBinary::valueToHex(elf.getHdr64_ehsize()));
-                        if (check("phentsize", "ehdr")) appendRecord(0, "phentsize", XBinary::valueToHex(elf.getHdr64_phentsize()));
-                        if (check("phnum", "ehdr")) appendRecord(0, "phnum", XBinary::valueToHex(elf.getHdr64_phnum()));
-                        if (check("shentsize", "ehdr")) appendRecord(0, "shentsize", XBinary::valueToHex(elf.getHdr64_shentsize()));
-                        if (check("shnum", "ehdr")) appendRecord(0, "shnum", XBinary::valueToHex(elf.getHdr64_shnum()));
-                        if (check("shstrndx", "ehdr")) appendRecord(0, "shstrndx", XBinary::valueToHex(elf.getHdr64_shstrndx()));
+                        if (check("type")) appendRecord(0, "type", XBinary::valueToHex(elf.getHdr64_type()));
+                        if (check("machine")) appendRecord(0, "machine", XBinary::valueToHex(elf.getHdr64_machine()));
+                        if (check("version")) appendRecord(0, "version", XBinary::valueToHex(elf.getHdr64_version()));
+                        if (check("entry")) appendRecord(0, "entry", XBinary::valueToHex(elf.getHdr64_entry()));
+                        if (check("phoff")) appendRecord(0, "phoff", XBinary::valueToHex(elf.getHdr64_phoff()));
+                        if (check("shoff")) appendRecord(0, "shoff", XBinary::valueToHex(elf.getHdr64_shoff()));
+                        if (check("flags")) appendRecord(0, "flags", XBinary::valueToHex(elf.getHdr64_flags()));
+                        if (check("ehsize")) appendRecord(0, "ehsize", XBinary::valueToHex(elf.getHdr64_ehsize()));
+                        if (check("phentsize")) appendRecord(0, "phentsize", XBinary::valueToHex(elf.getHdr64_phentsize()));
+                        if (check("phnum")) appendRecord(0, "phnum", XBinary::valueToHex(elf.getHdr64_phnum()));
+                        if (check("shentsize")) appendRecord(0, "shentsize", XBinary::valueToHex(elf.getHdr64_shentsize()));
+                        if (check("shnum")) appendRecord(0, "shnum", XBinary::valueToHex(elf.getHdr64_shnum()));
+                        if (check("shstrndx")) appendRecord(0, "shstrndx", XBinary::valueToHex(elf.getHdr64_shstrndx()));
                     } else {
-                        if (check("type", "ehdr")) appendRecord(0, "type", XBinary::valueToHex(elf.getHdr32_type()));
-                        if (check("machine", "ehdr")) appendRecord(0, "machine", XBinary::valueToHex(elf.getHdr32_machine()));
-                        if (check("version", "ehdr")) appendRecord(0, "version", XBinary::valueToHex(elf.getHdr32_version()));
-                        if (check("entry", "ehdr")) appendRecord(0, "entry", XBinary::valueToHex(elf.getHdr32_entry()));
-                        if (check("phoff", "ehdr")) appendRecord(0, "phoff", XBinary::valueToHex(elf.getHdr32_phoff()));
-                        if (check("shoff", "ehdr")) appendRecord(0, "shoff", XBinary::valueToHex(elf.getHdr32_shoff()));
-                        if (check("flags", "ehdr")) appendRecord(0, "flags", XBinary::valueToHex(elf.getHdr32_flags()));
-                        if (check("ehsize", "ehdr")) appendRecord(0, "ehsize", XBinary::valueToHex(elf.getHdr32_ehsize()));
-                        if (check("phentsize", "ehdr")) appendRecord(0, "phentsize", XBinary::valueToHex(elf.getHdr32_phentsize()));
-                        if (check("phnum", "ehdr")) appendRecord(0, "phnum", XBinary::valueToHex(elf.getHdr32_phnum()));
-                        if (check("shentsize", "ehdr")) appendRecord(0, "shentsize", XBinary::valueToHex(elf.getHdr32_shentsize()));
-                        if (check("shnum", "ehdr")) appendRecord(0, "shnum", XBinary::valueToHex(elf.getHdr32_shnum()));
-                        if (check("shstrndx", "ehdr")) appendRecord(0, "shstrndx", XBinary::valueToHex(elf.getHdr32_shstrndx()));
+                        if (check("type")) appendRecord(0, "type", XBinary::valueToHex(elf.getHdr32_type()));
+                        if (check("machine")) appendRecord(0, "machine", XBinary::valueToHex(elf.getHdr32_machine()));
+                        if (check("version")) appendRecord(0, "version", XBinary::valueToHex(elf.getHdr32_version()));
+                        if (check("entry")) appendRecord(0, "entry", XBinary::valueToHex(elf.getHdr32_entry()));
+                        if (check("phoff")) appendRecord(0, "phoff", XBinary::valueToHex(elf.getHdr32_phoff()));
+                        if (check("shoff")) appendRecord(0, "shoff", XBinary::valueToHex(elf.getHdr32_shoff()));
+                        if (check("flags")) appendRecord(0, "flags", XBinary::valueToHex(elf.getHdr32_flags()));
+                        if (check("ehsize")) appendRecord(0, "ehsize", XBinary::valueToHex(elf.getHdr32_ehsize()));
+                        if (check("phentsize")) appendRecord(0, "phentsize", XBinary::valueToHex(elf.getHdr32_phentsize()));
+                        if (check("phnum")) appendRecord(0, "phnum", XBinary::valueToHex(elf.getHdr32_phnum()));
+                        if (check("shentsize")) appendRecord(0, "shentsize", XBinary::valueToHex(elf.getHdr32_shentsize()));
+                        if (check("shnum")) appendRecord(0, "shnum", XBinary::valueToHex(elf.getHdr32_shnum()));
+                        if (check("shstrndx")) appendRecord(0, "shstrndx", XBinary::valueToHex(elf.getHdr32_shstrndx()));
                     }
                     // TODO Sections
                     // TODO Programs
@@ -332,27 +337,27 @@ void XFileInfo::process()
                 if (!(g_pPdStruct->bIsStop)) {
                     bool bIs64 = mach.is64();
 
-                    if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(mach.getFileType()));
+                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(mach.getFileType()));
 
                     //                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(XBinary::MAPMODE_SEGMENTS, g_pPdStruct);
 
-                    if (check("Entry point", "All")) {
-                        XFileInfoItem *pParent = appendRecord(0, tr("Entry point"), "");
+                    if (check("Entry point")) {
+                        XFileInfoItem *pParent = appendRecord(0, "Entry point", "");
 
-                        appendRecord(pParent, QString("%1(%2)").arg(tr("Entry point"), tr("Address")), XBinary::valueToHexEx(mach.getEntryPointAddress(&memoryMap)));
-                        appendRecord(pParent, QString("%1(%2)").arg(tr("Entry point"), tr("Offset")), XBinary::valueToHexEx(mach.getEntryPointOffset(&memoryMap)));
-                        appendRecord(pParent, QString("%1(%2)").arg(tr("Entry point"), tr("Relative address")), XBinary::valueToHexEx(mach.getEntryPointRVA(&memoryMap)));
-                        appendRecord(pParent, QString("%1(%2)").arg(tr("Entry point"), tr("Bytes")),
+                        appendRecord(pParent, QString("%1(%2)").arg("Entry point", "Address"), XBinary::valueToHexEx(mach.getEntryPointAddress(&memoryMap)));
+                        appendRecord(pParent, QString("%1(%2)").arg("Entry point", "Offset"), XBinary::valueToHexEx(mach.getEntryPointOffset(&memoryMap)));
+                        appendRecord(pParent, QString("%1(%2)").arg("Entry point", "Relative address"), XBinary::valueToHexEx(mach.getEntryPointRVA(&memoryMap)));
+                        appendRecord(pParent, QString("%1(%2)").arg("Entry point", "Bytes"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
-                        appendRecord(pParent, QString("%1(%2)").arg(tr("Entry point"), tr("Signature")),
+                        appendRecord(pParent, QString("%1(%2)").arg("Entry point", "Signature"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
-                        appendRecord(pParent, QString("%1(%2)(Rel)").arg(tr("Entry point"), tr("Signature")),
+                        appendRecord(pParent, QString("%1(%2)(Rel)").arg("Entry point", "Signature"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
                     }
 
-                    if (check("Header", "All")) {
-                        XFileInfoItem *pParent = appendRecord(0, tr("Header"), "");
+                    if (check("Header")) {
+                        XFileInfoItem *pParent = appendRecord(0, "Header", "");
 
                         appendRecord(pParent, "magic", XBinary::valueToHex(mach.getHeader_magic()));
                         appendRecord(pParent, "cputype", XBinary::valueToHex(mach.getHeader_cputype()));
@@ -382,26 +387,26 @@ void XFileInfo::process()
 
             if (pe.isValid()) {
                 if (!(g_pPdStruct->bIsStop)) {
-                    if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(pe.getFileType()));
+                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(pe.getFileType()));
 
                     //                    XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
-                    if (check("Entry point", "All")) {
-                        XFileInfoItem *pParent = appendRecord(0, tr("Entry point"), "");
+                    if (check("Entry point")) {
+                        XFileInfoItem *pParent = appendRecord(0, "Entry point", "");
 
-                        appendRecord(pParent, QString("%1").arg(tr("Address")), XBinary::valueToHexEx(pe.getEntryPointAddress(&memoryMap)));
-                        appendRecord(pParent, QString("%1").arg(tr("Offset")), XBinary::valueToHexEx(pe.getEntryPointOffset(&memoryMap)));
-                        appendRecord(pParent, QString("%1").arg(tr("Relative address")), XBinary::valueToHexEx(pe.getEntryPointRVA(&memoryMap)));
-                        appendRecord(pParent, QString("%1").arg(tr("Bytes")),
+                        appendRecord(pParent, QString("%1").arg("Address"), XBinary::valueToHexEx(pe.getEntryPointAddress(&memoryMap)));
+                        appendRecord(pParent, QString("%1").arg("Offset"), XBinary::valueToHexEx(pe.getEntryPointOffset(&memoryMap)));
+                        appendRecord(pParent, QString("%1").arg("Relative address"), XBinary::valueToHexEx(pe.getEntryPointRVA(&memoryMap)));
+                        appendRecord(pParent, QString("%1").arg("Bytes"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
-                        appendRecord(pParent, QString("%1").arg(tr("Signature")),
+                        appendRecord(pParent, QString("%1").arg("Signature"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
-                        appendRecord(pParent, QString("%1(Rel)").arg(tr("Signature")),
+                        appendRecord(pParent, QString("%1(Rel)").arg("Signature"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
                     }
 
-                    if (check("IMAGE_DOS_HEADER", "All")) {
+                    if (check("IMAGE_DOS_HEADER")) {
                         XFileInfoItem *pParent = appendRecord(0, "IMAGE_DOS_HEADER", "");
 
                         appendRecord(pParent, "e_magic", XBinary::valueToHex(pe.get_e_magic()));
@@ -420,7 +425,7 @@ void XFileInfo::process()
                         appendRecord(pParent, "e_ovno", XBinary::valueToHex(pe.get_e_ovno()));
                     }
 
-                    if (check("IMAGE_NT_HEADERS", "All")) {
+                    if (check("IMAGE_NT_HEADERS")) {
                         XFileInfoItem *pParent = appendRecord(0, "IMAGE_NT_HEADERS", "");
 
                         appendRecord(pParent, "Signature",
@@ -517,26 +522,26 @@ void XFileInfo::process()
 
             if (ne.isValid()) {
                 if (!(g_pPdStruct->bIsStop)) {
-                    if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(ne.getFileType()));
+                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(ne.getFileType()));
 
                     //                    XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
-                    if (check("Entry point", "All")) {
-                        XFileInfoItem *pParent = appendRecord(0, tr("Entry point"), "");
+                    if (check("Entry point")) {
+                        XFileInfoItem *pParent = appendRecord(0, "Entry point", "");
 
-                        appendRecord(pParent, QString("%1").arg(tr("Address")), XBinary::valueToHexEx(ne.getEntryPointAddress(&memoryMap)));
-                        appendRecord(pParent, QString("%1").arg(tr("Offset")), XBinary::valueToHexEx(ne.getEntryPointOffset(&memoryMap)));
-                        appendRecord(pParent, QString("%1").arg(tr("Relative address")), XBinary::valueToHexEx(ne.getEntryPointRVA(&memoryMap)));
-                        appendRecord(pParent, QString("%1").arg(tr("Bytes")),
+                        appendRecord(pParent, QString("%1").arg("Address"), XBinary::valueToHexEx(ne.getEntryPointAddress(&memoryMap)));
+                        appendRecord(pParent, QString("%1").arg("Offset"), XBinary::valueToHexEx(ne.getEntryPointOffset(&memoryMap)));
+                        appendRecord(pParent, QString("%1").arg("Relative address"), XBinary::valueToHexEx(ne.getEntryPointRVA(&memoryMap)));
+                        appendRecord(pParent, QString("%1").arg("Bytes"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
-                        appendRecord(pParent, QString("%1").arg(tr("Signature")),
+                        appendRecord(pParent, QString("%1").arg("Signature"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
-                        appendRecord(pParent, QString("%1(Rel)").arg(tr("Signature")),
+                        appendRecord(pParent, QString("%1(Rel)").arg("Signature"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
                     }
 
-                    if (check("IMAGE_DOS_HEADER", "All")) {
+                    if (check("IMAGE_DOS_HEADER")) {
                         XFileInfoItem *pParent = appendRecord(0, "IMAGE_DOS_HEADER", "");
 
                         appendRecord(pParent, "e_magic", XBinary::valueToHex(ne.get_e_magic()));
@@ -561,25 +566,25 @@ void XFileInfo::process()
 
             if (le.isValid()) {
                 if (!(g_pPdStruct->bIsStop)) {
-                    if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(le.getFileType()));
+                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(le.getFileType()));
 
                     //                    XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
-                    if (check("Entry point(Address)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Address")), XBinary::valueToHexEx(le.getEntryPointAddress(&memoryMap)));
-                    if (check("Entry point(Offset)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Offset")), XBinary::valueToHexEx(le.getEntryPointOffset(&memoryMap)));
-                    if (check("Entry point(Relative address)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Relative address")), XBinary::valueToHexEx(le.getEntryPointRVA(&memoryMap)));
-                    if (check("Entry point(Bytes)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Bytes")),
+                    if (check("Entry point(Address)"))
+                        appendRecord(0, QString("%1(%2)").arg("Entry point", "Address"), XBinary::valueToHexEx(le.getEntryPointAddress(&memoryMap)));
+                    if (check("Entry point(Offset)"))
+                        appendRecord(0, QString("%1(%2)").arg("Entry point", "Offset"), XBinary::valueToHexEx(le.getEntryPointOffset(&memoryMap)));
+                    if (check("Entry point(Relative address)"))
+                        appendRecord(0, QString("%1(%2)").arg("Entry point", "Relative address"), XBinary::valueToHexEx(le.getEntryPointRVA(&memoryMap)));
+                    if (check("Entry point(Bytes)"))
+                        appendRecord(0, QString("%1(%2)").arg("Entry point", "Bytes"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
-                    if (check("Entry point(Signature)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Signature")),
+                    if (check("Entry point(Signature)"))
+                        appendRecord(0, QString("%1(%2)").arg("Entry point", "Signature"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
-                    if (check("Entry point(Signature)(Rel)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)(Rel)").arg(tr("Entry point"), tr("Signature")),
+                    if (check("Entry point(Signature)(Rel)"))
+                        appendRecord(0, QString("%1(%2)(Rel)").arg("Entry point", "Signature"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
 
                     // TODO
@@ -593,21 +598,21 @@ void XFileInfo::process()
                     //                    XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
-                    if (check("Entry point", "All")) {
-                        XFileInfoItem *pParent = appendRecord(0, tr("Entry point"), "");
+                    if (check("Entry point")) {
+                        XFileInfoItem *pParent = appendRecord(0, "Entry point", "");
 
-                        appendRecord(pParent, QString("%1").arg(tr("Address")), XBinary::valueToHexEx(msdos.getEntryPointAddress(&memoryMap)));
-                        appendRecord(pParent, QString("%1").arg(tr("Offset")), XBinary::valueToHexEx(msdos.getEntryPointOffset(&memoryMap)));
-                        appendRecord(pParent, QString("%1").arg(tr("Relative address")), XBinary::valueToHexEx(msdos.getEntryPointRVA(&memoryMap)));
-                        appendRecord(pParent, QString("%1").arg(tr("Bytes")),
+                        appendRecord(pParent, QString("%1").arg("Address"), XBinary::valueToHexEx(msdos.getEntryPointAddress(&memoryMap)));
+                        appendRecord(pParent, QString("%1").arg("Offset"), XBinary::valueToHexEx(msdos.getEntryPointOffset(&memoryMap)));
+                        appendRecord(pParent, QString("%1").arg("Relative address"), XBinary::valueToHexEx(msdos.getEntryPointRVA(&memoryMap)));
+                        appendRecord(pParent, QString("%1").arg("Bytes"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
-                        appendRecord(pParent, QString("%1").arg(tr("Signature")),
+                        appendRecord(pParent, QString("%1").arg("Signature"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
-                        appendRecord(pParent, QString("%1(Rel)").arg(tr("Signature")),
+                        appendRecord(pParent, QString("%1(Rel)").arg("Signature"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
                     }
 
-                    if (check("IMAGE_DOS_HEADER", "All")) {
+                    if (check("IMAGE_DOS_HEADER")) {
                         XFileInfoItem *pParent = appendRecord(0, "IMAGE_DOS_HEADER", "");
 
                         appendRecord(pParent, "e_magic", XBinary::valueToHex(msdos.get_e_magic()));
@@ -634,25 +639,25 @@ void XFileInfo::process()
 
             if (xcom.isValid()) {
                 if (!(g_pPdStruct->bIsStop)) {
-                    if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(xcom.getFileType()));
+                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(xcom.getFileType()));
 
                     //                    XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
-                    if (check("Entry point(Address)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Address")), XBinary::valueToHexEx(xcom.getEntryPointAddress(&memoryMap)));
-                    if (check("Entry point(Offset)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Offset")), XBinary::valueToHexEx(xcom.getEntryPointOffset(&memoryMap)));
-                    if (check("Entry point(Relative address)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Relative address")), XBinary::valueToHexEx(xcom.getEntryPointRVA(&memoryMap)));
-                    if (check("Entry point(Bytes)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Bytes")),
+                    if (check("Entry point(Address)"))
+                        appendRecord(0, QString("%1(%2)").arg("Entry point", "Address"), XBinary::valueToHexEx(xcom.getEntryPointAddress(&memoryMap)));
+                    if (check("Entry point(Offset)"))
+                        appendRecord(0, QString("%1(%2)").arg("Entry point", "Offset"), XBinary::valueToHexEx(xcom.getEntryPointOffset(&memoryMap)));
+                    if (check("Entry point(Relative address)"))
+                        appendRecord(0, QString("%1(%2)").arg("Entry point", "Relative address"), XBinary::valueToHexEx(xcom.getEntryPointRVA(&memoryMap)));
+                    if (check("Entry point(Bytes)"))
+                        appendRecord(0, QString("%1(%2)").arg("Entry point", "Bytes"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
-                    if (check("Entry point(Signature)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)").arg(tr("Entry point"), tr("Signature")),
+                    if (check("Entry point(Signature)"))
+                        appendRecord(0, QString("%1(%2)").arg("Entry point", "Signature"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
-                    if (check("Entry point(Signature)(Rel)", "Entry point"))
-                        appendRecord(0, QString("%1(%2)(Rel)").arg(tr("Entry point"), tr("Signature")),
+                    if (check("Entry point(Signature)(Rel)"))
+                        appendRecord(0, QString("%1(%2)(Rel)").arg("Entry point", "Signature"),
                                      XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
 
                     // TODO
@@ -663,32 +668,32 @@ void XFileInfo::process()
 
             if (dex.isValid()) {
                 if (!(g_pPdStruct->bIsStop)) {
-                    if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(dex.getFileType()));
+                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(dex.getFileType()));
 
-                    if (check("magic", "Header")) appendRecord(0, "magic", XBinary::valueToHex(dex.getHeader_magic()));
-                    if (check("version", "Header")) appendRecord(0, "version", XBinary::valueToHex(dex.getHeader_version()));
-                    if (check("checksum", "Header")) appendRecord(0, "checksum", XBinary::valueToHex(dex.getHeader_checksum()));
-                    if (check("signature", "Header")) appendRecord(0, "signature", dex.getHeader_signature().toHex());
-                    if (check("file_size", "Header")) appendRecord(0, "file_size", XBinary::valueToHex(dex.getHeader_file_size()));
-                    if (check("header_size", "Header")) appendRecord(0, "header_size", XBinary::valueToHex(dex.getHeader_header_size()));
-                    if (check("endian_tag", "Header")) appendRecord(0, "endian_tag", XBinary::valueToHex(dex.getHeader_endian_tag()));
-                    if (check("link_size", "Header")) appendRecord(0, "link_size", XBinary::valueToHex(dex.getHeader_link_size()));
-                    if (check("link_off", "Header")) appendRecord(0, "link_off", XBinary::valueToHex(dex.getHeader_link_off()));
-                    if (check("map_off", "Header")) appendRecord(0, "map_off", XBinary::valueToHex(dex.getHeader_map_off()));
-                    if (check("string_ids_size", "Header")) appendRecord(0, "string_ids_size", XBinary::valueToHex(dex.getHeader_string_ids_size()));
-                    if (check("string_ids_off", "Header")) appendRecord(0, "string_ids_off", XBinary::valueToHex(dex.getHeader_string_ids_off()));
-                    if (check("type_ids_size", "Header")) appendRecord(0, "type_ids_size", XBinary::valueToHex(dex.getHeader_type_ids_size()));
-                    if (check("type_ids_off", "Header")) appendRecord(0, "type_ids_off", XBinary::valueToHex(dex.getHeader_type_ids_off()));
-                    if (check("proto_ids_size", "Header")) appendRecord(0, "proto_ids_size", XBinary::valueToHex(dex.getHeader_proto_ids_size()));
-                    if (check("proto_ids_off", "Header")) appendRecord(0, "proto_ids_off", XBinary::valueToHex(dex.getHeader_proto_ids_off()));
-                    if (check("field_ids_size", "Header")) appendRecord(0, "field_ids_size", XBinary::valueToHex(dex.getHeader_field_ids_size()));
-                    if (check("field_ids_off", "Header")) appendRecord(0, "field_ids_off", XBinary::valueToHex(dex.getHeader_field_ids_off()));
-                    if (check("method_ids_size", "Header")) appendRecord(0, "method_ids_size", XBinary::valueToHex(dex.getHeader_method_ids_size()));
-                    if (check("method_ids_off", "Header")) appendRecord(0, "method_ids_off", XBinary::valueToHex(dex.getHeader_method_ids_off()));
-                    if (check("class_defs_size", "Header")) appendRecord(0, "class_defs_size", XBinary::valueToHex(dex.getHeader_class_defs_size()));
-                    if (check("class_defs_off", "Header")) appendRecord(0, "class_defs_off", XBinary::valueToHex(dex.getHeader_class_defs_off()));
-                    if (check("data_size", "Header")) appendRecord(0, "data_size", XBinary::valueToHex(dex.getHeader_data_size()));
-                    if (check("data_off", "Header")) appendRecord(0, "data_off", XBinary::valueToHex(dex.getHeader_data_off()));
+                    if (check("magic")) appendRecord(0, "magic", XBinary::valueToHex(dex.getHeader_magic()));
+                    if (check("version")) appendRecord(0, "version", XBinary::valueToHex(dex.getHeader_version()));
+                    if (check("checksum")) appendRecord(0, "checksum", XBinary::valueToHex(dex.getHeader_checksum()));
+                    if (check("signature")) appendRecord(0, "signature", dex.getHeader_signature().toHex());
+                    if (check("file_size")) appendRecord(0, "file_size", XBinary::valueToHex(dex.getHeader_file_size()));
+                    if (check("header_size")) appendRecord(0, "header_size", XBinary::valueToHex(dex.getHeader_header_size()));
+                    if (check("endian_tag")) appendRecord(0, "endian_tag", XBinary::valueToHex(dex.getHeader_endian_tag()));
+                    if (check("link_size")) appendRecord(0, "link_size", XBinary::valueToHex(dex.getHeader_link_size()));
+                    if (check("link_off")) appendRecord(0, "link_off", XBinary::valueToHex(dex.getHeader_link_off()));
+                    if (check("map_off")) appendRecord(0, "map_off", XBinary::valueToHex(dex.getHeader_map_off()));
+                    if (check("string_ids_size")) appendRecord(0, "string_ids_size", XBinary::valueToHex(dex.getHeader_string_ids_size()));
+                    if (check("string_ids_off")) appendRecord(0, "string_ids_off", XBinary::valueToHex(dex.getHeader_string_ids_off()));
+                    if (check("type_ids_size")) appendRecord(0, "type_ids_size", XBinary::valueToHex(dex.getHeader_type_ids_size()));
+                    if (check("type_ids_off")) appendRecord(0, "type_ids_off", XBinary::valueToHex(dex.getHeader_type_ids_off()));
+                    if (check("proto_ids_size")) appendRecord(0, "proto_ids_size", XBinary::valueToHex(dex.getHeader_proto_ids_size()));
+                    if (check("proto_ids_off")) appendRecord(0, "proto_ids_off", XBinary::valueToHex(dex.getHeader_proto_ids_off()));
+                    if (check("field_ids_size")) appendRecord(0, "field_ids_size", XBinary::valueToHex(dex.getHeader_field_ids_size()));
+                    if (check("field_ids_off")) appendRecord(0, "field_ids_off", XBinary::valueToHex(dex.getHeader_field_ids_off()));
+                    if (check("method_ids_size")) appendRecord(0, "method_ids_size", XBinary::valueToHex(dex.getHeader_method_ids_size()));
+                    if (check("method_ids_off")) appendRecord(0, "method_ids_off", XBinary::valueToHex(dex.getHeader_method_ids_off()));
+                    if (check("class_defs_size")) appendRecord(0, "class_defs_size", XBinary::valueToHex(dex.getHeader_class_defs_size()));
+                    if (check("class_defs_off")) appendRecord(0, "class_defs_off", XBinary::valueToHex(dex.getHeader_class_defs_off()));
+                    if (check("data_size")) appendRecord(0, "data_size", XBinary::valueToHex(dex.getHeader_data_size()));
+                    if (check("data_off")) appendRecord(0, "data_off", XBinary::valueToHex(dex.getHeader_data_off()));
                     // TODO
                 }
             }
@@ -696,9 +701,9 @@ void XFileInfo::process()
             XPDF pdf(g_pDevice);
 
             if (pdf.isValid()) {
-                if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(pdf.getFileType()));
+                if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(pdf.getFileType()));
                 //                if(check("Version","Version"))
-                //                appendRecord(0,tr("Version"),pdf.getVersion());
+                //                appendRecord(0,"Version"),pdf.getVersion());
                 // TODO
             }
         } else if (XBinary::checkFileType(XBinary::FT_MACHOFAT, fileType)) {
@@ -708,7 +713,7 @@ void XFileInfo::process()
                 // TODO
             }
         } else {
-            if (check("File type", "File type")) appendRecord(0, tr("File type"), XBinary::fileTypeIdToString(XBinary::getPrefFileType(g_pDevice, true)));
+            if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(XBinary::getPrefFileType(g_pDevice, true)));
         }
     }
 
