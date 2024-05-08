@@ -105,24 +105,12 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
 
 XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pItemParent, const QString &sName, QVariant varData)
 {
-    XFileInfoItem *pResult = nullptr;
-
-    QString _sName;
+    XFileInfoItem *pResult = new XFileInfoItem(sName, varData);
 
     if (pItemParent) {
-        _sName = pItemParent->getName() + "#";
-    }
-
-    _sName += sName;
-
-    if (check(_sName)) {
-        pResult = new XFileInfoItem(sName, varData);
-
-        if (pItemParent) {
-            pItemParent->appendChild(pResult);
-        } else {
-            g_pModel->appendChild(pResult);
-        }
+        pItemParent->appendChild(pResult);
+    } else {
+        g_pModel->appendChild(pResult);
     }
 
     return pResult;
@@ -133,22 +121,28 @@ void XFileInfo::setCurrentStatus(const QString &sStatus)
     XBinary::setPdStructStatus(g_pPdStruct, g_nFreeIndex, sStatus);
 }
 
-bool XFileInfo::check(const QString &sString)
+bool XFileInfo::check(const QString &sString, const QString &sExtra)
 {
+    QString sCurrentString = sString;
+
     bool bResult = true;
+
+    if (sExtra != "") {
+        sCurrentString += "#" + sExtra;
+    }
 
     qint32 nNumberOfSections = g_options.sString.count("#") + 1;
 
     for (qint32 i = 0; i < nNumberOfSections; i++) {
         QString sOptionString = g_options.sString.section("#",i,i).toUpper();
-        QString _sString = sString.section("#",i,i).toUpper();
+        QString _sString = sCurrentString.section("#",i,i).toUpper();
         if ((sOptionString != _sString) && (_sString != "")) {
             bResult = false;
         }
     }
 
     if (bResult) {
-        setCurrentStatus(sString);
+        setCurrentStatus(sCurrentString);
     }
 
     return bResult;
@@ -196,46 +190,97 @@ void XFileInfo::process()
     }
 
     {
-        XFileInfoItem *pItemParent = appendRecord(0, "Info", "");
-        appendRecord(pItemParent, "File name", XBinary::getDeviceFileName(g_pDevice));
+        QString sGroup = "Info";
+        if (check(sGroup)) {
+            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+            {
+                QString sRecord = "File name";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getDeviceFileName(g_pDevice));
+            }
+            {
+                QString sRecord = "Size";
+                if (check(sGroup, sRecord)) {
+                    qint64 nSize = g_pDevice->size();
+                    QString sSize = QString::number(nSize);
 
-        qint64 nSize = g_pDevice->size();
-        QString sSize = QString::number(nSize);
+                    if (g_options.bComment) {
+                        sSize += QString("(%1)").arg(XBinary::bytesCountToString(nSize));
+                    }
 
-        if (g_options.bComment) {
-            sSize += QString("(%1)").arg(XBinary::bytesCountToString(nSize));
-        }
-
-        appendRecord(pItemParent, "Size", sSize);
-
-        if (XBinary::checkFileType(XBinary::FT_ELF, fileType) || XBinary::checkFileType(XBinary::FT_PE, fileType) ||
-            XBinary::checkFileType(XBinary::FT_MACHO, fileType) || XBinary::checkFileType(XBinary::FT_MSDOS, fileType) ||
-            XBinary::checkFileType(XBinary::FT_NE, fileType) || XBinary::checkFileType(XBinary::FT_LE, fileType)) {
-            XBinary::OSINFO osInfo = XFormats::getOsInfo(fileType, g_pDevice);
-            QString sOperationSystem = XBinary::osNameIdToString(osInfo.osName);
-
-            if (osInfo.sOsVersion != "") {
-                sOperationSystem += QString("(%1)").arg(osInfo.sOsVersion);
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, "Size", sSize);
+                }
             }
 
-            appendRecord(pItemParent, "Operation system", sOperationSystem);
-            appendRecord(pItemParent, "Architecture", osInfo.sArch);
-            appendRecord(pItemParent, "Mode", XBinary::modeIdToString(osInfo.mode));
-            appendRecord(pItemParent, "Type", osInfo.sType);
-            appendRecord(pItemParent, "Endianness", XBinary::endianToString(osInfo.endian));
+            if (XBinary::checkFileType(XBinary::FT_ELF, fileType) || XBinary::checkFileType(XBinary::FT_PE, fileType) ||
+                XBinary::checkFileType(XBinary::FT_MACHO, fileType) || XBinary::checkFileType(XBinary::FT_MSDOS, fileType) ||
+                XBinary::checkFileType(XBinary::FT_NE, fileType) || XBinary::checkFileType(XBinary::FT_LE, fileType)) {
+
+                XBinary::OSINFO osInfo = XFormats::getOsInfo(fileType, g_pDevice);
+
+                {
+                    QString sRecord = "Operation system";
+                    if (check(sGroup, sRecord)) {
+                        QString sOperationSystem = XBinary::osNameIdToString(osInfo.osName);
+
+                        if (osInfo.sOsVersion != "") {
+                            sOperationSystem += QString("(%1)").arg(osInfo.sOsVersion);
+                        }
+
+                        appendRecord(pItemParent, sRecord, sOperationSystem);
+                    }
+                }
+                {
+                    QString sRecord = "Architecture";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, osInfo.sArch);
+                }
+                {
+                    QString sRecord = "Mode";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::modeIdToString(osInfo.mode));
+                }
+                {
+                    QString sRecord = "Type";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, osInfo.sType);
+                }
+                {
+                    QString sRecord = "Endianness";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::endianToString(osInfo.endian));
+                }
+            }
         }
     }
-
-    if (check("Hash")) {
-        XFileInfoItem *pParent = appendRecord(0, "Hash", "");
-
-        appendRecord(pParent, "MD4", XBinary::getHash(XBinary::HASH_MD4, g_pDevice, g_pPdStruct));
-        appendRecord(pParent, "MD5", XBinary::getHash(XBinary::HASH_MD5, g_pDevice, g_pPdStruct));
-        appendRecord(pParent, "SHA1", XBinary::getHash(XBinary::HASH_SHA1, g_pDevice, g_pPdStruct));
-        appendRecord(pParent, "SHA224", XBinary::getHash(XBinary::HASH_SHA224, g_pDevice, g_pPdStruct));
-        appendRecord(pParent, "SHA256", XBinary::getHash(XBinary::HASH_SHA256, g_pDevice, g_pPdStruct));
-        appendRecord(pParent, "SHA384", XBinary::getHash(XBinary::HASH_SHA384, g_pDevice, g_pPdStruct));
-        appendRecord(pParent, "SHA512", XBinary::getHash(XBinary::HASH_SHA512, g_pDevice, g_pPdStruct));
+    {
+        QString sGroup = "Hash";
+        if (check(sGroup)) {
+            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+            {
+                QString sRecord = "MD4";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_MD4, g_pDevice, g_pPdStruct));
+            }
+            {
+                QString sRecord = "MD5";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_MD5, g_pDevice, g_pPdStruct));
+            }
+            {
+                QString sRecord = "SHA1";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA1, g_pDevice, g_pPdStruct));
+            }
+            {
+                QString sRecord = "SHA224";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA224, g_pDevice, g_pPdStruct));
+            }
+            {
+                QString sRecord = "SHA256";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA256, g_pDevice, g_pPdStruct));
+            }
+            {
+                QString sRecord = "SHA384";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA384, g_pDevice, g_pPdStruct));
+            }
+            {
+                QString sRecord = "SHA512";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA512, g_pDevice, g_pPdStruct));
+            }
+        }
     }
 
     if (check("Entropy")) {
