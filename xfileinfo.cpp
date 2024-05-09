@@ -282,18 +282,18 @@ void XFileInfo::process()
             }
         }
     }
+    {
+        QString sRecord = "Entropy";
+        if (check(sRecord)) {
+            double dEntropy = XBinary::getEntropy(g_pDevice, g_pPdStruct);
+            QString sEntropy = QString::number(dEntropy);
 
-    if (check("Entropy")) {
-        XFileInfoItem *pParent = appendRecord(0, "Entropy", "");
+            if (g_options.bComment) {
+                sEntropy += QString("(%1)").arg(XBinary::isPacked(dEntropy) ? ("packed") : ("not packed"));
+            }
 
-        double dEntropy = XBinary::getEntropy(g_pDevice, g_pPdStruct);
-        QString sEntropy = QString::number(dEntropy);
-
-        if (g_options.bComment) {
-            sEntropy += QString("(%1)").arg(XBinary::isPacked(dEntropy) ? ("packed") : ("not packed"));
+            appendRecord(0, sRecord, sEntropy);
         }
-
-        appendRecord(pParent, "Entropy", sEntropy);
     }
 
     if (!(g_pPdStruct->bIsStop)) {
