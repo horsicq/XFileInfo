@@ -134,8 +134,8 @@ bool XFileInfo::check(const QString &sString, const QString &sExtra)
     qint32 nNumberOfSections = g_options.sString.count("#") + 1;
 
     for (qint32 i = 0; i < nNumberOfSections; i++) {
-        QString sOptionString = g_options.sString.section("#",i,i).toUpper();
-        QString _sString = sCurrentString.section("#",i,i).toUpper();
+        QString sOptionString = g_options.sString.section("#", i, i).toUpper();
+        QString _sString = sCurrentString.section("#", i, i).toUpper();
         if ((sOptionString != _sString) && (_sString != "")) {
             bResult = false;
         }
@@ -232,7 +232,6 @@ void XFileInfo::process()
             if (XBinary::checkFileType(XBinary::FT_ELF, fileType) || XBinary::checkFileType(XBinary::FT_PE, fileType) ||
                 XBinary::checkFileType(XBinary::FT_MACHO, fileType) || XBinary::checkFileType(XBinary::FT_MSDOS, fileType) ||
                 XBinary::checkFileType(XBinary::FT_NE, fileType) || XBinary::checkFileType(XBinary::FT_LE, fileType)) {
-
                 XBinary::OSINFO osInfo = XFormats::getOsInfo(fileType, g_pDevice);
 
                 {

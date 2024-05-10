@@ -162,7 +162,7 @@ void XFileInfoWidget::reloadType()
     qint32 nNumberOfMethods = listMethods.count();
 
     for (qint32 i = 0; i < nNumberOfMethods; i++) {
-        ui->comboBoxMethod->addItem(listMethods.at(i), listMethods.at(i)); // TODO Translate here
+        ui->comboBoxMethod->addItem(listMethods.at(i), listMethods.at(i));  // TODO Translate here
     }
 
     ui->comboBoxMethod->blockSignals(bBlocked1);
