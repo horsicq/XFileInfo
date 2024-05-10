@@ -197,18 +197,36 @@ void XFileInfo::process()
                 QString sRecord = "File name";
                 if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getDeviceFileName(g_pDevice));
             }
+
+            XBinary::FILEFORMATINFO fileFormatInfo = XFormats::getFileFormatInfo(fileType, g_pDevice, true);
             {
                 QString sRecord = "Size";
                 if (check(sGroup, sRecord)) {
-                    qint64 nSize = g_pDevice->size();
+                    qint64 nSize = fileFormatInfo.nSize;
                     QString sSize = QString::number(nSize);
 
                     if (g_options.bComment) {
                         sSize += QString("(%1)").arg(XBinary::bytesCountToString(nSize));
                     }
 
-                    if (check(sGroup, sRecord)) appendRecord(pItemParent, "Size", sSize);
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, sSize);
                 }
+            }
+            {
+                QString sRecord = "File type";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::fileTypeIdToString(fileFormatInfo.fileType));
+            }
+            {
+                QString sRecord = "String";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, fileFormatInfo.sString);
+            }
+            {
+                QString sRecord = "Extension";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, fileFormatInfo.sExt);
+            }
+            {
+                QString sRecord = "Version";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, fileFormatInfo.sVersion);
             }
 
             if (XBinary::checkFileType(XBinary::FT_ELF, fileType) || XBinary::checkFileType(XBinary::FT_PE, fileType) ||
@@ -302,7 +320,9 @@ void XFileInfo::process()
 
             if (binary.isValid()) {
                 if (!(g_pPdStruct->bIsStop)) {
-                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(binary.getFileType()));
+                    {
+                        // TODO
+                    }
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_ELF, fileType)) {
@@ -311,8 +331,6 @@ void XFileInfo::process()
             if (elf.isValid()) {
                 if (!(g_pPdStruct->bIsStop)) {
                     bool bIs64 = elf.is64();
-
-                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(elf.getFileType()));
 
                     //                    XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(XBinary::MAPMODE_SEGMENTS, g_pPdStruct);
