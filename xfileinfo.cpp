@@ -399,8 +399,6 @@ void XFileInfo::process()
                 if (!(g_pPdStruct->bIsStop)) {
                     bool bIs64 = mach.is64();
 
-                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(mach.getFileType()));
-
                     //                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(XBinary::MAPMODE_SEGMENTS, g_pPdStruct);
 
@@ -449,8 +447,6 @@ void XFileInfo::process()
 
             if (pe.isValid()) {
                 if (!(g_pPdStruct->bIsStop)) {
-                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(pe.getFileType()));
-
                     //                    XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
@@ -584,8 +580,6 @@ void XFileInfo::process()
 
             if (ne.isValid()) {
                 if (!(g_pPdStruct->bIsStop)) {
-                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(ne.getFileType()));
-
                     //                    XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
@@ -628,8 +622,6 @@ void XFileInfo::process()
 
             if (le.isValid()) {
                 if (!(g_pPdStruct->bIsStop)) {
-                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(le.getFileType()));
-
                     //                    XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
@@ -701,8 +693,6 @@ void XFileInfo::process()
 
             if (xcom.isValid()) {
                 if (!(g_pPdStruct->bIsStop)) {
-                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(xcom.getFileType()));
-
                     //                    XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
@@ -730,8 +720,6 @@ void XFileInfo::process()
 
             if (dex.isValid()) {
                 if (!(g_pPdStruct->bIsStop)) {
-                    if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(dex.getFileType()));
-
                     if (check("magic")) appendRecord(0, "magic", XBinary::valueToHex(dex.getHeader_magic()));
                     if (check("version")) appendRecord(0, "version", XBinary::valueToHex(dex.getHeader_version()));
                     if (check("checksum")) appendRecord(0, "checksum", XBinary::valueToHex(dex.getHeader_checksum()));
@@ -775,7 +763,7 @@ void XFileInfo::process()
                 // TODO
             }
         } else {
-            if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(XBinary::getPrefFileType(g_pDevice, true)));
+            // TODO
         }
     }
 
