@@ -364,13 +364,42 @@ void XFileInfo::process()
                             }
                         }
                     }
-
-                    if (check("ident_mag")) appendRecord(0, "ident_mag", XBinary::valueToHex(elf.getIdent_mag_LE()));
-                    if (check("ident_class")) appendRecord(0, "ident_class", XBinary::valueToHex(elf.getIdent_class()));
-                    if (check("ident_data")) appendRecord(0, "ident_data", XBinary::valueToHex(elf.getIdent_data()));
-                    if (check("ident_version")) appendRecord(0, "ident_version", XBinary::valueToHex(elf.getIdent_version()));
-                    if (check("ident_osabi")) appendRecord(0, "ident_osabi", XBinary::valueToHex(elf.getIdent_osabi()));
-                    if (check("ident_abiversion")) appendRecord(0, "ident_abiversion", XBinary::valueToHex(elf.getIdent_abiversion()));
+                    {
+                        QString sGroup = "Elf_Ehdr";
+                        if (check(sGroup)) {
+                            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+                            {
+                                QString sSubGroup = "e_ident";
+                                if (check(sSubGroup)) {
+                                    XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
+                                    {
+                                        QString sRecord = "ei_mag";
+                                        if (check(sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(elf.getIdent_mag_LE()));
+                                    }
+                                    {
+                                        QString sRecord = "ei_class";
+                                        if (check(sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(elf.getIdent_class()));
+                                    }
+                                    {
+                                        QString sRecord = "ei_data";
+                                        if (check(sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(elf.getIdent_data()));
+                                    }
+                                    {
+                                        QString sRecord = "ei_version";
+                                        if (check(sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(elf.getIdent_version()));
+                                    }
+                                    {
+                                        QString sRecord = "ei_osabi";
+                                        if (check(sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(elf.getIdent_osabi()));
+                                    }
+                                    {
+                                        QString sRecord = "ei_abiversion";
+                                        if (check(sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(elf.getIdent_abiversion()));
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     if (bIs64) {
                         if (check("type")) appendRecord(0, "type", XBinary::valueToHex(elf.getHdr64_type()));
