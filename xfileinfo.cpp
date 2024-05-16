@@ -352,15 +352,21 @@ void XFileInfo::process()
                             }
                             {
                                 QString sRecord = "Bytes";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
                             }
                             {
                                 QString sRecord = "Signature";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
                             }
                             {
                                 QString sRecord = QString("%1(rel)").arg("Signature");
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
                             }
                         }
                     }
@@ -485,15 +491,21 @@ void XFileInfo::process()
                             }
                             {
                                 QString sRecord = "Bytes";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
                             }
                             {
                                 QString sRecord = "Signature";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
                             }
                             {
                                 QString sRecord = QString("%1(rel)").arg("Signature");
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
                             }
                         }
                     }
@@ -550,15 +562,21 @@ void XFileInfo::process()
                             }
                             {
                                 QString sRecord = "Bytes";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
                             }
                             {
                                 QString sRecord = "Signature";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
                             }
                             {
                                 QString sRecord = QString("%1(rel)").arg("Signature");
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
                             }
                         }
                     }
@@ -700,15 +718,21 @@ void XFileInfo::process()
                             }
                             {
                                 QString sRecord = "Bytes";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
                             }
                             {
                                 QString sRecord = "Signature";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
                             }
                             {
                                 QString sRecord = QString("%1(rel)").arg("Signature");
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
                             }
                         }
                     }
@@ -759,15 +783,21 @@ void XFileInfo::process()
                             }
                             {
                                 QString sRecord = "Bytes";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
                             }
                             {
                                 QString sRecord = "Signature";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
                             }
                             {
                                 QString sRecord = QString("%1(rel)").arg("Signature");
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
                             }
                         }
                     }
@@ -801,15 +831,21 @@ void XFileInfo::process()
                             }
                             {
                                 QString sRecord = "Bytes";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
                             }
                             {
                                 QString sRecord = "Signature";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
                             }
                             {
                                 QString sRecord = QString("%1(rel)").arg("Signature");
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
                             }
                         }
                     }
@@ -861,15 +897,21 @@ void XFileInfo::process()
                             }
                             {
                                 QString sRecord = "Bytes";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
                             }
                             {
                                 QString sRecord = "Signature";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
                             }
                             {
                                 QString sRecord = QString("%1(rel)").arg("Signature");
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
+                                if (check(sGroup, sRecord))
+                                    appendRecord(pItemParent, sRecord,
+                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
                             }
                         }
                     }
