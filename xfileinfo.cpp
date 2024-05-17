@@ -414,6 +414,50 @@ void XFileInfo::process()
                                         QString sRecord = "machine";
                                         if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_machine()));
                                     }
+                                    {
+                                        QString sRecord = "version";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_version()));
+                                    }
+                                    {
+                                        QString sRecord = "entry";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_entry()));
+                                    }
+                                    {
+                                        QString sRecord = "phoff";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_phoff()));
+                                    }
+                                    {
+                                        QString sRecord = "shoff";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_shoff()));
+                                    }
+                                    {
+                                        QString sRecord = "flags";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_flags()));
+                                    }
+                                    {
+                                        QString sRecord = "ehsize";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_ehsize()));
+                                    }
+                                    {
+                                        QString sRecord = "phentsize";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_phentsize()));
+                                    }
+                                    {
+                                        QString sRecord = "phnum";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_phnum()));
+                                    }
+                                    {
+                                        QString sRecord = "shentsize";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_shentsize()));
+                                    }
+                                    {
+                                        QString sRecord = "shnum";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_shnum()));
+                                    }
+                                    {
+                                        QString sRecord = "shstrndx";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_shstrndx()));
+                                    }
                                 } else {
                                     {
                                         QString sRecord = "type";
@@ -423,40 +467,55 @@ void XFileInfo::process()
                                         QString sRecord = "machine";
                                         if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_machine()));
                                     }
+                                    {
+                                        QString sRecord = "version";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_version()));
+                                    }
+                                    {
+                                        QString sRecord = "entry";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_entry()));
+                                    }
+                                    {
+                                        QString sRecord = "phoff";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_phoff()));
+                                    }
+                                    {
+                                        QString sRecord = "shoff";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_shoff()));
+                                    }
+                                    {
+                                        QString sRecord = "flags";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_flags()));
+                                    }
+                                    {
+                                        QString sRecord = "ehsize";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_ehsize()));
+                                    }
+                                    {
+                                        QString sRecord = "phentsize";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_phentsize()));
+                                    }
+                                    {
+                                        QString sRecord = "phnum";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_phnum()));
+                                    }
+                                    {
+                                        QString sRecord = "shentsize";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_shentsize()));
+                                    }
+                                    {
+                                        QString sRecord = "shnum";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_shnum()));
+                                    }
+                                    {
+                                        QString sRecord = "shstrndx";
+                                        if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_shstrndx()));
+                                    }
                                 }
                             }
                         }
                     }
 
-                    // if (bIs64) {
-                    //     if (check("type")) appendRecord(0, "type", XBinary::valueToHex(elf.getHdr64_type()));
-                    //     if (check("machine")) appendRecord(0, "machine", XBinary::valueToHex(elf.getHdr64_machine()));
-                    //     if (check("version")) appendRecord(0, "version", XBinary::valueToHex(elf.getHdr64_version()));
-                    //     if (check("entry")) appendRecord(0, "entry", XBinary::valueToHex(elf.getHdr64_entry()));
-                    //     if (check("phoff")) appendRecord(0, "phoff", XBinary::valueToHex(elf.getHdr64_phoff()));
-                    //     if (check("shoff")) appendRecord(0, "shoff", XBinary::valueToHex(elf.getHdr64_shoff()));
-                    //     if (check("flags")) appendRecord(0, "flags", XBinary::valueToHex(elf.getHdr64_flags()));
-                    //     if (check("ehsize")) appendRecord(0, "ehsize", XBinary::valueToHex(elf.getHdr64_ehsize()));
-                    //     if (check("phentsize")) appendRecord(0, "phentsize", XBinary::valueToHex(elf.getHdr64_phentsize()));
-                    //     if (check("phnum")) appendRecord(0, "phnum", XBinary::valueToHex(elf.getHdr64_phnum()));
-                    //     if (check("shentsize")) appendRecord(0, "shentsize", XBinary::valueToHex(elf.getHdr64_shentsize()));
-                    //     if (check("shnum")) appendRecord(0, "shnum", XBinary::valueToHex(elf.getHdr64_shnum()));
-                    //     if (check("shstrndx")) appendRecord(0, "shstrndx", XBinary::valueToHex(elf.getHdr64_shstrndx()));
-                    // } else {
-                    //     if (check("type")) appendRecord(0, "type", XBinary::valueToHex(elf.getHdr32_type()));
-                    //     if (check("machine")) appendRecord(0, "machine", XBinary::valueToHex(elf.getHdr32_machine()));
-                    //     if (check("version")) appendRecord(0, "version", XBinary::valueToHex(elf.getHdr32_version()));
-                    //     if (check("entry")) appendRecord(0, "entry", XBinary::valueToHex(elf.getHdr32_entry()));
-                    //     if (check("phoff")) appendRecord(0, "phoff", XBinary::valueToHex(elf.getHdr32_phoff()));
-                    //     if (check("shoff")) appendRecord(0, "shoff", XBinary::valueToHex(elf.getHdr32_shoff()));
-                    //     if (check("flags")) appendRecord(0, "flags", XBinary::valueToHex(elf.getHdr32_flags()));
-                    //     if (check("ehsize")) appendRecord(0, "ehsize", XBinary::valueToHex(elf.getHdr32_ehsize()));
-                    //     if (check("phentsize")) appendRecord(0, "phentsize", XBinary::valueToHex(elf.getHdr32_phentsize()));
-                    //     if (check("phnum")) appendRecord(0, "phnum", XBinary::valueToHex(elf.getHdr32_phnum()));
-                    //     if (check("shentsize")) appendRecord(0, "shentsize", XBinary::valueToHex(elf.getHdr32_shentsize()));
-                    //     if (check("shnum")) appendRecord(0, "shnum", XBinary::valueToHex(elf.getHdr32_shnum()));
-                    //     if (check("shstrndx")) appendRecord(0, "shstrndx", XBinary::valueToHex(elf.getHdr32_shstrndx()));
-                    // }
                     // TODO Sections
                     // TODO Programs
                     // TODO rels
