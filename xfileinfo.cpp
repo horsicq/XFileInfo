@@ -569,6 +569,19 @@ void XFileInfo::process()
                         }
                     }
 
+                    {
+                        QString sGroup = "Header";
+                        if (check(sGroup)) {
+                            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+                            {
+                                {
+                                    QString sRecord = "magic";
+                                    if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_magic()));
+                                }
+                            }
+                        }
+                    }
+
                     if (check("Header")) {
                         XFileInfoItem *pParent = appendRecord(0, "Header", "");
 
