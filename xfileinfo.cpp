@@ -578,6 +578,18 @@ void XFileInfo::process()
                                     QString sRecord = "magic";
                                     if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_magic()));
                                 }
+                                {
+                                    QString sRecord = "cputype";
+                                    if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_cputype()));
+                                }
+                                {
+                                    QString sRecord = "cpusubtype";
+                                    if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_cpusubtype()));
+                                }
+                                {
+                                    QString sRecord = "filetype";
+                                    if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_filetype()));
+                                }
                             }
                         }
                     }
@@ -585,10 +597,6 @@ void XFileInfo::process()
                     if (check("Header")) {
                         XFileInfoItem *pParent = appendRecord(0, "Header", "");
 
-                        appendRecord(pParent, "magic", XBinary::valueToHex(mach.getHeader_magic()));
-                        appendRecord(pParent, "cputype", XBinary::valueToHex(mach.getHeader_cputype()));
-                        appendRecord(pParent, "cpusubtype", XBinary::valueToHex(mach.getHeader_cpusubtype()));
-                        appendRecord(pParent, "filetype", XBinary::valueToHex(mach.getHeader_filetype()));
                         appendRecord(pParent, "ncmds", XBinary::valueToHex(mach.getHeader_ncmds()));
                         appendRecord(pParent, "sizeofcmds", XBinary::valueToHex(mach.getHeader_sizeofcmds()));
                         appendRecord(pParent, "flags", XBinary::valueToHex(mach.getHeader_flags()));
