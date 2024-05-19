@@ -590,6 +590,14 @@ void XFileInfo::process()
                                     QString sRecord = "filetype";
                                     if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_filetype()));
                                 }
+                                {
+                                    QString sRecord = "ncmds";
+                                    if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_ncmds()));
+                                }
+                                {
+                                    QString sRecord = "sizeofcmds";
+                                    if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_sizeofcmds()));
+                                }
                             }
                         }
                     }
@@ -597,8 +605,6 @@ void XFileInfo::process()
                     if (check("Header")) {
                         XFileInfoItem *pParent = appendRecord(0, "Header", "");
 
-                        appendRecord(pParent, "ncmds", XBinary::valueToHex(mach.getHeader_ncmds()));
-                        appendRecord(pParent, "sizeofcmds", XBinary::valueToHex(mach.getHeader_sizeofcmds()));
                         appendRecord(pParent, "flags", XBinary::valueToHex(mach.getHeader_flags()));
 
                         if (bIs64) {
