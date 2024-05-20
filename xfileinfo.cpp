@@ -598,17 +598,15 @@ void XFileInfo::process()
                                     QString sRecord = "sizeofcmds";
                                     if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_sizeofcmds()));
                                 }
+                                {
+                                    QString sRecord = "flags";
+                                    if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_flags()));
+                                }
+                                if (bIs64) {
+                                    QString sRecord = "reserved";
+                                    if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_reserved()));
+                                }
                             }
-                        }
-                    }
-
-                    if (check("Header")) {
-                        XFileInfoItem *pParent = appendRecord(0, "Header", "");
-
-                        appendRecord(pParent, "flags", XBinary::valueToHex(mach.getHeader_flags()));
-
-                        if (bIs64) {
-                            appendRecord(pParent, "reserved", XBinary::valueToHex(mach.getHeader_reserved()));
                         }
                     }
                     // TODO
