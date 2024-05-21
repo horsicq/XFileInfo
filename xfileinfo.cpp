@@ -198,7 +198,7 @@ void XFileInfo::process()
                 if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getDeviceFileName(g_pDevice));
             }
 
-            XBinary::FILEFORMATINFO fileFormatInfo = XFormats::getFileFormatInfo(fileType, g_pDevice, true);
+            XBinary::FILEFORMATINFO fileFormatInfo = XFormats::getFileFormatInfo(fileType, g_pDevice, true, -1, g_pPdStruct);
             {
                 QString sRecord = "Size";
                 if (check(sGroup, sRecord)) {
@@ -661,6 +661,19 @@ void XFileInfo::process()
                                 if (check(sGroup, sRecord))
                                     appendRecord(pItemParent, sRecord,
                                                  XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
+                            }
+                        }
+                    }
+
+                    {
+                        QString sGroup = "IMAGE_DOS_HEADER";
+                        if (check(sGroup)) {
+                            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+                            {
+                                {
+                                    QString sRecord = "e_magic";
+                                    if (check(sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_magic()));
+                                }
                             }
                         }
                     }
