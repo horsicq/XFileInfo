@@ -50,7 +50,7 @@ signals:
 private:
     XFileInfoItem *appendRecord(XFileInfoItem *pItemParent, const QString &sName, QVariant varData);
     void setCurrentStatus(const QString &sStatus);
-    bool check(const QString &sString, const QString &sExtra = QString());
+    bool check(const QString &sString, const QString &sExtra1 = QString(), const QString &sExtra2 = QString());
     QString addFlags(XBinary::MODE mode, quint64 nValue, QMap<quint64, QString> mapFlags, XBinary::VL_TYPE vlType);
     QString addDateTime(XBinary::MODE mode, XBinary::DT_TYPE dtType, quint64 nValue);
     static void _addMethod(QList<QString> *pListMethods, const QString &sName);
