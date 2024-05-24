@@ -702,20 +702,36 @@ void XFileInfo::process()
                                     QString sRecord = "e_maxalloc";
                                     if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_maxalloc()));
                                 }
+                                {
+                                    QString sRecord = "e_ss";
+                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_ss()));
+                                }
+                                {
+                                    QString sRecord = "e_sp";
+                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_sp()));
+                                }
+                                {
+                                    QString sRecord = "e_csum";
+                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_csum()));
+                                }
+                                {
+                                    QString sRecord = "e_ip";
+                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_ip()));
+                                }
+                                {
+                                    QString sRecord = "e_cs";
+                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_cs()));
+                                }
+                                {
+                                    QString sRecord = "e_lfarlc";
+                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_lfarlc()));
+                                }
+                                {
+                                    QString sRecord = "e_ovno";
+                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_ovno()));
+                                }
                             }
                         }
-                    }
-
-                    if (check("IMAGE_DOS_HEADER")) {
-                        XFileInfoItem *pParent = appendRecord(0, "IMAGE_DOS_HEADER", "");
-
-                        appendRecord(pParent, "e_ss", XBinary::valueToHex(pe.get_e_ss()));
-                        appendRecord(pParent, "e_sp", XBinary::valueToHex(pe.get_e_sp()));
-                        appendRecord(pParent, "e_csum", XBinary::valueToHex(pe.get_e_csum()));
-                        appendRecord(pParent, "e_ip", XBinary::valueToHex(pe.get_e_ip()));
-                        appendRecord(pParent, "e_cs", XBinary::valueToHex(pe.get_e_cs()));
-                        appendRecord(pParent, "e_lfarlc", XBinary::valueToHex(pe.get_e_lfarlc()));
-                        appendRecord(pParent, "e_ovno", XBinary::valueToHex(pe.get_e_ovno()));
                     }
 
                     if (check("IMAGE_NT_HEADERS")) {
