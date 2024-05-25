@@ -540,42 +540,7 @@ void XFileInfo::process()
                     //                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(XBinary::MAPMODE_SEGMENTS, g_pPdStruct);
 
-                    {
-                        QString sGroup = "Entry point";
-                        if (check(sGroup)) {
-                            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
-                            {
-                                QString sRecord = "Address";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(mach.getEntryPointAddress(&memoryMap)));
-                            }
-                            {
-                                QString sRecord = "Offset";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(mach.getEntryPointOffset(&memoryMap)));
-                            }
-                            {
-                                QString sRecord = "Relative address";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(mach.getEntryPointRVA(&memoryMap)));
-                            }
-                            {
-                                QString sRecord = "Bytes";
-                                if (check(sGroup, sRecord))
-                                    appendRecord(pItemParent, sRecord,
-                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
-                            }
-                            {
-                                QString sRecord = "Signature";
-                                if (check(sGroup, sRecord))
-                                    appendRecord(pItemParent, sRecord,
-                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
-                            }
-                            {
-                                QString sRecord = QString("%1(rel)").arg("Signature");
-                                if (check(sGroup, sRecord))
-                                    appendRecord(pItemParent, sRecord,
-                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
-                            }
-                        }
-                    }
+                    _entryPoint(&mach, &memoryMap);
 
                     {
                         QString sGroup = "Header";
