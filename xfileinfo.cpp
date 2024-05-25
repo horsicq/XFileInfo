@@ -734,6 +734,19 @@ void XFileInfo::process()
                         }
                     }
 
+                    {
+                        QString sGroup = "IMAGE_NT_HEADERS";
+                        if (check(sGroup)) {
+                            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+                            {
+                                {
+                                    QString sRecord = "Signature";
+                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, addFlags(XBinary::MODE_16, pe.getNtHeaders_Signature(), XPE::getImageNtHeadersSignatures(), XBinary::VL_TYPE_LIST));
+                                }
+                            }
+                        }
+                    }
+
                     if (check("IMAGE_NT_HEADERS")) {
                         XFileInfoItem *pParent = appendRecord(0, "IMAGE_NT_HEADERS", "");
 
