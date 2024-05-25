@@ -54,6 +54,7 @@ private:
     QString addFlags(XBinary::MODE mode, quint64 nValue, QMap<quint64, QString> mapFlags, XBinary::VL_TYPE vlType);
     QString addDateTime(XBinary::MODE mode, XBinary::DT_TYPE dtType, quint64 nValue);
     static void _addMethod(QList<QString> *pListMethods, const QString &sName);
+    void _entryPoint(XBinary *pBinary, XBinary::_MEMORY_MAP *pMemoryMap);
 
 public slots:
     void process();
