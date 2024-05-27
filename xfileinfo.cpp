@@ -215,6 +215,72 @@ void XFileInfo::_entryPoint(XBinary *pBinary, XBinary::_MEMORY_MAP *pMemoryMap)
     }
 }
 
+void XFileInfo::_IMAGE_DOS_HEADER(XMSDOS *pMSDOS)
+{
+    QString sGroup = "IMAGE_DOS_HEADER";
+    if (check(sGroup)) {
+        XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+        {
+            {
+                QString sRecord = "e_magic";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_magic()));
+            }
+            {
+                QString sRecord = "e_cblp";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_cblp()));
+            }
+            {
+                QString sRecord = "e_cp";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_cp()));
+            }
+            {
+                QString sRecord = "e_crlc";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_crlc()));
+            }
+            {
+                QString sRecord = "e_cparhdr";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_cparhdr()));
+            }
+            {
+                QString sRecord = "e_minalloc";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_minalloc()));
+            }
+            {
+                QString sRecord = "e_maxalloc";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_maxalloc()));
+            }
+            {
+                QString sRecord = "e_ss";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_ss()));
+            }
+            {
+                QString sRecord = "e_sp";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_sp()));
+            }
+            {
+                QString sRecord = "e_csum";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_csum()));
+            }
+            {
+                QString sRecord = "e_ip";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_ip()));
+            }
+            {
+                QString sRecord = "e_cs";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_cs()));
+            }
+            {
+                QString sRecord = "e_lfarlc";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_lfarlc()));
+            }
+            {
+                QString sRecord = "e_ovno";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_ovno()));
+            }
+        }
+    }
+}
+
 void XFileInfo::process()
 {
     QElapsedTimer scanTimer;
@@ -600,71 +666,7 @@ void XFileInfo::process()
                     XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     _entryPoint(&pe, &memoryMap);
-
-                    {
-                        QString sGroup = "IMAGE_DOS_HEADER";
-                        if (check(sGroup)) {
-                            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
-                            {
-                                {
-                                    QString sRecord = "e_magic";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_magic()));
-                                }
-                                {
-                                    QString sRecord = "e_cblp";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_cblp()));
-                                }
-                                {
-                                    QString sRecord = "e_cp";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_cp()));
-                                }
-                                {
-                                    QString sRecord = "e_crlc";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_crlc()));
-                                }
-                                {
-                                    QString sRecord = "e_cparhdr";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_cparhdr()));
-                                }
-                                {
-                                    QString sRecord = "e_minalloc";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_minalloc()));
-                                }
-                                {
-                                    QString sRecord = "e_maxalloc";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_maxalloc()));
-                                }
-                                {
-                                    QString sRecord = "e_ss";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_ss()));
-                                }
-                                {
-                                    QString sRecord = "e_sp";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_sp()));
-                                }
-                                {
-                                    QString sRecord = "e_csum";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_csum()));
-                                }
-                                {
-                                    QString sRecord = "e_ip";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_ip()));
-                                }
-                                {
-                                    QString sRecord = "e_cs";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_cs()));
-                                }
-                                {
-                                    QString sRecord = "e_lfarlc";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_lfarlc()));
-                                }
-                                {
-                                    QString sRecord = "e_ovno";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pe.get_e_ovno()));
-                                }
-                            }
-                        }
-                    }
+                    _IMAGE_DOS_HEADER(&pe);
 
                     {
                         QString sGroup = "IMAGE_NT_HEADERS";
@@ -781,61 +783,8 @@ void XFileInfo::process()
                     //                    XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
-                    {
-                        QString sGroup = "Entry point";
-                        if (check(sGroup)) {
-                            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
-                            {
-                                QString sRecord = "Address";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(ne.getEntryPointAddress(&memoryMap)));
-                            }
-                            {
-                                QString sRecord = "Offset";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(ne.getEntryPointOffset(&memoryMap)));
-                            }
-                            {
-                                QString sRecord = "Relative address";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(ne.getEntryPointRVA(&memoryMap)));
-                            }
-                            {
-                                QString sRecord = "Bytes";
-                                if (check(sGroup, sRecord))
-                                    appendRecord(pItemParent, sRecord,
-                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
-                            }
-                            {
-                                QString sRecord = "Signature";
-                                if (check(sGroup, sRecord))
-                                    appendRecord(pItemParent, sRecord,
-                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
-                            }
-                            {
-                                QString sRecord = QString("%1(rel)").arg("Signature");
-                                if (check(sGroup, sRecord))
-                                    appendRecord(pItemParent, sRecord,
-                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
-                            }
-                        }
-                    }
-
-                    if (check("IMAGE_DOS_HEADER")) {
-                        XFileInfoItem *pParent = appendRecord(0, "IMAGE_DOS_HEADER", "");
-
-                        appendRecord(pParent, "e_magic", XBinary::valueToHex(ne.get_e_magic()));
-                        appendRecord(pParent, "e_cblp", XBinary::valueToHex(ne.get_e_cblp()));
-                        appendRecord(pParent, "e_cp", XBinary::valueToHex(ne.get_e_cp()));
-                        appendRecord(pParent, "e_crlc", XBinary::valueToHex(ne.get_e_crlc()));
-                        appendRecord(pParent, "e_cparhdr", XBinary::valueToHex(ne.get_e_cparhdr()));
-                        appendRecord(pParent, "e_minalloc", XBinary::valueToHex(ne.get_e_minalloc()));
-                        appendRecord(pParent, "e_maxalloc", XBinary::valueToHex(ne.get_e_maxalloc()));
-                        appendRecord(pParent, "e_ss", XBinary::valueToHex(ne.get_e_ss()));
-                        appendRecord(pParent, "e_sp", XBinary::valueToHex(ne.get_e_sp()));
-                        appendRecord(pParent, "e_csum", XBinary::valueToHex(ne.get_e_csum()));
-                        appendRecord(pParent, "e_ip", XBinary::valueToHex(ne.get_e_ip()));
-                        appendRecord(pParent, "e_cs", XBinary::valueToHex(ne.get_e_cs()));
-                        appendRecord(pParent, "e_lfarlc", XBinary::valueToHex(ne.get_e_lfarlc()));
-                        appendRecord(pParent, "e_ovno", XBinary::valueToHex(ne.get_e_ovno()));
-                    }
+                    _entryPoint(&ne, &memoryMap);
+                    _IMAGE_DOS_HEADER(&ne);
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_LE, fileType)) {
@@ -846,42 +795,8 @@ void XFileInfo::process()
                     //                    XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
-                    {
-                        QString sGroup = "Entry point";
-                        if (check(sGroup)) {
-                            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
-                            {
-                                QString sRecord = "Address";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(le.getEntryPointAddress(&memoryMap)));
-                            }
-                            {
-                                QString sRecord = "Offset";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(le.getEntryPointOffset(&memoryMap)));
-                            }
-                            {
-                                QString sRecord = "Relative address";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(le.getEntryPointRVA(&memoryMap)));
-                            }
-                            {
-                                QString sRecord = "Bytes";
-                                if (check(sGroup, sRecord))
-                                    appendRecord(pItemParent, sRecord,
-                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
-                            }
-                            {
-                                QString sRecord = "Signature";
-                                if (check(sGroup, sRecord))
-                                    appendRecord(pItemParent, sRecord,
-                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
-                            }
-                            {
-                                QString sRecord = QString("%1(rel)").arg("Signature");
-                                if (check(sGroup, sRecord))
-                                    appendRecord(pItemParent, sRecord,
-                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
-                            }
-                        }
-                    }
+                    _entryPoint(&le, &memoryMap);
+                    _IMAGE_DOS_HEADER(&le);
 
                     // TODO
                 }
@@ -894,60 +809,8 @@ void XFileInfo::process()
                     //                    XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
-                    {
-                        QString sGroup = "Entry point";
-                        if (check(sGroup)) {
-                            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
-                            {
-                                QString sRecord = "Address";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(msdos.getEntryPointAddress(&memoryMap)));
-                            }
-                            {
-                                QString sRecord = "Offset";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(msdos.getEntryPointOffset(&memoryMap)));
-                            }
-                            {
-                                QString sRecord = "Relative address";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(msdos.getEntryPointRVA(&memoryMap)));
-                            }
-                            {
-                                QString sRecord = "Bytes";
-                                if (check(sGroup, sRecord))
-                                    appendRecord(pItemParent, sRecord,
-                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
-                            }
-                            {
-                                QString sRecord = "Signature";
-                                if (check(sGroup, sRecord))
-                                    appendRecord(pItemParent, sRecord,
-                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
-                            }
-                            {
-                                QString sRecord = QString("%1(rel)").arg("Signature");
-                                if (check(sGroup, sRecord))
-                                    appendRecord(pItemParent, sRecord,
-                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
-                            }
-                        }
-                    }
-                    if (check("IMAGE_DOS_HEADER")) {
-                        XFileInfoItem *pParent = appendRecord(0, "IMAGE_DOS_HEADER", "");
-
-                        appendRecord(pParent, "e_magic", XBinary::valueToHex(msdos.get_e_magic()));
-                        appendRecord(pParent, "e_cblp", XBinary::valueToHex(msdos.get_e_cblp()));
-                        appendRecord(pParent, "e_cp", XBinary::valueToHex(msdos.get_e_cp()));
-                        appendRecord(pParent, "e_crlc", XBinary::valueToHex(msdos.get_e_crlc()));
-                        appendRecord(pParent, "e_cparhdr", XBinary::valueToHex(msdos.get_e_cparhdr()));
-                        appendRecord(pParent, "e_minalloc", XBinary::valueToHex(msdos.get_e_minalloc()));
-                        appendRecord(pParent, "e_maxalloc", XBinary::valueToHex(msdos.get_e_maxalloc()));
-                        appendRecord(pParent, "e_ss", XBinary::valueToHex(msdos.get_e_ss()));
-                        appendRecord(pParent, "e_sp", XBinary::valueToHex(msdos.get_e_sp()));
-                        appendRecord(pParent, "e_csum", XBinary::valueToHex(msdos.get_e_csum()));
-                        appendRecord(pParent, "e_ip", XBinary::valueToHex(msdos.get_e_ip()));
-                        appendRecord(pParent, "e_cs", XBinary::valueToHex(msdos.get_e_cs()));
-                        appendRecord(pParent, "e_lfarlc", XBinary::valueToHex(msdos.get_e_lfarlc()));
-                        appendRecord(pParent, "e_ovno", XBinary::valueToHex(msdos.get_e_ovno()));
-                    }
+                    _entryPoint(&msdos, &memoryMap);
+                    _IMAGE_DOS_HEADER(&msdos);
 
                     // TODO
                 }
@@ -960,42 +823,7 @@ void XFileInfo::process()
                     //                    XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
-                    {
-                        QString sGroup = "Entry point";
-                        if (check(sGroup)) {
-                            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
-                            {
-                                QString sRecord = "Address";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(xcom.getEntryPointAddress(&memoryMap)));
-                            }
-                            {
-                                QString sRecord = "Offset";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(xcom.getEntryPointOffset(&memoryMap)));
-                            }
-                            {
-                                QString sRecord = "Relative address";
-                                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(xcom.getEntryPointRVA(&memoryMap)));
-                            }
-                            {
-                                QString sRecord = "Bytes";
-                                if (check(sGroup, sRecord))
-                                    appendRecord(pItemParent, sRecord,
-                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
-                            }
-                            {
-                                QString sRecord = "Signature";
-                                if (check(sGroup, sRecord))
-                                    appendRecord(pItemParent, sRecord,
-                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
-                            }
-                            {
-                                QString sRecord = QString("%1(rel)").arg("Signature");
-                                if (check(sGroup, sRecord))
-                                    appendRecord(pItemParent, sRecord,
-                                                 XCapstone::getSignature(g_pDevice, &memoryMap, memoryMap.nEntryPointAddress, XCapstone::ST_MASKREL, N_SIGNATURECOUNT));
-                            }
-                        }
-                    }
+                    _entryPoint(&xcom, &memoryMap);
                     // TODO
                 }
             }
