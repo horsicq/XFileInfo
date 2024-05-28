@@ -281,6 +281,153 @@ void XFileInfo::_IMAGE_DOS_HEADER(XMSDOS *pMSDOS)
     }
 }
 
+void XFileInfo::_Elf_Ehdr(XELF *pELF, bool bIs64)
+{
+    QString sGroup = "Elf_Ehdr";
+    if (check(sGroup)) {
+        XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+        {
+            QString sSubGroup = "e_ident";
+            if (check(sGroup, sSubGroup)) {
+                XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
+                {
+                    QString sRecord = "ei_mag";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pELF->getIdent_mag_LE()));
+                }
+                {
+                    QString sRecord = "ei_class";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pELF->getIdent_class()));
+                }
+                {
+                    QString sRecord = "ei_data";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pELF->getIdent_data()));
+                }
+                {
+                    QString sRecord = "ei_version";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pELF->getIdent_version()));
+                }
+                {
+                    QString sRecord = "ei_osabi";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pELF->getIdent_osabi()));
+                }
+                {
+                    QString sRecord = "ei_abiversion";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pELF->getIdent_abiversion()));
+                }
+            }
+        }
+        {
+            if (!bIs64) {
+                {
+                    QString sRecord = "type";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr32_type()));
+                }
+                {
+                    QString sRecord = "machine";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr32_machine()));
+                }
+                {
+                    QString sRecord = "version";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr32_version()));
+                }
+                {
+                    QString sRecord = "entry";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr32_entry()));
+                }
+                {
+                    QString sRecord = "phoff";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr32_phoff()));
+                }
+                {
+                    QString sRecord = "shoff";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr32_shoff()));
+                }
+                {
+                    QString sRecord = "flags";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr32_flags()));
+                }
+                {
+                    QString sRecord = "ehsize";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr32_ehsize()));
+                }
+                {
+                    QString sRecord = "phentsize";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr32_phentsize()));
+                }
+                {
+                    QString sRecord = "phnum";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr32_phnum()));
+                }
+                {
+                    QString sRecord = "shentsize";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr32_shentsize()));
+                }
+                {
+                    QString sRecord = "shnum";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr32_shnum()));
+                }
+                {
+                    QString sRecord = "shstrndx";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr32_shstrndx()));
+                }
+            } else {
+                {
+                    QString sRecord = "type";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr64_type()));
+                }
+                {
+                    QString sRecord = "machine";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr64_machine()));
+                }
+                {
+                    QString sRecord = "version";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr64_version()));
+                }
+                {
+                    QString sRecord = "entry";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr64_entry()));
+                }
+                {
+                    QString sRecord = "phoff";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr64_phoff()));
+                }
+                {
+                    QString sRecord = "shoff";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr64_shoff()));
+                }
+                {
+                    QString sRecord = "flags";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr64_flags()));
+                }
+                {
+                    QString sRecord = "ehsize";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr64_ehsize()));
+                }
+                {
+                    QString sRecord = "phentsize";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr64_phentsize()));
+                }
+                {
+                    QString sRecord = "phnum";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr64_phnum()));
+                }
+                {
+                    QString sRecord = "shentsize";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr64_shentsize()));
+                }
+                {
+                    QString sRecord = "shnum";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr64_shnum()));
+                }
+                {
+                    QString sRecord = "shstrndx";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pELF->getHdr64_shstrndx()));
+                }
+            }
+        }
+    }
+}
+
 void XFileInfo::process()
 {
     QElapsedTimer scanTimer;
@@ -441,153 +588,7 @@ void XFileInfo::process()
                     XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(XBinary::MAPMODE_SEGMENTS, g_pPdStruct);
 
                     _entryPoint(&elf, &memoryMap);
-
-                    {
-                        QString sGroup = "Elf_Ehdr";
-                        if (check(sGroup)) {
-                            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
-                            {
-                                QString sSubGroup = "e_ident";
-                                if (check(sGroup, sSubGroup)) {
-                                    XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
-                                    {
-                                        QString sRecord = "ei_mag";
-                                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(elf.getIdent_mag_LE()));
-                                    }
-                                    {
-                                        QString sRecord = "ei_class";
-                                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(elf.getIdent_class()));
-                                    }
-                                    {
-                                        QString sRecord = "ei_data";
-                                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(elf.getIdent_data()));
-                                    }
-                                    {
-                                        QString sRecord = "ei_version";
-                                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(elf.getIdent_version()));
-                                    }
-                                    {
-                                        QString sRecord = "ei_osabi";
-                                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(elf.getIdent_osabi()));
-                                    }
-                                    {
-                                        QString sRecord = "ei_abiversion";
-                                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(elf.getIdent_abiversion()));
-                                    }
-                                }
-                            }
-                            {
-                                if (!bIs64) {
-                                    {
-                                        QString sRecord = "type";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_type()));
-                                    }
-                                    {
-                                        QString sRecord = "machine";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_machine()));
-                                    }
-                                    {
-                                        QString sRecord = "version";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_version()));
-                                    }
-                                    {
-                                        QString sRecord = "entry";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_entry()));
-                                    }
-                                    {
-                                        QString sRecord = "phoff";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_phoff()));
-                                    }
-                                    {
-                                        QString sRecord = "shoff";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_shoff()));
-                                    }
-                                    {
-                                        QString sRecord = "flags";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_flags()));
-                                    }
-                                    {
-                                        QString sRecord = "ehsize";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_ehsize()));
-                                    }
-                                    {
-                                        QString sRecord = "phentsize";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_phentsize()));
-                                    }
-                                    {
-                                        QString sRecord = "phnum";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_phnum()));
-                                    }
-                                    {
-                                        QString sRecord = "shentsize";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_shentsize()));
-                                    }
-                                    {
-                                        QString sRecord = "shnum";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_shnum()));
-                                    }
-                                    {
-                                        QString sRecord = "shstrndx";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr32_shstrndx()));
-                                    }
-                                } else {
-                                    {
-                                        QString sRecord = "type";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_type()));
-                                    }
-                                    {
-                                        QString sRecord = "machine";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_machine()));
-                                    }
-                                    {
-                                        QString sRecord = "version";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_version()));
-                                    }
-                                    {
-                                        QString sRecord = "entry";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_entry()));
-                                    }
-                                    {
-                                        QString sRecord = "phoff";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_phoff()));
-                                    }
-                                    {
-                                        QString sRecord = "shoff";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_shoff()));
-                                    }
-                                    {
-                                        QString sRecord = "flags";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_flags()));
-                                    }
-                                    {
-                                        QString sRecord = "ehsize";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_ehsize()));
-                                    }
-                                    {
-                                        QString sRecord = "phentsize";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_phentsize()));
-                                    }
-                                    {
-                                        QString sRecord = "phnum";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_phnum()));
-                                    }
-                                    {
-                                        QString sRecord = "shentsize";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_shentsize()));
-                                    }
-                                    {
-                                        QString sRecord = "shnum";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_shnum()));
-                                    }
-                                    {
-                                        QString sRecord = "shstrndx";
-                                        if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(elf.getHdr64_shstrndx()));
-                                    }
-                                }
-                            }
-                        }
-                    }
-
+                    _Elf_Ehdr(&elf, bIs64);
                     // TODO Sections
                     // TODO Programs
                     // TODO rels
