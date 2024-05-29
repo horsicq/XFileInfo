@@ -428,6 +428,48 @@ void XFileInfo::_Elf_Ehdr(XELF *pELF, bool bIs64)
     }
 }
 
+void XFileInfo::_mach_header(XMACH *pMACH, bool bIs64)
+{
+    QString sGroup = "Header";
+    if (check(sGroup)) {
+        XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+        {
+            {
+                QString sRecord = "magic";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMACH->getHeader_magic()));
+            }
+            {
+                QString sRecord = "cputype";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMACH->getHeader_cputype()));
+            }
+            {
+                QString sRecord = "cpusubtype";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMACH->getHeader_cpusubtype()));
+            }
+            {
+                QString sRecord = "filetype";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMACH->getHeader_filetype()));
+            }
+            {
+                QString sRecord = "ncmds";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMACH->getHeader_ncmds()));
+            }
+            {
+                QString sRecord = "sizeofcmds";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMACH->getHeader_sizeofcmds()));
+            }
+            {
+                QString sRecord = "flags";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMACH->getHeader_flags()));
+            }
+            if (bIs64) {
+                QString sRecord = "reserved";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMACH->getHeader_reserved()));
+            }
+        }
+    }
+}
+
 void XFileInfo::process()
 {
     QElapsedTimer scanTimer;
@@ -606,47 +648,7 @@ void XFileInfo::process()
                     XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(XBinary::MAPMODE_SEGMENTS, g_pPdStruct);
 
                     _entryPoint(&mach, &memoryMap);
-
-                    {
-                        QString sGroup = "Header";
-                        if (check(sGroup)) {
-                            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
-                            {
-                                {
-                                    QString sRecord = "magic";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_magic()));
-                                }
-                                {
-                                    QString sRecord = "cputype";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_cputype()));
-                                }
-                                {
-                                    QString sRecord = "cpusubtype";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_cpusubtype()));
-                                }
-                                {
-                                    QString sRecord = "filetype";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_filetype()));
-                                }
-                                {
-                                    QString sRecord = "ncmds";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_ncmds()));
-                                }
-                                {
-                                    QString sRecord = "sizeofcmds";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_sizeofcmds()));
-                                }
-                                {
-                                    QString sRecord = "flags";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_flags()));
-                                }
-                                if (bIs64) {
-                                    QString sRecord = "reserved";
-                                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(mach.getHeader_reserved()));
-                                }
-                            }
-                        }
-                    }
+                    _mach_header(&mach, bIs64);
                     // TODO
                 }
             }

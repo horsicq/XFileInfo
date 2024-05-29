@@ -58,6 +58,7 @@ private:
     void _entryPoint(XBinary *pBinary, XBinary::_MEMORY_MAP *pMemoryMap);
     void _IMAGE_DOS_HEADER(XMSDOS *pMSDOS);
     void _Elf_Ehdr(XELF *pELF, bool bIs64);
+    void _mach_header(XMACH *pMACH, bool bIs64);
 
 public slots:
     void process();
