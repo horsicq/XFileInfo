@@ -504,12 +504,15 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE)
                     QString sRecord = "PointerToSymbolTable";
                     if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_PointerToSymbolTable()));
                 }
+                {
+                    QString sRecord = "NumberOfSymbols";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_NumberOfSymbols()));
+                }
             }
         }
     }
 
     // if (check("IMAGE_NT_HEADERS")) {
-    //     appendRecord(pParentFH, "NumberOfSymbols", XBinary::valueToHex(pe.getFileHeader_NumberOfSymbols()));
     //     appendRecord(pParentFH, "SizeOfOptionalHeader", XBinary::valueToHex(pe.getFileHeader_SizeOfOptionalHeader()));
     //     appendRecord(pParentFH, "Characteristics",
     //                  addFlags(XBinary::MODE_16, pe.getFileHeader_Characteristics(), XPE::getImageFileHeaderCharacteristics(), XBinary::VL_TYPE_FLAGS));
