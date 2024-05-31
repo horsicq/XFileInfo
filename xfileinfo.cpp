@@ -492,14 +492,23 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE)
                     QString sRecord = "Machine";
                     if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addFlags(XBinary::MODE_16, pPE->getFileHeader_Machine(), XPE::getImageFileHeaderMachines(), XBinary::VL_TYPE_LIST));
                 }
+                {
+                    QString sRecord = "NumberOfSections";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_NumberOfSections()));
+                }
+                {
+                    QString sRecord = "TimeDateStamp";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addDateTime(XBinary::MODE_32, XBinary::DT_TYPE_POSIX, pPE->getFileHeader_TimeDateStamp()));
+                }
+                {
+                    QString sRecord = "PointerToSymbolTable";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_PointerToSymbolTable()));
+                }
             }
         }
     }
 
     // if (check("IMAGE_NT_HEADERS")) {
-    //     appendRecord(pParentFH, "NumberOfSections", XBinary::valueToHex(pe.getFileHeader_NumberOfSections()));
-    //     appendRecord(pParentFH, "TimeDateStamp", addDateTime(XBinary::MODE_32, XBinary::DT_TYPE_POSIX, pe.getFileHeader_TimeDateStamp()));
-    //     appendRecord(pParentFH, "PointerToSymbolTable", XBinary::valueToHex(pe.getFileHeader_PointerToSymbolTable()));
     //     appendRecord(pParentFH, "NumberOfSymbols", XBinary::valueToHex(pe.getFileHeader_NumberOfSymbols()));
     //     appendRecord(pParentFH, "SizeOfOptionalHeader", XBinary::valueToHex(pe.getFileHeader_SizeOfOptionalHeader()));
     //     appendRecord(pParentFH, "Characteristics",
