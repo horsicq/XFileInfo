@@ -470,6 +470,108 @@ void XFileInfo::_mach_header(XMACH *pMACH, bool bIs64)
     }
 }
 
+void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE)
+{
+    {
+        QString sGroup = "IMAGE_NT_HEADERS";
+        if (check(sGroup)) {
+            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+            {
+                {
+                    QString sRecord = "Signature";
+                    if (check(sGroup, sRecord))
+                        appendRecord(pItemParent, sRecord,
+                                     addFlags(XBinary::MODE_16, pPE->getNtHeaders_Signature(), XPE::getImageNtHeadersSignatures(), XBinary::VL_TYPE_LIST));
+                }
+            }
+
+            QString sSubGroup = "IMAGE_FILE_HEADER";
+            if (check(sGroup, sSubGroup)) {
+                XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
+                {
+                    QString sRecord = "Machine";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addFlags(XBinary::MODE_16, pPE->getFileHeader_Machine(), XPE::getImageFileHeaderMachines(), XBinary::VL_TYPE_LIST));
+                }
+            }
+        }
+    }
+
+    // if (check("IMAGE_NT_HEADERS")) {
+    //     appendRecord(pParentFH, "NumberOfSections", XBinary::valueToHex(pe.getFileHeader_NumberOfSections()));
+    //     appendRecord(pParentFH, "TimeDateStamp", addDateTime(XBinary::MODE_32, XBinary::DT_TYPE_POSIX, pe.getFileHeader_TimeDateStamp()));
+    //     appendRecord(pParentFH, "PointerToSymbolTable", XBinary::valueToHex(pe.getFileHeader_PointerToSymbolTable()));
+    //     appendRecord(pParentFH, "NumberOfSymbols", XBinary::valueToHex(pe.getFileHeader_NumberOfSymbols()));
+    //     appendRecord(pParentFH, "SizeOfOptionalHeader", XBinary::valueToHex(pe.getFileHeader_SizeOfOptionalHeader()));
+    //     appendRecord(pParentFH, "Characteristics",
+    //                  addFlags(XBinary::MODE_16, pe.getFileHeader_Characteristics(), XPE::getImageFileHeaderCharacteristics(), XBinary::VL_TYPE_FLAGS));
+
+    //     XFileInfoItem *pParentOH = appendRecord(pParent, "IMAGE_OPTIONAL_HEADER", "");
+
+    //     appendRecord(pParentOH, "Magic",
+    //                  addFlags(XBinary::MODE_16, pe.getOptionalHeader_Magic(), XPE::getImageOptionalHeaderMagic(), XBinary::VL_TYPE_LIST));
+    //     appendRecord(pParentOH, "MajorLinkerVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorLinkerVersion()));
+    //     appendRecord(pParentOH, "MinorLinkerVersion", XBinary::valueToHex(pe.getOptionalHeader_MinorLinkerVersion()));
+    //     appendRecord(pParentOH, "SizeOfCode", XBinary::valueToHex(pe.getOptionalHeader_SizeOfCode()));
+    //     appendRecord(pParentOH, "SizeOfInitializedData", XBinary::valueToHex(pe.getOptionalHeader_SizeOfInitializedData()));
+    //     appendRecord(pParentOH, "SizeOfUninitializedData", XBinary::valueToHex(pe.getOptionalHeader_SizeOfUninitializedData()));
+    //     appendRecord(pParentOH, "AddressOfEntryPoint", XBinary::valueToHex(pe.getOptionalHeader_AddressOfEntryPoint()));
+    //     appendRecord(pParentOH, "BaseOfCode", XBinary::valueToHex(pe.getOptionalHeader_BaseOfCode()));
+
+    //     if (fileType == XBinary::FT_PE32) {
+    //         appendRecord(pParentOH, "BaseOfData", XBinary::valueToHex(pe.getOptionalHeader_BaseOfData()));
+    //         appendRecord(pParentOH, "ImageBase", XBinary::valueToHex((quint32)pe.getOptionalHeader_ImageBase()));
+    //     } else if (fileType == XBinary::FT_PE64) {
+    //         appendRecord(pParentOH, "ImageBase", XBinary::valueToHex((quint64)pe.getOptionalHeader_ImageBase()));
+    //     }
+
+    //     appendRecord(pParentOH, "SectionAlignment", XBinary::valueToHex(pe.getOptionalHeader_SectionAlignment()));
+    //     appendRecord(pParentOH, "FileAlignment", XBinary::valueToHex(pe.getOptionalHeader_FileAlignment()));
+    //     appendRecord(pParentOH, "MajorOperatingSystemVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorOperatingSystemVersion()));
+    //     appendRecord(pParentOH, "MinorOperatingSystemVersion", XBinary::valueToHex(pe.getOptionalHeader_MinorOperatingSystemVersion()));
+    //     appendRecord(pParentOH, "MajorImageVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorImageVersion()));
+    //     appendRecord(pParentOH, "MinorImageVersion", XBinary::valueToHex(pe.getOptionalHeader_MinorImageVersion()));
+    //     appendRecord(pParentOH, "MajorSubsystemVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorSubsystemVersion()));
+    //     appendRecord(pParentOH, "MinorSubsystemVersion", XBinary::valueToHex(pe.getOptionalHeader_MinorSubsystemVersion()));
+    //     appendRecord(pParentOH, "Win32VersionValue", XBinary::valueToHex(pe.getOptionalHeader_Win32VersionValue()));
+    //     appendRecord(pParentOH, "SizeOfImage", XBinary::valueToHex(pe.getOptionalHeader_SizeOfImage()));
+    //     appendRecord(pParentOH, "SizeOfHeaders", XBinary::valueToHex(pe.getOptionalHeader_SizeOfHeaders()));
+    //     appendRecord(pParentOH, "CheckSum", XBinary::valueToHex(pe.getOptionalHeader_CheckSum()));
+    //     appendRecord(pParentOH, "Subsystem",
+    //                  addFlags(XBinary::MODE_16, pe.getOptionalHeader_Subsystem(), XPE::getImageOptionalHeaderSubsystem(), XBinary::VL_TYPE_LIST));
+    //     appendRecord(pParentOH, "DllCharacteristics",
+    //                  addFlags(XBinary::MODE_16, pe.getOptionalHeader_DllCharacteristics(), XPE::getImageOptionalHeaderDllCharacteristics(),
+    //                           XBinary::VL_TYPE_FLAGS));
+
+    //     if (fileType == XBinary::FT_PE32) {
+    //         appendRecord(pParentOH, "SizeOfStackReserve", XBinary::valueToHex((quint32)pe.getOptionalHeader_SizeOfStackReserve()));
+    //         appendRecord(pParentOH, "SizeOfStackCommit", XBinary::valueToHex((quint32)pe.getOptionalHeader_SizeOfStackCommit()));
+    //         appendRecord(pParentOH, "SizeOfHeapReserve", XBinary::valueToHex((quint32)pe.getOptionalHeader_SizeOfHeapReserve()));
+    //         appendRecord(pParentOH, "SizeOfHeapCommit", XBinary::valueToHex((quint32)pe.getOptionalHeader_SizeOfHeapCommit()));
+    //     } else if (fileType == XBinary::FT_PE64) {
+    //         appendRecord(pParentOH, "SizeOfStackReserve", XBinary::valueToHex((quint64)pe.getOptionalHeader_SizeOfStackReserve()));
+    //         appendRecord(pParentOH, "SizeOfStackCommit", XBinary::valueToHex((quint64)pe.getOptionalHeader_SizeOfStackCommit()));
+    //         appendRecord(pParentOH, "SizeOfHeapReserve", XBinary::valueToHex((quint64)pe.getOptionalHeader_SizeOfHeapReserve()));
+    //         appendRecord(pParentOH, "SizeOfHeapCommit", XBinary::valueToHex((quint64)pe.getOptionalHeader_SizeOfHeapCommit()));
+    //     }
+
+    //     appendRecord(pParentOH, "LoaderFlags", XBinary::valueToHex(pe.getOptionalHeader_LoaderFlags()));
+    //     appendRecord(pParentOH, "NumberOfRvaAndSizes", XBinary::valueToHex(pe.getOptionalHeader_NumberOfRvaAndSizes()));
+
+    //     XFileInfoItem *pParentDD = appendRecord(pParentOH, "DataDirectory", "");
+
+    //     quint32 nNumberOfRvaAndSizes = pe.getOptionalHeader_NumberOfRvaAndSizes();
+
+    //     for (quint32 i = 0; i < nNumberOfRvaAndSizes; i++) {
+    //         XFileInfoItem *pParentDirectory = appendRecord(pParentDD, QString::number(i), "");
+
+    //         XPE_DEF::IMAGE_DATA_DIRECTORY idd = pe.getOptionalHeader_DataDirectory(i);
+
+    //         appendRecord(pParentDirectory, "VirtualAddress", XBinary::valueToHex(idd.VirtualAddress));
+    //         appendRecord(pParentDirectory, "Size", XBinary::valueToHex(idd.Size));
+    //     }
+    // }
+}
+
 void XFileInfo::process()
 {
     QElapsedTimer scanTimer;
@@ -670,106 +772,7 @@ void XFileInfo::process()
 
                     _entryPoint(&pe, &memoryMap);
                     _IMAGE_DOS_HEADER(&pe);
-
-                    {
-                        QString sGroup = "IMAGE_NT_HEADERS";
-                        if (check(sGroup)) {
-                            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
-                            {
-                                {
-                                    QString sRecord = "Signature";
-                                    if (check(sGroup, sRecord))
-                                        appendRecord(pItemParent, sRecord,
-                                                     addFlags(XBinary::MODE_16, pe.getNtHeaders_Signature(), XPE::getImageNtHeadersSignatures(), XBinary::VL_TYPE_LIST));
-                                }
-                            }
-                        }
-                    }
-
-                    if (check("IMAGE_NT_HEADERS")) {
-                        XFileInfoItem *pParent = appendRecord(0, "IMAGE_NT_HEADERS", "");
-
-                        appendRecord(pParent, "Signature",
-                                     addFlags(XBinary::MODE_16, pe.getNtHeaders_Signature(), XPE::getImageNtHeadersSignatures(), XBinary::VL_TYPE_LIST));
-
-                        XFileInfoItem *pParentFH = appendRecord(pParent, "IMAGE_FILE_HEADER", "");
-
-                        appendRecord(pParentFH, "Machine",
-                                     addFlags(XBinary::MODE_16, pe.getFileHeader_Machine(), XPE::getImageFileHeaderMachines(), XBinary::VL_TYPE_LIST));
-                        appendRecord(pParentFH, "NumberOfSections", XBinary::valueToHex(pe.getFileHeader_NumberOfSections()));
-                        appendRecord(pParentFH, "TimeDateStamp", addDateTime(XBinary::MODE_32, XBinary::DT_TYPE_POSIX, pe.getFileHeader_TimeDateStamp()));
-                        appendRecord(pParentFH, "PointerToSymbolTable", XBinary::valueToHex(pe.getFileHeader_PointerToSymbolTable()));
-                        appendRecord(pParentFH, "NumberOfSymbols", XBinary::valueToHex(pe.getFileHeader_NumberOfSymbols()));
-                        appendRecord(pParentFH, "SizeOfOptionalHeader", XBinary::valueToHex(pe.getFileHeader_SizeOfOptionalHeader()));
-                        appendRecord(pParentFH, "Characteristics",
-                                     addFlags(XBinary::MODE_16, pe.getFileHeader_Characteristics(), XPE::getImageFileHeaderCharacteristics(), XBinary::VL_TYPE_FLAGS));
-
-                        XFileInfoItem *pParentOH = appendRecord(pParent, "IMAGE_OPTIONAL_HEADER", "");
-
-                        appendRecord(pParentOH, "Magic",
-                                     addFlags(XBinary::MODE_16, pe.getOptionalHeader_Magic(), XPE::getImageOptionalHeaderMagic(), XBinary::VL_TYPE_LIST));
-                        appendRecord(pParentOH, "MajorLinkerVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorLinkerVersion()));
-                        appendRecord(pParentOH, "MinorLinkerVersion", XBinary::valueToHex(pe.getOptionalHeader_MinorLinkerVersion()));
-                        appendRecord(pParentOH, "SizeOfCode", XBinary::valueToHex(pe.getOptionalHeader_SizeOfCode()));
-                        appendRecord(pParentOH, "SizeOfInitializedData", XBinary::valueToHex(pe.getOptionalHeader_SizeOfInitializedData()));
-                        appendRecord(pParentOH, "SizeOfUninitializedData", XBinary::valueToHex(pe.getOptionalHeader_SizeOfUninitializedData()));
-                        appendRecord(pParentOH, "AddressOfEntryPoint", XBinary::valueToHex(pe.getOptionalHeader_AddressOfEntryPoint()));
-                        appendRecord(pParentOH, "BaseOfCode", XBinary::valueToHex(pe.getOptionalHeader_BaseOfCode()));
-
-                        if (fileType == XBinary::FT_PE32) {
-                            appendRecord(pParentOH, "BaseOfData", XBinary::valueToHex(pe.getOptionalHeader_BaseOfData()));
-                            appendRecord(pParentOH, "ImageBase", XBinary::valueToHex((quint32)pe.getOptionalHeader_ImageBase()));
-                        } else if (fileType == XBinary::FT_PE64) {
-                            appendRecord(pParentOH, "ImageBase", XBinary::valueToHex((quint64)pe.getOptionalHeader_ImageBase()));
-                        }
-
-                        appendRecord(pParentOH, "SectionAlignment", XBinary::valueToHex(pe.getOptionalHeader_SectionAlignment()));
-                        appendRecord(pParentOH, "FileAlignment", XBinary::valueToHex(pe.getOptionalHeader_FileAlignment()));
-                        appendRecord(pParentOH, "MajorOperatingSystemVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorOperatingSystemVersion()));
-                        appendRecord(pParentOH, "MinorOperatingSystemVersion", XBinary::valueToHex(pe.getOptionalHeader_MinorOperatingSystemVersion()));
-                        appendRecord(pParentOH, "MajorImageVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorImageVersion()));
-                        appendRecord(pParentOH, "MinorImageVersion", XBinary::valueToHex(pe.getOptionalHeader_MinorImageVersion()));
-                        appendRecord(pParentOH, "MajorSubsystemVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorSubsystemVersion()));
-                        appendRecord(pParentOH, "MinorSubsystemVersion", XBinary::valueToHex(pe.getOptionalHeader_MinorSubsystemVersion()));
-                        appendRecord(pParentOH, "Win32VersionValue", XBinary::valueToHex(pe.getOptionalHeader_Win32VersionValue()));
-                        appendRecord(pParentOH, "SizeOfImage", XBinary::valueToHex(pe.getOptionalHeader_SizeOfImage()));
-                        appendRecord(pParentOH, "SizeOfHeaders", XBinary::valueToHex(pe.getOptionalHeader_SizeOfHeaders()));
-                        appendRecord(pParentOH, "CheckSum", XBinary::valueToHex(pe.getOptionalHeader_CheckSum()));
-                        appendRecord(pParentOH, "Subsystem",
-                                     addFlags(XBinary::MODE_16, pe.getOptionalHeader_Subsystem(), XPE::getImageOptionalHeaderSubsystem(), XBinary::VL_TYPE_LIST));
-                        appendRecord(pParentOH, "DllCharacteristics",
-                                     addFlags(XBinary::MODE_16, pe.getOptionalHeader_DllCharacteristics(), XPE::getImageOptionalHeaderDllCharacteristics(),
-                                              XBinary::VL_TYPE_FLAGS));
-
-                        if (fileType == XBinary::FT_PE32) {
-                            appendRecord(pParentOH, "SizeOfStackReserve", XBinary::valueToHex((quint32)pe.getOptionalHeader_SizeOfStackReserve()));
-                            appendRecord(pParentOH, "SizeOfStackCommit", XBinary::valueToHex((quint32)pe.getOptionalHeader_SizeOfStackCommit()));
-                            appendRecord(pParentOH, "SizeOfHeapReserve", XBinary::valueToHex((quint32)pe.getOptionalHeader_SizeOfHeapReserve()));
-                            appendRecord(pParentOH, "SizeOfHeapCommit", XBinary::valueToHex((quint32)pe.getOptionalHeader_SizeOfHeapCommit()));
-                        } else if (fileType == XBinary::FT_PE64) {
-                            appendRecord(pParentOH, "SizeOfStackReserve", XBinary::valueToHex((quint64)pe.getOptionalHeader_SizeOfStackReserve()));
-                            appendRecord(pParentOH, "SizeOfStackCommit", XBinary::valueToHex((quint64)pe.getOptionalHeader_SizeOfStackCommit()));
-                            appendRecord(pParentOH, "SizeOfHeapReserve", XBinary::valueToHex((quint64)pe.getOptionalHeader_SizeOfHeapReserve()));
-                            appendRecord(pParentOH, "SizeOfHeapCommit", XBinary::valueToHex((quint64)pe.getOptionalHeader_SizeOfHeapCommit()));
-                        }
-
-                        appendRecord(pParentOH, "LoaderFlags", XBinary::valueToHex(pe.getOptionalHeader_LoaderFlags()));
-                        appendRecord(pParentOH, "NumberOfRvaAndSizes", XBinary::valueToHex(pe.getOptionalHeader_NumberOfRvaAndSizes()));
-
-                        XFileInfoItem *pParentDD = appendRecord(pParentOH, "DataDirectory", "");
-
-                        quint32 nNumberOfRvaAndSizes = pe.getOptionalHeader_NumberOfRvaAndSizes();
-
-                        for (quint32 i = 0; i < nNumberOfRvaAndSizes; i++) {
-                            XFileInfoItem *pParentDirectory = appendRecord(pParentDD, QString::number(i), "");
-
-                            XPE_DEF::IMAGE_DATA_DIRECTORY idd = pe.getOptionalHeader_DataDirectory(i);
-
-                            appendRecord(pParentDirectory, "VirtualAddress", XBinary::valueToHex(idd.VirtualAddress));
-                            appendRecord(pParentDirectory, "Size", XBinary::valueToHex(idd.Size));
-                        }
-                    }
-
+                    PE_IMAGE_NT_HEADERS(&pe);
                     // TODO
                     // Sizes !!!
                     // Sections

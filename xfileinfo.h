@@ -59,6 +59,7 @@ private:
     void _IMAGE_DOS_HEADER(XMSDOS *pMSDOS);
     void _Elf_Ehdr(XELF *pELF, bool bIs64);
     void _mach_header(XMACH *pMACH, bool bIs64);
+    void PE_IMAGE_NT_HEADERS(XPE *pPE);
 
 public slots:
     void process();
