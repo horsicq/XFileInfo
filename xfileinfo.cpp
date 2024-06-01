@@ -477,53 +477,58 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE)
         if (check(sGroup)) {
             XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
             {
-                {
-                    QString sRecord = "Signature";
-                    if (check(sGroup, sRecord))
-                        appendRecord(pItemParent, sRecord,
-                                     addFlags(XBinary::MODE_16, pPE->getNtHeaders_Signature(), XPE::getImageNtHeadersSignatures(), XBinary::VL_TYPE_LIST));
+                QString sRecord = "Signature";
+                if (check(sGroup, sRecord))
+                    appendRecord(pItemParent, sRecord,
+                                 addFlags(XBinary::MODE_16, pPE->getNtHeaders_Signature(), XPE::getImageNtHeadersSignatures(), XBinary::VL_TYPE_LIST));
+            }
+            {
+                QString sSubGroup = "IMAGE_FILE_HEADER";
+                if (check(sGroup, sSubGroup)) {
+                    XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
+                    {
+                        QString sRecord = "Machine";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addFlags(XBinary::MODE_16, pPE->getFileHeader_Machine(), XPE::getImageFileHeaderMachines(), XBinary::VL_TYPE_LIST));
+                    }
+                    {
+                        QString sRecord = "NumberOfSections";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_NumberOfSections()));
+                    }
+                    {
+                        QString sRecord = "TimeDateStamp";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addDateTime(XBinary::MODE_32, XBinary::DT_TYPE_POSIX, pPE->getFileHeader_TimeDateStamp()));
+                    }
+                    {
+                        QString sRecord = "PointerToSymbolTable";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_PointerToSymbolTable()));
+                    }
+                    {
+                        QString sRecord = "NumberOfSymbols";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_NumberOfSymbols()));
+                    }
+                    {
+                        QString sRecord = "SizeOfOptionalHeader";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_SizeOfOptionalHeader()));
+                    }
+                    {
+                        QString sRecord = "Characteristics";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addFlags(XBinary::MODE_16, pPE->getFileHeader_Characteristics(), XPE::getImageFileHeaderCharacteristics(), XBinary::VL_TYPE_FLAGS));
+                    }
                 }
             }
-
-            QString sSubGroup = "IMAGE_FILE_HEADER";
-            if (check(sGroup, sSubGroup)) {
-                XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
-                {
-                    QString sRecord = "Machine";
-                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addFlags(XBinary::MODE_16, pPE->getFileHeader_Machine(), XPE::getImageFileHeaderMachines(), XBinary::VL_TYPE_LIST));
-                }
-                {
-                    QString sRecord = "NumberOfSections";
-                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_NumberOfSections()));
-                }
-                {
-                    QString sRecord = "TimeDateStamp";
-                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addDateTime(XBinary::MODE_32, XBinary::DT_TYPE_POSIX, pPE->getFileHeader_TimeDateStamp()));
-                }
-                {
-                    QString sRecord = "PointerToSymbolTable";
-                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_PointerToSymbolTable()));
-                }
-                {
-                    QString sRecord = "NumberOfSymbols";
-                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_NumberOfSymbols()));
-                }
-                {
-                    QString sRecord = "SizeOfOptionalHeader";
-                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_SizeOfOptionalHeader()));
-                }
-                {
-                    QString sRecord = "Characteristics";
-                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addFlags(XBinary::MODE_16, pPE->getFileHeader_Characteristics(), XPE::getImageFileHeaderCharacteristics(), XBinary::VL_TYPE_FLAGS));
+            {
+                QString sSubGroup = "IMAGE_OPTIONAL_HEADER";
+                if (check(sGroup, sSubGroup)) {
+                    XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
+                    {
+                        QString sRecord = "Magic";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addFlags(XBinary::MODE_16, pPE->getOptionalHeader_Magic(), XPE::getImageOptionalHeaderMagic(), XBinary::VL_TYPE_LIST));
+                    }
                 }
             }
         }
     }
 
-    //     XFileInfoItem *pParentOH = appendRecord(pParent, "IMAGE_OPTIONAL_HEADER", "");
-
-    //     appendRecord(pParentOH, "Magic",
-    //                  addFlags(XBinary::MODE_16, pe.getOptionalHeader_Magic(), XPE::getImageOptionalHeaderMagic(), XBinary::VL_TYPE_LIST));
     //     appendRecord(pParentOH, "MajorLinkerVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorLinkerVersion()));
     //     appendRecord(pParentOH, "MinorLinkerVersion", XBinary::valueToHex(pe.getOptionalHeader_MinorLinkerVersion()));
     //     appendRecord(pParentOH, "SizeOfCode", XBinary::valueToHex(pe.getOptionalHeader_SizeOfCode()));
