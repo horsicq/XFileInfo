@@ -508,14 +508,17 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE)
                     QString sRecord = "NumberOfSymbols";
                     if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_NumberOfSymbols()));
                 }
+                {
+                    QString sRecord = "SizeOfOptionalHeader";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_SizeOfOptionalHeader()));
+                }
+                {
+                    QString sRecord = "Characteristics";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addFlags(XBinary::MODE_16, pPE->getFileHeader_Characteristics(), XPE::getImageFileHeaderCharacteristics(), XBinary::VL_TYPE_FLAGS));
+                }
             }
         }
     }
-
-    // if (check("IMAGE_NT_HEADERS")) {
-    //     appendRecord(pParentFH, "SizeOfOptionalHeader", XBinary::valueToHex(pe.getFileHeader_SizeOfOptionalHeader()));
-    //     appendRecord(pParentFH, "Characteristics",
-    //                  addFlags(XBinary::MODE_16, pe.getFileHeader_Characteristics(), XPE::getImageFileHeaderCharacteristics(), XBinary::VL_TYPE_FLAGS));
 
     //     XFileInfoItem *pParentOH = appendRecord(pParent, "IMAGE_OPTIONAL_HEADER", "");
 
