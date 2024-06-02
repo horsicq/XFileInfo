@@ -524,16 +524,31 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE)
                         QString sRecord = "Magic";
                         if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addFlags(XBinary::MODE_16, pPE->getOptionalHeader_Magic(), XPE::getImageOptionalHeaderMagic(), XBinary::VL_TYPE_LIST));
                     }
+                    {
+                        QString sRecord = "MajorLinkerVersion";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MajorLinkerVersion()));
+                    }
+                    {
+                        QString sRecord = "MinorLinkerVersion";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MinorLinkerVersion()));
+                    }
+                    {
+                        QString sRecord = "SizeOfCode";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfCode()));
+                    }
+                    {
+                        QString sRecord = "SizeOfInitializedData";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfInitializedData()));
+                    }
+                    {
+                        QString sRecord = "SizeOfUninitializedData";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfUninitializedData()));
+                    }
                 }
             }
         }
     }
 
-    //     appendRecord(pParentOH, "MajorLinkerVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorLinkerVersion()));
-    //     appendRecord(pParentOH, "MinorLinkerVersion", XBinary::valueToHex(pe.getOptionalHeader_MinorLinkerVersion()));
-    //     appendRecord(pParentOH, "SizeOfCode", XBinary::valueToHex(pe.getOptionalHeader_SizeOfCode()));
-    //     appendRecord(pParentOH, "SizeOfInitializedData", XBinary::valueToHex(pe.getOptionalHeader_SizeOfInitializedData()));
-    //     appendRecord(pParentOH, "SizeOfUninitializedData", XBinary::valueToHex(pe.getOptionalHeader_SizeOfUninitializedData()));
     //     appendRecord(pParentOH, "AddressOfEntryPoint", XBinary::valueToHex(pe.getOptionalHeader_AddressOfEntryPoint()));
     //     appendRecord(pParentOH, "BaseOfCode", XBinary::valueToHex(pe.getOptionalHeader_BaseOfCode()));
 
