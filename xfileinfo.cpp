@@ -544,13 +544,21 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE)
                         QString sRecord = "SizeOfUninitializedData";
                         if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfUninitializedData()));
                     }
+                    {
+                        QString sRecord = "AddressOfEntryPoint";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_AddressOfEntryPoint()));
+                    }
+                    {
+                        QString sRecord = "BaseOfCode";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfUninitializedData()));
+                    }
                 }
             }
         }
     }
 
-    //     appendRecord(pParentOH, "AddressOfEntryPoint", XBinary::valueToHex(pe.getOptionalHeader_AddressOfEntryPoint()));
-    //     appendRecord(pParentOH, "BaseOfCode", XBinary::valueToHex(pe.getOptionalHeader_BaseOfCode()));
+    //     appendRecord(pParentOH, "", XBinary::valueToHex(pe.getOptionalHeader_AddressOfEntryPoint()));
+    //     appendRecord(pParentOH, "", XBinary::valueToHex(pe.getOptionalHeader_BaseOfCode()));
 
     //     if (fileType == XBinary::FT_PE32) {
     //         appendRecord(pParentOH, "BaseOfData", XBinary::valueToHex(pe.getOptionalHeader_BaseOfData()));
