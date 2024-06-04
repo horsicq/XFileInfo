@@ -470,7 +470,7 @@ void XFileInfo::_mach_header(XMACH *pMACH, bool bIs64)
     }
 }
 
-void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE)
+void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
 {
     {
         QString sGroup = "IMAGE_NT_HEADERS";
@@ -550,22 +550,28 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE)
                     }
                     {
                         QString sRecord = "BaseOfCode";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfUninitializedData()));
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_BaseOfCode()));
+                    }
+
+                    if (!bIs64) {
+                        {
+                            QString sRecord = "BaseOfData";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_BaseOfData()));
+                        }
+                        {
+                            QString sRecord = "ImageBase";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_ImageBase()));
+                        }
+                    } else {
+                        {
+                            QString sRecord = "ImageBase";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_ImageBase()));
+                        }
                     }
                 }
             }
         }
     }
-
-    //     appendRecord(pParentOH, "", XBinary::valueToHex(pe.getOptionalHeader_AddressOfEntryPoint()));
-    //     appendRecord(pParentOH, "", XBinary::valueToHex(pe.getOptionalHeader_BaseOfCode()));
-
-    //     if (fileType == XBinary::FT_PE32) {
-    //         appendRecord(pParentOH, "BaseOfData", XBinary::valueToHex(pe.getOptionalHeader_BaseOfData()));
-    //         appendRecord(pParentOH, "ImageBase", XBinary::valueToHex((quint32)pe.getOptionalHeader_ImageBase()));
-    //     } else if (fileType == XBinary::FT_PE64) {
-    //         appendRecord(pParentOH, "ImageBase", XBinary::valueToHex((quint64)pe.getOptionalHeader_ImageBase()));
-    //     }
 
     //     appendRecord(pParentOH, "SectionAlignment", XBinary::valueToHex(pe.getOptionalHeader_SectionAlignment()));
     //     appendRecord(pParentOH, "FileAlignment", XBinary::valueToHex(pe.getOptionalHeader_FileAlignment()));
@@ -812,10 +818,11 @@ void XFileInfo::process()
                 if (!(g_pPdStruct->bIsStop)) {
                     //                    XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
+                    bool bIs64 = pe.is64();
 
                     _entryPoint(&pe, &memoryMap);
                     _IMAGE_DOS_HEADER(&pe);
-                    PE_IMAGE_NT_HEADERS(&pe);
+                    PE_IMAGE_NT_HEADERS(&pe, bIs64);
                     // TODO
                     // Sizes !!!
                     // Sections
