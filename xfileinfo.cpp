@@ -585,15 +585,27 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
                         QString sRecord = "MinorOperatingSystemVersion";
                         if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MinorOperatingSystemVersion()));
                     }
+                    {
+                        QString sRecord = "MajorImageVersion";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MajorImageVersion()));
+                    }
+                    {
+                        QString sRecord = "MinorImageVersion";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MinorImageVersion()));
+                    }
+                    {
+                        QString sRecord = "MajorSubsystemVersion";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MajorSubsystemVersion()));
+                    }
+                    {
+                        QString sRecord = "MinorSubsystemVersion";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MinorSubsystemVersion()));
+                    }
                 }
             }
         }
     }
 
-    //     appendRecord(pParentOH, "MajorImageVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorImageVersion()));
-    //     appendRecord(pParentOH, "MinorImageVersion", XBinary::valueToHex(pe.getOptionalHeader_MinorImageVersion()));
-    //     appendRecord(pParentOH, "MajorSubsystemVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorSubsystemVersion()));
-    //     appendRecord(pParentOH, "MinorSubsystemVersion", XBinary::valueToHex(pe.getOptionalHeader_MinorSubsystemVersion()));
     //     appendRecord(pParentOH, "Win32VersionValue", XBinary::valueToHex(pe.getOptionalHeader_Win32VersionValue()));
     //     appendRecord(pParentOH, "SizeOfImage", XBinary::valueToHex(pe.getOptionalHeader_SizeOfImage()));
     //     appendRecord(pParentOH, "SizeOfHeaders", XBinary::valueToHex(pe.getOptionalHeader_SizeOfHeaders()));
