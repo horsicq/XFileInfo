@@ -568,15 +568,28 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
                             if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_ImageBase()));
                         }
                     }
+
+                    {
+                        QString sRecord = "SectionAlignment";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SectionAlignment()));
+                    }
+                    {
+                        QString sRecord = "FileAlignment";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_FileAlignment()));
+                    }
+                    {
+                        QString sRecord = "MajorOperatingSystemVersion";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MajorOperatingSystemVersion()));
+                    }
+                    {
+                        QString sRecord = "MinorOperatingSystemVersion";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MinorOperatingSystemVersion()));
+                    }
                 }
             }
         }
     }
 
-    //     appendRecord(pParentOH, "SectionAlignment", XBinary::valueToHex(pe.getOptionalHeader_SectionAlignment()));
-    //     appendRecord(pParentOH, "FileAlignment", XBinary::valueToHex(pe.getOptionalHeader_FileAlignment()));
-    //     appendRecord(pParentOH, "MajorOperatingSystemVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorOperatingSystemVersion()));
-    //     appendRecord(pParentOH, "MinorOperatingSystemVersion", XBinary::valueToHex(pe.getOptionalHeader_MinorOperatingSystemVersion()));
     //     appendRecord(pParentOH, "MajorImageVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorImageVersion()));
     //     appendRecord(pParentOH, "MinorImageVersion", XBinary::valueToHex(pe.getOptionalHeader_MinorImageVersion()));
     //     appendRecord(pParentOH, "MajorSubsystemVersion", XBinary::valueToHex(pe.getOptionalHeader_MajorSubsystemVersion()));
