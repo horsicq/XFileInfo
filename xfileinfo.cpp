@@ -609,13 +609,18 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
                         QString sRecord = "SizeOfImage";
                         if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfImage()));
                     }
+                    {
+                        QString sRecord = "SizeOfHeaders";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfHeaders()));
+                    }
+                    {
+                        QString sRecord = "CheckSum";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_CheckSum()));
+                    }
                 }
             }
         }
     }
-
-    //     appendRecord(pParentOH, "SizeOfHeaders", XBinary::valueToHex(pe.getOptionalHeader_SizeOfHeaders()));
-    //     appendRecord(pParentOH, "CheckSum", XBinary::valueToHex(pe.getOptionalHeader_CheckSum()));
     //     appendRecord(pParentOH, "Subsystem",
     //                  addFlags(XBinary::MODE_16, pe.getOptionalHeader_Subsystem(), XPE::getImageOptionalHeaderSubsystem(), XBinary::VL_TYPE_LIST));
     //     appendRecord(pParentOH, "DllCharacteristics",
@@ -703,7 +708,9 @@ void XFileInfo::process()
             }
             {
                 QString sRecord = "Version";
-                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, fileFormatInfo.sVersion);
+                if (check(sGroup, sRecord) && (fileFormatInfo.sVersion != "")) {
+                    appendRecord(pItemParent, sRecord, fileFormatInfo.sVersion);
+                }
             }
 
             if (XBinary::checkFileType(XBinary::FT_ELF, fileType) || XBinary::checkFileType(XBinary::FT_PE, fileType) ||
