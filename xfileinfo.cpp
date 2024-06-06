@@ -601,13 +601,19 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
                         QString sRecord = "MinorSubsystemVersion";
                         if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MinorSubsystemVersion()));
                     }
+                    {
+                        QString sRecord = "Win32VersionValue";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_Win32VersionValue()));
+                    }
+                    {
+                        QString sRecord = "SizeOfImage";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfImage()));
+                    }
                 }
             }
         }
     }
 
-    //     appendRecord(pParentOH, "Win32VersionValue", XBinary::valueToHex(pe.getOptionalHeader_Win32VersionValue()));
-    //     appendRecord(pParentOH, "SizeOfImage", XBinary::valueToHex(pe.getOptionalHeader_SizeOfImage()));
     //     appendRecord(pParentOH, "SizeOfHeaders", XBinary::valueToHex(pe.getOptionalHeader_SizeOfHeaders()));
     //     appendRecord(pParentOH, "CheckSum", XBinary::valueToHex(pe.getOptionalHeader_CheckSum()));
     //     appendRecord(pParentOH, "Subsystem",
