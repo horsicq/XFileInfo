@@ -617,15 +617,18 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
                         QString sRecord = "CheckSum";
                         if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_CheckSum()));
                     }
+                    {
+                        QString sRecord = "Subsystem";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord,addFlags(XBinary::MODE_16, pPE->getOptionalHeader_Subsystem(), XPE::getImageOptionalHeaderSubsystem(), XBinary::VL_TYPE_LIST));
+                    }
+                    {
+                        QString sRecord = "DllCharacteristics";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addFlags(XBinary::MODE_16, pPE->getOptionalHeader_DllCharacteristics(), XPE::getImageOptionalHeaderDllCharacteristics(), XBinary::VL_TYPE_FLAGS));
+                    }
                 }
             }
         }
     }
-    //     appendRecord(pParentOH, "Subsystem",
-    //                  addFlags(XBinary::MODE_16, pe.getOptionalHeader_Subsystem(), XPE::getImageOptionalHeaderSubsystem(), XBinary::VL_TYPE_LIST));
-    //     appendRecord(pParentOH, "DllCharacteristics",
-    //                  addFlags(XBinary::MODE_16, pe.getOptionalHeader_DllCharacteristics(), XPE::getImageOptionalHeaderDllCharacteristics(),
-    //                           XBinary::VL_TYPE_FLAGS));
 
     //     if (fileType == XBinary::FT_PE32) {
     //         appendRecord(pParentOH, "SizeOfStackReserve", XBinary::valueToHex((quint32)pe.getOptionalHeader_SizeOfStackReserve()));
