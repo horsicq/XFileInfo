@@ -488,7 +488,9 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
                     XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
                     {
                         QString sRecord = "Machine";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addFlags(XBinary::MODE_16, pPE->getFileHeader_Machine(), XPE::getImageFileHeaderMachines(), XBinary::VL_TYPE_LIST));
+                        if (check(sGroup, sSubGroup, sRecord))
+                            appendRecord(pItemSub, sRecord,
+                                         addFlags(XBinary::MODE_16, pPE->getFileHeader_Machine(), XPE::getImageFileHeaderMachines(), XBinary::VL_TYPE_LIST));
                     }
                     {
                         QString sRecord = "NumberOfSections";
@@ -496,7 +498,8 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
                     }
                     {
                         QString sRecord = "TimeDateStamp";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addDateTime(XBinary::MODE_32, XBinary::DT_TYPE_POSIX, pPE->getFileHeader_TimeDateStamp()));
+                        if (check(sGroup, sSubGroup, sRecord))
+                            appendRecord(pItemSub, sRecord, addDateTime(XBinary::MODE_32, XBinary::DT_TYPE_POSIX, pPE->getFileHeader_TimeDateStamp()));
                     }
                     {
                         QString sRecord = "PointerToSymbolTable";
@@ -512,7 +515,10 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
                     }
                     {
                         QString sRecord = "Characteristics";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addFlags(XBinary::MODE_16, pPE->getFileHeader_Characteristics(), XPE::getImageFileHeaderCharacteristics(), XBinary::VL_TYPE_FLAGS));
+                        if (check(sGroup, sSubGroup, sRecord))
+                            appendRecord(
+                                pItemSub, sRecord,
+                                addFlags(XBinary::MODE_16, pPE->getFileHeader_Characteristics(), XPE::getImageFileHeaderCharacteristics(), XBinary::VL_TYPE_FLAGS));
                     }
                 }
             }
@@ -522,7 +528,9 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
                     XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
                     {
                         QString sRecord = "Magic";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addFlags(XBinary::MODE_16, pPE->getOptionalHeader_Magic(), XPE::getImageOptionalHeaderMagic(), XBinary::VL_TYPE_LIST));
+                        if (check(sGroup, sSubGroup, sRecord))
+                            appendRecord(pItemSub, sRecord,
+                                         addFlags(XBinary::MODE_16, pPE->getOptionalHeader_Magic(), XPE::getImageOptionalHeaderMagic(), XBinary::VL_TYPE_LIST));
                     }
                     {
                         QString sRecord = "MajorLinkerVersion";
@@ -619,11 +627,16 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
                     }
                     {
                         QString sRecord = "Subsystem";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord,addFlags(XBinary::MODE_16, pPE->getOptionalHeader_Subsystem(), XPE::getImageOptionalHeaderSubsystem(), XBinary::VL_TYPE_LIST));
+                        if (check(sGroup, sSubGroup, sRecord))
+                            appendRecord(pItemSub, sRecord,
+                                         addFlags(XBinary::MODE_16, pPE->getOptionalHeader_Subsystem(), XPE::getImageOptionalHeaderSubsystem(), XBinary::VL_TYPE_LIST));
                     }
                     {
                         QString sRecord = "DllCharacteristics";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, addFlags(XBinary::MODE_16, pPE->getOptionalHeader_DllCharacteristics(), XPE::getImageOptionalHeaderDllCharacteristics(), XBinary::VL_TYPE_FLAGS));
+                        if (check(sGroup, sSubGroup, sRecord))
+                            appendRecord(pItemSub, sRecord,
+                                         addFlags(XBinary::MODE_16, pPE->getOptionalHeader_DllCharacteristics(), XPE::getImageOptionalHeaderDllCharacteristics(),
+                                                  XBinary::VL_TYPE_FLAGS));
                     }
                 }
             }
