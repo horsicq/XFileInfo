@@ -712,12 +712,17 @@ void XFileInfo::DEX_HEADER(XDEX *pDEX)
                 QString sRecord = "magic";
                 if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pDEX->getHeader_magic()));
             }
+            {
+                QString sRecord = "version";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pDEX->getHeader_version()));
+            }
+            {
+                QString sRecord = "checksum";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pDEX->getHeader_checksum()));
+            }
         }
     }
 
-//    if (check("magic")) appendRecord(0, "magic", XBinary::valueToHex(dex.getHeader_magic()));
-//    if (check("version")) appendRecord(0, "version", XBinary::valueToHex(dex.getHeader_version()));
-//    if (check("checksum")) appendRecord(0, "checksum", XBinary::valueToHex(dex.getHeader_checksum()));
 //    if (check("signature")) appendRecord(0, "signature", dex.getHeader_signature().toHex());
 //    if (check("file_size")) appendRecord(0, "file_size", XBinary::valueToHex(dex.getHeader_file_size()));
 //    if (check("header_size")) appendRecord(0, "header_size", XBinary::valueToHex(dex.getHeader_header_size()));
