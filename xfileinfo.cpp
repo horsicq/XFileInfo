@@ -732,15 +732,21 @@ void XFileInfo::DEX_HEADER(XDEX *pDEX)
                 QString sRecord = "header_size";
                 if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pDEX->getHeader_header_size()));
             }
+            {
+                QString sRecord = "endian_tag";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pDEX->getHeader_endian_tag()));
+            }
+            {
+                QString sRecord = "link_size";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pDEX->getHeader_link_size()));
+            }
+            {
+                QString sRecord = "link_off";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pDEX->getHeader_link_off()));
+            }
         }
     }
 
-//    if (check("")) appendRecord(0, "signature", dex.getHeader_signature().toHex());
-//    if (check("")) appendRecord(0, "file_size", XBinary::valueToHex(dex.getHeader_file_size()));
-//    if (check("")) appendRecord(0, "header_size", XBinary::valueToHex(dex.getHeader_header_size()));
-//    if (check("endian_tag")) appendRecord(0, "endian_tag", XBinary::valueToHex(dex.getHeader_endian_tag()));
-//    if (check("link_size")) appendRecord(0, "link_size", XBinary::valueToHex(dex.getHeader_link_size()));
-//    if (check("link_off")) appendRecord(0, "link_off", XBinary::valueToHex(dex.getHeader_link_off()));
 //    if (check("map_off")) appendRecord(0, "map_off", XBinary::valueToHex(dex.getHeader_map_off()));
 //    if (check("string_ids_size")) appendRecord(0, "string_ids_size", XBinary::valueToHex(dex.getHeader_string_ids_size()));
 //    if (check("string_ids_off")) appendRecord(0, "string_ids_off", XBinary::valueToHex(dex.getHeader_string_ids_off()));
