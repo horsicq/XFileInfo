@@ -788,16 +788,36 @@ void XFileInfo::DEX_HEADER(XDEX *pDEX)
                 QString sRecord = "field_ids_off";
                 if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pDEX->getHeader_field_ids_off()));
             }
+            {
+                QString sRecord = "method_ids_size";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pDEX->getHeader_method_ids_size()));
+            }
+            {
+                QString sRecord = "method_ids_size";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pDEX->getHeader_method_ids_size()));
+            }
+            {
+                QString sRecord = "method_ids_off";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pDEX->getHeader_method_ids_off()));
+            }
+            {
+                QString sRecord = "class_defs_size";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pDEX->getHeader_class_defs_size()));
+            }
+            {
+                QString sRecord = "class_defs_off";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pDEX->getHeader_class_defs_off()));
+            }
+            {
+                QString sRecord = "data_size";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pDEX->getHeader_data_size()));
+            }
+            {
+                QString sRecord = "data_off";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pDEX->getHeader_data_off()));
+            }
         }
     }
-
-    //    if (check("method_ids_size")) appendRecord(0, "method_ids_size", XBinary::valueToHex(dex.getHeader_method_ids_size()));
-    //    if (check("method_ids_off")) appendRecord(0, "method_ids_off", XBinary::valueToHex(dex.getHeader_method_ids_off()));
-    //    if (check("class_defs_size")) appendRecord(0, "class_defs_size", XBinary::valueToHex(dex.getHeader_class_defs_size()));
-    //    if (check("class_defs_off")) appendRecord(0, "class_defs_off", XBinary::valueToHex(dex.getHeader_class_defs_off()));
-    //    if (check("data_size")) appendRecord(0, "data_size", XBinary::valueToHex(dex.getHeader_data_size()));
-    //    if (check("data_off")) appendRecord(0, "data_off", XBinary::valueToHex(dex.getHeader_data_off()));
-    // TODO
 }
 
 void XFileInfo::process()
