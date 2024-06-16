@@ -63,36 +63,37 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     _addMethod(&listResult, "Hash");
     _addMethod(&listResult, "Entropy");
 
-    if (XBinary::checkFileType(XBinary::FT_ELF, fileType) || XBinary::checkFileType(XBinary::FT_MACHO, fileType) || XBinary::checkFileType(XBinary::FT_COM, fileType) ||
-        XBinary::checkFileType(XBinary::FT_PE, fileType) || XBinary::checkFileType(XBinary::FT_NE, fileType) || XBinary::checkFileType(XBinary::FT_LE, fileType) ||
-        XBinary::checkFileType(XBinary::FT_MSDOS, fileType)) {
-        _addMethod(&listResult, "Entry point");
-    }
-
     if (XBinary::checkFileType(XBinary::FT_ELF, fileType)) {
+        _addMethod(&listResult, "Entry point");
         _addMethod(&listResult, "Elf_Ehdr");
     } else if (XBinary::checkFileType(XBinary::FT_MACHO, fileType)) {
+        _addMethod(&listResult, "Entry point");
         _addMethod(&listResult, "Header");
     } else if (XBinary::checkFileType(XBinary::FT_MACHOFAT, fileType)) {
         // TODO !!!
         // Header
         // Archs
     } else if (XBinary::checkFileType(XBinary::FT_PE, fileType)) {
+        _addMethod(&listResult, "Entry point");
         _addMethod(&listResult, "IMAGE_DOS_HEADER");
         _addMethod(&listResult, "IMAGE_NT_HEADERS");
         // TODO !!!
     } else if (XBinary::checkFileType(XBinary::FT_NE, fileType)) {
+        _addMethod(&listResult, "Entry point");
         _addMethod(&listResult, "IMAGE_DOS_HEADER");
         // TODO !!!
     } else if (XBinary::checkFileType(XBinary::FT_LE, fileType)) {
+        _addMethod(&listResult, "Entry point");
         _addMethod(&listResult, "IMAGE_DOS_HEADER");
         // TODO !!!
     } else if (XBinary::checkFileType(XBinary::FT_MSDOS, fileType)) {
+        _addMethod(&listResult, "Entry point");
         _addMethod(&listResult, "IMAGE_DOS_HEADER");
     } else if (XBinary::checkFileType(XBinary::FT_DEX, fileType)) {
         _addMethod(&listResult, "Header");
         // TODO
     } else if (XBinary::checkFileType(XBinary::FT_COM, fileType)) {
+        _addMethod(&listResult, "Entry point");
         // TODO
     }
     //    else if(XBinary::checkFileType(XBinary::FT_PDF,fileType))
