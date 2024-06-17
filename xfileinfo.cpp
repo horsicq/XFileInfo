@@ -216,7 +216,7 @@ void XFileInfo::_entryPoint(XBinary *pBinary, XBinary::_MEMORY_MAP *pMemoryMap)
     }
 }
 
-void XFileInfo::_IMAGE_DOS_HEADER(XMSDOS *pMSDOS)
+void XFileInfo::_IMAGE_DOS_HEADER(XMSDOS *pMSDOS, bool bExtra)
 {
     QString sGroup = "IMAGE_DOS_HEADER";
     if (check(sGroup)) {
@@ -277,6 +277,28 @@ void XFileInfo::_IMAGE_DOS_HEADER(XMSDOS *pMSDOS)
             {
                 QString sRecord = "e_ovno";
                 if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_ovno()));
+            }
+            if (bExtra) {
+                // {
+                //     QString sRecord = "e_res";
+                //     if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_res()));
+                // }
+                {
+                    QString sRecord = "e_oemid";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_oemid()));
+                }
+                {
+                    QString sRecord = "e_oeminfo";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_oeminfo()));
+                }
+                // {
+                //     QString sRecord = "e_res2";
+                //     if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_res2()));
+                // }
+                {
+                    QString sRecord = "e_lfanew";
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pMSDOS->get_e_lfanew()));
+                }
             }
         }
     }
@@ -1023,14 +1045,26 @@ void XFileInfo::process()
                     bool bIs64 = pe.is64();
 
                     _entryPoint(&pe, &memoryMap);
-                    _IMAGE_DOS_HEADER(&pe);
+                    _IMAGE_DOS_HEADER(&pe, true);
                     PE_IMAGE_NT_HEADERS(&pe, bIs64);
+
                     // TODO
                     // Sizes !!!
                     // Sections
                     // Resources
                     // Import
                     // Export
+                    // Relocs
+                    // Exceptions
+                    // Debug
+                    // TLS
+                    // LoadConfig
+                    // BoundImport
+                    // DelayImport
+                    // NET
+                    // Overlay
+                    // Rich
+                    // Sign
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_NE, fileType)) {
@@ -1042,7 +1076,7 @@ void XFileInfo::process()
                     XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     _entryPoint(&ne, &memoryMap);
-                    _IMAGE_DOS_HEADER(&ne);
+                    _IMAGE_DOS_HEADER(&ne, true);
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_LE, fileType)) {
@@ -1054,7 +1088,7 @@ void XFileInfo::process()
                     XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     _entryPoint(&le, &memoryMap);
-                    _IMAGE_DOS_HEADER(&le);
+                    _IMAGE_DOS_HEADER(&le, true);
 
                     // TODO
                 }
@@ -1068,7 +1102,7 @@ void XFileInfo::process()
                     XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
                     _entryPoint(&msdos, &memoryMap);
-                    _IMAGE_DOS_HEADER(&msdos);
+                    _IMAGE_DOS_HEADER(&msdos, false);
 
                     // TODO
                 }
