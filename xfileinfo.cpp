@@ -1006,10 +1006,26 @@ void XFileInfo::process()
 
                     _entryPoint(&elf, &memoryMap);
                     _Elf_Ehdr(&elf, bIs64);
+                    // TODO
                     // TODO Sections
                     // TODO Programs
                     // TODO rels
                     // TODO libraries
+                    // TODO symbols
+                    // TODO dynamic
+                    // TODO notes
+                    // TODO version
+                    // TODO verneed
+                    // TODO verdef
+                    // TODO gnuhash
+                    // TODO hash
+                    // TODO sysvhash
+                    // TODO relocations
+                    // TODO relocationsaddend
+                    // TODO relocationsrel
+                    // TODO relocationsrela
+                    // TODO relocationsplt
+                    // TODO relocationspltrel
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_MACHO, fileType)) {
