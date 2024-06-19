@@ -122,7 +122,7 @@ void XFileInfo::setCurrentStatus(const QString &sStatus)
     XBinary::setPdStructStatus(g_pPdStruct, g_nFreeIndex, sStatus);
 }
 
-bool XFileInfo::check(const QString &sString, const QString &sExtra1, const QString &sExtra2)
+bool XFileInfo::check(const QString &sString, const QString &sExtra1, const QString &sExtra2, const QString &sExtra3, const QString &sExtra4)
 {
     QString sCurrentString = sString;
 
@@ -134,6 +134,14 @@ bool XFileInfo::check(const QString &sString, const QString &sExtra1, const QStr
 
     if (sExtra2 != "") {
         sCurrentString += "#" + sExtra2;
+    }
+
+    if (sExtra3 != "") {
+        sCurrentString += "#" + sExtra3;
+    }
+
+    if (sExtra4 != "") {
+        sCurrentString += "#" + sExtra4;
     }
 
     qint32 nNumberOfSections = g_options.sString.count("#") + 1;
@@ -713,24 +721,36 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
                         QString sRecord = "NumberOfRvaAndSizes";
                         if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_NumberOfRvaAndSizes()));
                     }
+                    QString sSubGroup2 = "IMAGE_DATA_DIRECTORY";
+                    if (check(sGroup, sSubGroup, sSubGroup2)) {
+                        XFileInfoItem *pItemSub2 = appendRecord(pItemSub, sSubGroup2, "");
+                        {
+                            QMap<quint64, QString> mapDD = XPE::getImageOptionalHeaderDataDirectory();
+
+                            qint32 nCount = qMin(pPE->getOptionalHeader_NumberOfRvaAndSizes(), (quint32)16);
+
+                            for (int i = 0; i < nCount; i++) {
+                                QString sSubGroup3 = mapDD.value(i);
+                                if (check(sGroup, sSubGroup, sSubGroup2, sSubGroup3)) {
+                                    XFileInfoItem *pItemSub3 = appendRecord(pItemSub2, sSubGroup3, "");
+                                    {
+                                        {
+                                            QString sRecord = "VirtualAddress";
+                                            if (check(sGroup, sSubGroup, sSubGroup2, sSubGroup3, sRecord)) appendRecord(pItemSub3, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_DataDirectory(i).VirtualAddress));
+                                        }
+                                        {
+                                            QString sRecord = "Size";
+                                            if (check(sGroup, sSubGroup, sSubGroup2, sSubGroup3, sRecord)) appendRecord(pItemSub3, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_DataDirectory(i).Size));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
-
-    //     XFileInfoItem *pParentDD = appendRecord(pParentOH, "DataDirectory", "");
-
-    //     quint32 nNumberOfRvaAndSizes = pe.getOptionalHeader_NumberOfRvaAndSizes();
-
-    //     for (quint32 i = 0; i < nNumberOfRvaAndSizes; i++) {
-    //         XFileInfoItem *pParentDirectory = appendRecord(pParentDD, QString::number(i), "");
-
-    //         XPE_DEF::IMAGE_DATA_DIRECTORY idd = pe.getOptionalHeader_DataDirectory(i);
-
-    //         appendRecord(pParentDirectory, "VirtualAddress", XBinary::valueToHex(idd.VirtualAddress));
-    //         appendRecord(pParentDirectory, "Size", XBinary::valueToHex(idd.Size));
-    //     }
-    // }
 }
 
 void XFileInfo::DEX_HEADER(XDEX *pDEX)
