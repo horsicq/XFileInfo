@@ -77,6 +77,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
         _addMethod(&listResult, "Entry point");
         _addMethod(&listResult, "IMAGE_DOS_HEADER");
         _addMethod(&listResult, "IMAGE_NT_HEADERS");
+        _addMethod(&listResult, "IMAGE_SECTION_HEADER");
         // TODO !!!
     } else if (XBinary::checkFileType(XBinary::FT_NE, fileType)) {
         _addMethod(&listResult, "Entry point");
@@ -503,249 +504,316 @@ void XFileInfo::_mach_header(XMACH *pMACH, bool bIs64)
 
 void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
 {
-    {
-        QString sGroup = "IMAGE_NT_HEADERS";
-        if (check(sGroup)) {
-            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
-            {
-                QString sRecord = "Signature";
-                if (check(sGroup, sRecord))
-                    appendRecord(pItemParent, sRecord,
-                                 addFlags(XBinary::MODE_16, pPE->getNtHeaders_Signature(), XPE::getImageNtHeadersSignatures(), XBinary::VL_TYPE_LIST));
-            }
-            {
-                QString sSubGroup = "IMAGE_FILE_HEADER";
-                if (check(sGroup, sSubGroup)) {
-                    XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
-                    {
-                        QString sRecord = "Machine";
-                        if (check(sGroup, sSubGroup, sRecord))
-                            appendRecord(pItemSub, sRecord,
-                                         addFlags(XBinary::MODE_16, pPE->getFileHeader_Machine(), XPE::getImageFileHeaderMachines(), XBinary::VL_TYPE_LIST));
-                    }
-                    {
-                        QString sRecord = "NumberOfSections";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_NumberOfSections()));
-                    }
-                    {
-                        QString sRecord = "TimeDateStamp";
-                        if (check(sGroup, sSubGroup, sRecord))
-                            appendRecord(pItemSub, sRecord, addDateTime(XBinary::MODE_32, XBinary::DT_TYPE_POSIX, pPE->getFileHeader_TimeDateStamp()));
-                    }
-                    {
-                        QString sRecord = "PointerToSymbolTable";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_PointerToSymbolTable()));
-                    }
-                    {
-                        QString sRecord = "NumberOfSymbols";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_NumberOfSymbols()));
-                    }
-                    {
-                        QString sRecord = "SizeOfOptionalHeader";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_SizeOfOptionalHeader()));
-                    }
-                    {
-                        QString sRecord = "Characteristics";
-                        if (check(sGroup, sSubGroup, sRecord))
-                            appendRecord(
-                                pItemSub, sRecord,
-                                addFlags(XBinary::MODE_16, pPE->getFileHeader_Characteristics(), XPE::getImageFileHeaderCharacteristics(), XBinary::VL_TYPE_FLAGS));
-                    }
+    QString sGroup = "IMAGE_NT_HEADERS";
+    if (check(sGroup)) {
+        XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+        {
+            QString sRecord = "Signature";
+            if (check(sGroup, sRecord))
+                appendRecord(pItemParent, sRecord,
+                             addFlags(XBinary::MODE_16, pPE->getNtHeaders_Signature(), XPE::getImageNtHeadersSignatures(), XBinary::VL_TYPE_LIST));
+        }
+        {
+            QString sSubGroup = "IMAGE_FILE_HEADER";
+            if (check(sGroup, sSubGroup)) {
+                XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
+                {
+                    QString sRecord = "Machine";
+                    if (check(sGroup, sSubGroup, sRecord))
+                        appendRecord(pItemSub, sRecord,
+                                     addFlags(XBinary::MODE_16, pPE->getFileHeader_Machine(), XPE::getImageFileHeaderMachines(), XBinary::VL_TYPE_LIST));
+                }
+                {
+                    QString sRecord = "NumberOfSections";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_NumberOfSections()));
+                }
+                {
+                    QString sRecord = "TimeDateStamp";
+                    if (check(sGroup, sSubGroup, sRecord))
+                        appendRecord(pItemSub, sRecord, addDateTime(XBinary::MODE_32, XBinary::DT_TYPE_POSIX, pPE->getFileHeader_TimeDateStamp()));
+                }
+                {
+                    QString sRecord = "PointerToSymbolTable";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_PointerToSymbolTable()));
+                }
+                {
+                    QString sRecord = "NumberOfSymbols";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_NumberOfSymbols()));
+                }
+                {
+                    QString sRecord = "SizeOfOptionalHeader";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getFileHeader_SizeOfOptionalHeader()));
+                }
+                {
+                    QString sRecord = "Characteristics";
+                    if (check(sGroup, sSubGroup, sRecord))
+                        appendRecord(
+                            pItemSub, sRecord,
+                            addFlags(XBinary::MODE_16, pPE->getFileHeader_Characteristics(), XPE::getImageFileHeaderCharacteristics(), XBinary::VL_TYPE_FLAGS));
                 }
             }
-            {
-                QString sSubGroup = "IMAGE_OPTIONAL_HEADER";
-                if (check(sGroup, sSubGroup)) {
-                    XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
+        }
+        {
+            QString sSubGroup = "IMAGE_OPTIONAL_HEADER";
+            if (check(sGroup, sSubGroup)) {
+                XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
+                {
+                    QString sRecord = "Magic";
+                    if (check(sGroup, sSubGroup, sRecord))
+                        appendRecord(pItemSub, sRecord,
+                                     addFlags(XBinary::MODE_16, pPE->getOptionalHeader_Magic(), XPE::getImageOptionalHeaderMagic(), XBinary::VL_TYPE_LIST));
+                }
+                {
+                    QString sRecord = "MajorLinkerVersion";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MajorLinkerVersion()));
+                }
+                {
+                    QString sRecord = "MinorLinkerVersion";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MinorLinkerVersion()));
+                }
+                {
+                    QString sRecord = "SizeOfCode";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfCode()));
+                }
+                {
+                    QString sRecord = "SizeOfInitializedData";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfInitializedData()));
+                }
+                {
+                    QString sRecord = "SizeOfUninitializedData";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfUninitializedData()));
+                }
+                {
+                    QString sRecord = "AddressOfEntryPoint";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_AddressOfEntryPoint()));
+                }
+                {
+                    QString sRecord = "BaseOfCode";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_BaseOfCode()));
+                }
+
+                if (!bIs64) {
                     {
-                        QString sRecord = "Magic";
+                        QString sRecord = "BaseOfData";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_BaseOfData()));
+                    }
+                    {
+                        QString sRecord = "ImageBase";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_ImageBase()));
+                    }
+                } else {
+                    {
+                        QString sRecord = "ImageBase";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_ImageBase()));
+                    }
+                }
+
+                {
+                    QString sRecord = "SectionAlignment";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SectionAlignment()));
+                }
+                {
+                    QString sRecord = "FileAlignment";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_FileAlignment()));
+                }
+                {
+                    QString sRecord = "MajorOperatingSystemVersion";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MajorOperatingSystemVersion()));
+                }
+                {
+                    QString sRecord = "MinorOperatingSystemVersion";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MinorOperatingSystemVersion()));
+                }
+                {
+                    QString sRecord = "MajorImageVersion";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MajorImageVersion()));
+                }
+                {
+                    QString sRecord = "MinorImageVersion";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MinorImageVersion()));
+                }
+                {
+                    QString sRecord = "MajorSubsystemVersion";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MajorSubsystemVersion()));
+                }
+                {
+                    QString sRecord = "MinorSubsystemVersion";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MinorSubsystemVersion()));
+                }
+                {
+                    QString sRecord = "Win32VersionValue";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_Win32VersionValue()));
+                }
+                {
+                    QString sRecord = "SizeOfImage";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfImage()));
+                }
+                {
+                    QString sRecord = "SizeOfHeaders";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfHeaders()));
+                }
+                {
+                    QString sRecord = "CheckSum";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_CheckSum()));
+                }
+                {
+                    QString sRecord = "Subsystem";
+                    if (check(sGroup, sSubGroup, sRecord))
+                        appendRecord(pItemSub, sRecord,
+                                     addFlags(XBinary::MODE_16, pPE->getOptionalHeader_Subsystem(), XPE::getImageOptionalHeaderSubsystem(), XBinary::VL_TYPE_LIST));
+                }
+                {
+                    QString sRecord = "DllCharacteristics";
+                    if (check(sGroup, sSubGroup, sRecord))
+                        appendRecord(pItemSub, sRecord,
+                                     addFlags(XBinary::MODE_16, pPE->getOptionalHeader_DllCharacteristics(), XPE::getImageOptionalHeaderDllCharacteristics(),
+                                              XBinary::VL_TYPE_FLAGS));
+                }
+
+                if (!bIs64) {
+                    {
+                        QString sRecord = "SizeOfStackReserve";
                         if (check(sGroup, sSubGroup, sRecord))
-                            appendRecord(pItemSub, sRecord,
-                                         addFlags(XBinary::MODE_16, pPE->getOptionalHeader_Magic(), XPE::getImageOptionalHeaderMagic(), XBinary::VL_TYPE_LIST));
+                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfStackReserve()));
                     }
                     {
-                        QString sRecord = "MajorLinkerVersion";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MajorLinkerVersion()));
-                    }
-                    {
-                        QString sRecord = "MinorLinkerVersion";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MinorLinkerVersion()));
-                    }
-                    {
-                        QString sRecord = "SizeOfCode";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfCode()));
-                    }
-                    {
-                        QString sRecord = "SizeOfInitializedData";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfInitializedData()));
-                    }
-                    {
-                        QString sRecord = "SizeOfUninitializedData";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfUninitializedData()));
-                    }
-                    {
-                        QString sRecord = "AddressOfEntryPoint";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_AddressOfEntryPoint()));
-                    }
-                    {
-                        QString sRecord = "BaseOfCode";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_BaseOfCode()));
-                    }
-
-                    if (!bIs64) {
-                        {
-                            QString sRecord = "BaseOfData";
-                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_BaseOfData()));
-                        }
-                        {
-                            QString sRecord = "ImageBase";
-                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_ImageBase()));
-                        }
-                    } else {
-                        {
-                            QString sRecord = "ImageBase";
-                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_ImageBase()));
-                        }
-                    }
-
-                    {
-                        QString sRecord = "SectionAlignment";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SectionAlignment()));
-                    }
-                    {
-                        QString sRecord = "FileAlignment";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_FileAlignment()));
-                    }
-                    {
-                        QString sRecord = "MajorOperatingSystemVersion";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MajorOperatingSystemVersion()));
-                    }
-                    {
-                        QString sRecord = "MinorOperatingSystemVersion";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MinorOperatingSystemVersion()));
-                    }
-                    {
-                        QString sRecord = "MajorImageVersion";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MajorImageVersion()));
-                    }
-                    {
-                        QString sRecord = "MinorImageVersion";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MinorImageVersion()));
-                    }
-                    {
-                        QString sRecord = "MajorSubsystemVersion";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MajorSubsystemVersion()));
-                    }
-                    {
-                        QString sRecord = "MinorSubsystemVersion";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_MinorSubsystemVersion()));
-                    }
-                    {
-                        QString sRecord = "Win32VersionValue";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_Win32VersionValue()));
-                    }
-                    {
-                        QString sRecord = "SizeOfImage";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfImage()));
-                    }
-                    {
-                        QString sRecord = "SizeOfHeaders";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_SizeOfHeaders()));
-                    }
-                    {
-                        QString sRecord = "CheckSum";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_CheckSum()));
-                    }
-                    {
-                        QString sRecord = "Subsystem";
+                        QString sRecord = "SizeOfStackCommit";
                         if (check(sGroup, sSubGroup, sRecord))
-                            appendRecord(pItemSub, sRecord,
-                                         addFlags(XBinary::MODE_16, pPE->getOptionalHeader_Subsystem(), XPE::getImageOptionalHeaderSubsystem(), XBinary::VL_TYPE_LIST));
+                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfStackCommit()));
                     }
                     {
-                        QString sRecord = "DllCharacteristics";
+                        QString sRecord = "SizeOfHeapReserve";
                         if (check(sGroup, sSubGroup, sRecord))
-                            appendRecord(pItemSub, sRecord,
-                                         addFlags(XBinary::MODE_16, pPE->getOptionalHeader_DllCharacteristics(), XPE::getImageOptionalHeaderDllCharacteristics(),
-                                                  XBinary::VL_TYPE_FLAGS));
-                    }
-
-                    if (!bIs64) {
-                        {
-                            QString sRecord = "SizeOfStackReserve";
-                            if (check(sGroup, sSubGroup, sRecord))
-                                appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfStackReserve()));
-                        }
-                        {
-                            QString sRecord = "SizeOfStackCommit";
-                            if (check(sGroup, sSubGroup, sRecord))
-                                appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfStackCommit()));
-                        }
-                        {
-                            QString sRecord = "SizeOfHeapReserve";
-                            if (check(sGroup, sSubGroup, sRecord))
-                                appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfHeapReserve()));
-                        }
-                        {
-                            QString sRecord = "SizeOfHeapCommit";
-                            if (check(sGroup, sSubGroup, sRecord))
-                                appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfHeapCommit()));
-                        }
-                    } else {
-                        {
-                            QString sRecord = "SizeOfStackReserve";
-                            if (check(sGroup, sSubGroup, sRecord))
-                                appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfStackReserve()));
-                        }
-                        {
-                            QString sRecord = "SizeOfStackCommit";
-                            if (check(sGroup, sSubGroup, sRecord))
-                                appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfStackCommit()));
-                        }
-                        {
-                            QString sRecord = "SizeOfHeapReserve";
-                            if (check(sGroup, sSubGroup, sRecord))
-                                appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfHeapReserve()));
-                        }
-                        {
-                            QString sRecord = "SizeOfHeapCommit";
-                            if (check(sGroup, sSubGroup, sRecord))
-                                appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfHeapCommit()));
-                        }
+                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfHeapReserve()));
                     }
                     {
-                        QString sRecord = "LoaderFlags";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_LoaderFlags()));
+                        QString sRecord = "SizeOfHeapCommit";
+                        if (check(sGroup, sSubGroup, sRecord))
+                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfHeapCommit()));
+                    }
+                } else {
+                    {
+                        QString sRecord = "SizeOfStackReserve";
+                        if (check(sGroup, sSubGroup, sRecord))
+                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfStackReserve()));
                     }
                     {
-                        QString sRecord = "NumberOfRvaAndSizes";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_NumberOfRvaAndSizes()));
+                        QString sRecord = "SizeOfStackCommit";
+                        if (check(sGroup, sSubGroup, sRecord))
+                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfStackCommit()));
                     }
-                    QString sSubGroup2 = "IMAGE_DATA_DIRECTORY";
-                    if (check(sGroup, sSubGroup, sSubGroup2)) {
-                        XFileInfoItem *pItemSub2 = appendRecord(pItemSub, sSubGroup2, "");
-                        {
-                            QMap<quint64, QString> mapDD = XPE::getImageOptionalHeaderDataDirectory();
+                    {
+                        QString sRecord = "SizeOfHeapReserve";
+                        if (check(sGroup, sSubGroup, sRecord))
+                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfHeapReserve()));
+                    }
+                    {
+                        QString sRecord = "SizeOfHeapCommit";
+                        if (check(sGroup, sSubGroup, sRecord))
+                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfHeapCommit()));
+                    }
+                }
+                {
+                    QString sRecord = "LoaderFlags";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_LoaderFlags()));
+                }
+                {
+                    QString sRecord = "NumberOfRvaAndSizes";
+                    if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_NumberOfRvaAndSizes()));
+                }
+                QString sSubGroup2 = "IMAGE_DATA_DIRECTORY";
+                if (check(sGroup, sSubGroup, sSubGroup2)) {
+                    XFileInfoItem *pItemSub2 = appendRecord(pItemSub, sSubGroup2, "");
+                    {
+                        QMap<quint64, QString> mapDD = XPE::getImageOptionalHeaderDataDirectory();
 
-                            qint32 nCount = qMin(pPE->getOptionalHeader_NumberOfRvaAndSizes(), (quint32)16);
+                        qint32 nCount = qMin(pPE->getOptionalHeader_NumberOfRvaAndSizes(), (quint32)16);
 
-                            for (int i = 0; i < nCount; i++) {
-                                QString sSubGroup3 = mapDD.value(i);
-                                if (check(sGroup, sSubGroup, sSubGroup2, sSubGroup3)) {
-                                    XFileInfoItem *pItemSub3 = appendRecord(pItemSub2, sSubGroup3, "");
+                        for (int i = 0; i < nCount; i++) {
+                            QString sSubGroup3 = mapDD.value(i);
+                            if (check(sGroup, sSubGroup, sSubGroup2, sSubGroup3)) {
+                                XFileInfoItem *pItemSub3 = appendRecord(pItemSub2, sSubGroup3, "");
+                                {
                                     {
-                                        {
-                                            QString sRecord = "VirtualAddress";
-                                            if (check(sGroup, sSubGroup, sSubGroup2, sSubGroup3, sRecord)) appendRecord(pItemSub3, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_DataDirectory(i).VirtualAddress));
-                                        }
-                                        {
-                                            QString sRecord = "Size";
-                                            if (check(sGroup, sSubGroup, sSubGroup2, sSubGroup3, sRecord)) appendRecord(pItemSub3, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_DataDirectory(i).Size));
-                                        }
+                                        QString sRecord = "VirtualAddress";
+                                        if (check(sGroup, sSubGroup, sSubGroup2, sSubGroup3, sRecord)) appendRecord(pItemSub3, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_DataDirectory(i).VirtualAddress));
+                                    }
+                                    {
+                                        QString sRecord = "Size";
+                                        if (check(sGroup, sSubGroup, sSubGroup2, sSubGroup3, sRecord)) appendRecord(pItemSub3, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_DataDirectory(i).Size));
                                     }
                                 }
                             }
                         }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void XFileInfo::PE_IMAGE_SECTION_HEADER(XPE *pPE)
+{
+    QString sGroup = "IMAGE_SECTION_HEADER";
+    if (check(sGroup)) {
+        XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+
+        QList<XPE_DEF::IMAGE_SECTION_HEADER> listISH = pPE->getSectionHeaders();
+        qint32 nNumberOfSections = listISH.count();
+
+        for (qint32 i = 0; i < nNumberOfSections; i++) {
+            QString sSectionName = QString("%1").arg(i);
+
+            QString sSubGroup = sSectionName;
+            if (check(sGroup, sSubGroup)) {
+                XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
+                {
+                    {
+                        QString sRecord = "Name";
+                        if (check(sGroup, sSubGroup, sRecord)) {
+                            QString _sName = QString((char *)listISH.at(i).Name);
+                            _sName.resize(qMin(_sName.length(), XPE_DEF::S_IMAGE_SIZEOF_SHORT_NAME));
+
+                            appendRecord(pItemSub, sRecord, _sName);
+                        }
+                    }
+                    {
+                        QString sRecord = "VirtualSize";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).Misc.VirtualSize));
+                    }
+                    {
+                        QString sRecord = "VirtualAddress";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).VirtualAddress));
+                    }
+                    {
+                        QString sRecord = "SizeOfRawData";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).SizeOfRawData));
+                    }
+                    {
+                        QString sRecord = "PointerToRawData";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).PointerToRawData));
+                    }
+                    {
+                        QString sRecord = "PointerToRelocations";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).PointerToRelocations));
+                    }
+                    {
+                        QString sRecord = "PointerToLinenumbers";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).PointerToLinenumbers));
+                    }
+                    {
+                        QString sRecord = "NumberOfRelocations";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).NumberOfRelocations));
+                    }
+                    {
+                        QString sRecord = "NumberOfLinenumbers";
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).NumberOfLinenumbers));
+                    }
+                    {
+                        QString sRecord = "Characteristics";
+                        if (check(sGroup, sSubGroup, sRecord))
+                            appendRecord(pItemSub, sRecord,
+                                         addFlags(XBinary::MODE_32, listISH.at(i).Characteristics, XPE::getImageSectionHeaderFlags(), XBinary::VL_TYPE_FLAGS));
                     }
                 }
             }
@@ -1083,10 +1151,10 @@ void XFileInfo::process()
                     _entryPoint(&pe, &memoryMap);
                     _IMAGE_DOS_HEADER(&pe, true);
                     PE_IMAGE_NT_HEADERS(&pe, bIs64);
+                    PE_IMAGE_SECTION_HEADER(&pe);
 
                     // TODO
                     // Sizes !!!
-                    // Sections
                     // Resources
                     // Import
                     // Export
