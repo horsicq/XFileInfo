@@ -754,66 +754,68 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
 
 void XFileInfo::PE_IMAGE_SECTION_HEADER(XPE *pPE)
 {
-    QString sGroup = "IMAGE_SECTION_HEADER";
-    if (check(sGroup)) {
-        XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+    if (pPE->getFileHeader_NumberOfSections()) {
+        QString sGroup = "IMAGE_SECTION_HEADER";
+        if (check(sGroup)) {
+            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
 
-        QList<XPE_DEF::IMAGE_SECTION_HEADER> listISH = pPE->getSectionHeaders();
-        qint32 nNumberOfSections = listISH.count();
+            QList<XPE_DEF::IMAGE_SECTION_HEADER> listISH = pPE->getSectionHeaders();
+            qint32 nNumberOfSections = listISH.count();
 
-        for (qint32 i = 0; i < nNumberOfSections; i++) {
-            QString sSectionName = QString("%1").arg(i);
+            for (qint32 i = 0; i < nNumberOfSections; i++) {
+                QString sSectionName = QString("%1").arg(i);
 
-            QString sSubGroup = sSectionName;
-            if (check(sGroup, sSubGroup)) {
-                XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
-                {
+                QString sSubGroup = sSectionName;
+                if (check(sGroup, sSubGroup)) {
+                    XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
                     {
-                        QString sRecord = "Name";
-                        if (check(sGroup, sSubGroup, sRecord)) {
-                            QString _sName = QString((char *)listISH.at(i).Name);
-                            _sName.resize(qMin(_sName.length(), XPE_DEF::S_IMAGE_SIZEOF_SHORT_NAME));
+                        {
+                            QString sRecord = "Name";
+                            if (check(sGroup, sSubGroup, sRecord)) {
+                                QString _sName = QString((char *)listISH.at(i).Name);
+                                _sName.resize(qMin(_sName.length(), XPE_DEF::S_IMAGE_SIZEOF_SHORT_NAME));
 
-                            appendRecord(pItemSub, sRecord, _sName);
+                                appendRecord(pItemSub, sRecord, _sName);
+                            }
                         }
-                    }
-                    {
-                        QString sRecord = "VirtualSize";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).Misc.VirtualSize));
-                    }
-                    {
-                        QString sRecord = "VirtualAddress";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).VirtualAddress));
-                    }
-                    {
-                        QString sRecord = "SizeOfRawData";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).SizeOfRawData));
-                    }
-                    {
-                        QString sRecord = "PointerToRawData";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).PointerToRawData));
-                    }
-                    {
-                        QString sRecord = "PointerToRelocations";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).PointerToRelocations));
-                    }
-                    {
-                        QString sRecord = "PointerToLinenumbers";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).PointerToLinenumbers));
-                    }
-                    {
-                        QString sRecord = "NumberOfRelocations";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).NumberOfRelocations));
-                    }
-                    {
-                        QString sRecord = "NumberOfLinenumbers";
-                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).NumberOfLinenumbers));
-                    }
-                    {
-                        QString sRecord = "Characteristics";
-                        if (check(sGroup, sSubGroup, sRecord))
-                            appendRecord(pItemSub, sRecord,
-                                         addFlags(XBinary::MODE_32, listISH.at(i).Characteristics, XPE::getImageSectionHeaderFlags(), XBinary::VL_TYPE_FLAGS));
+                        {
+                            QString sRecord = "VirtualSize";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).Misc.VirtualSize));
+                        }
+                        {
+                            QString sRecord = "VirtualAddress";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).VirtualAddress));
+                        }
+                        {
+                            QString sRecord = "SizeOfRawData";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).SizeOfRawData));
+                        }
+                        {
+                            QString sRecord = "PointerToRawData";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).PointerToRawData));
+                        }
+                        {
+                            QString sRecord = "PointerToRelocations";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).PointerToRelocations));
+                        }
+                        {
+                            QString sRecord = "PointerToLinenumbers";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).PointerToLinenumbers));
+                        }
+                        {
+                            QString sRecord = "NumberOfRelocations";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).NumberOfRelocations));
+                        }
+                        {
+                            QString sRecord = "NumberOfLinenumbers";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listISH.at(i).NumberOfLinenumbers));
+                        }
+                        {
+                            QString sRecord = "Characteristics";
+                            if (check(sGroup, sSubGroup, sRecord))
+                                appendRecord(pItemSub, sRecord,
+                                             addFlags(XBinary::MODE_32, listISH.at(i).Characteristics, XPE::getImageSectionHeaderFlags(), XBinary::VL_TYPE_FLAGS));
+                        }
                     }
                 }
             }
