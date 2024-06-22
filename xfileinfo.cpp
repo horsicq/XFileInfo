@@ -754,13 +754,13 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
 
 void XFileInfo::PE_IMAGE_SECTION_HEADER(XPE *pPE)
 {
-    if (pPE->getFileHeader_NumberOfSections()) {
-        QString sGroup = "IMAGE_SECTION_HEADER";
-        if (check(sGroup)) {
-            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+    QString sGroup = "IMAGE_SECTION_HEADER";
+    if (check(sGroup)) {
+        QList<XPE_DEF::IMAGE_SECTION_HEADER> listISH = pPE->getSectionHeaders();
+        qint32 nNumberOfSections = listISH.count();
 
-            QList<XPE_DEF::IMAGE_SECTION_HEADER> listISH = pPE->getSectionHeaders();
-            qint32 nNumberOfSections = listISH.count();
+        if (nNumberOfSections > 0) {
+            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
 
             for (qint32 i = 0; i < nNumberOfSections; i++) {
                 QString sSectionName = QString("%1").arg(i);
