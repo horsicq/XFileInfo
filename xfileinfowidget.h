@@ -47,6 +47,7 @@ public:
 
     void setData(QIODevice *pDevice, XBinary::FT fileType, const QString &sString, bool bAuto = false);
     void reload();
+    virtual void adjustView();
 
 protected:
     virtual void registerShortcuts(bool bState);

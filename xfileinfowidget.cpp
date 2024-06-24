@@ -105,6 +105,10 @@ void XFileInfoWidget::reload()
     }
 }
 
+void XFileInfoWidget::adjustView()
+{
+}
+
 void XFileInfoWidget::registerShortcuts(bool bState)
 {
     Q_UNUSED(bState)
