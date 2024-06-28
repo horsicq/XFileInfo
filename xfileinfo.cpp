@@ -510,8 +510,7 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
         {
             QString sRecord = "Signature";
             if (check(sGroup, sRecord))
-                appendRecord(pItemParent, sRecord,
-                             addFlags(XBinary::MODE_16, pPE->getNtHeaders_Signature(), XPE::getImageNtHeadersSignatures(), XBinary::VL_TYPE_LIST));
+                appendRecord(pItemParent, sRecord, addFlags(XBinary::MODE_16, pPE->getNtHeaders_Signature(), XPE::getImageNtHeadersSignatures(), XBinary::VL_TYPE_LIST));
         }
         {
             QString sSubGroup = "IMAGE_FILE_HEADER";
@@ -547,9 +546,8 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
                 {
                     QString sRecord = "Characteristics";
                     if (check(sGroup, sSubGroup, sRecord))
-                        appendRecord(
-                            pItemSub, sRecord,
-                            addFlags(XBinary::MODE_16, pPE->getFileHeader_Characteristics(), XPE::getImageFileHeaderCharacteristics(), XBinary::VL_TYPE_FLAGS));
+                        appendRecord(pItemSub, sRecord,
+                                     addFlags(XBinary::MODE_16, pPE->getFileHeader_Characteristics(), XPE::getImageFileHeaderCharacteristics(), XBinary::VL_TYPE_FLAGS));
                 }
             }
         }
@@ -673,44 +671,36 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
                 if (!bIs64) {
                     {
                         QString sRecord = "SizeOfStackReserve";
-                        if (check(sGroup, sSubGroup, sRecord))
-                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfStackReserve()));
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfStackReserve()));
                     }
                     {
                         QString sRecord = "SizeOfStackCommit";
-                        if (check(sGroup, sSubGroup, sRecord))
-                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfStackCommit()));
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfStackCommit()));
                     }
                     {
                         QString sRecord = "SizeOfHeapReserve";
-                        if (check(sGroup, sSubGroup, sRecord))
-                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfHeapReserve()));
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfHeapReserve()));
                     }
                     {
                         QString sRecord = "SizeOfHeapCommit";
-                        if (check(sGroup, sSubGroup, sRecord))
-                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfHeapCommit()));
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint32)pPE->getOptionalHeader_SizeOfHeapCommit()));
                     }
                 } else {
                     {
                         QString sRecord = "SizeOfStackReserve";
-                        if (check(sGroup, sSubGroup, sRecord))
-                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfStackReserve()));
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfStackReserve()));
                     }
                     {
                         QString sRecord = "SizeOfStackCommit";
-                        if (check(sGroup, sSubGroup, sRecord))
-                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfStackCommit()));
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfStackCommit()));
                     }
                     {
                         QString sRecord = "SizeOfHeapReserve";
-                        if (check(sGroup, sSubGroup, sRecord))
-                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfHeapReserve()));
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfHeapReserve()));
                     }
                     {
                         QString sRecord = "SizeOfHeapCommit";
-                        if (check(sGroup, sSubGroup, sRecord))
-                            appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfHeapCommit()));
+                        if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex((quint64)pPE->getOptionalHeader_SizeOfHeapCommit()));
                     }
                 }
                 {
@@ -736,11 +726,13 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
                                 {
                                     {
                                         QString sRecord = "VirtualAddress";
-                                        if (check(sGroup, sSubGroup, sSubGroup2, sSubGroup3, sRecord)) appendRecord(pItemSub3, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_DataDirectory(i).VirtualAddress));
+                                        if (check(sGroup, sSubGroup, sSubGroup2, sSubGroup3, sRecord))
+                                            appendRecord(pItemSub3, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_DataDirectory(i).VirtualAddress));
                                     }
                                     {
                                         QString sRecord = "Size";
-                                        if (check(sGroup, sSubGroup, sSubGroup2, sSubGroup3, sRecord)) appendRecord(pItemSub3, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_DataDirectory(i).Size));
+                                        if (check(sGroup, sSubGroup, sSubGroup2, sSubGroup3, sRecord))
+                                            appendRecord(pItemSub3, sRecord, XBinary::valueToHex(pPE->getOptionalHeader_DataDirectory(i).Size));
                                     }
                                 }
                             }
