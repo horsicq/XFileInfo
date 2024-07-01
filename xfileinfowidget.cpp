@@ -32,8 +32,6 @@ XFileInfoWidget::XFileInfoWidget(QWidget *pParent) : XShortcutsWidget(pParent), 
 
     ui->checkBoxComment->setChecked(true);
 
-    XOptions::setMonoFont(ui->plainTextEditFileInfo);
-
     const bool bBlocked1 = ui->comboBoxShow->blockSignals(true);
 
     ui->comboBoxShow->addItem(tr("Text"), SM_TEXT);
@@ -107,6 +105,7 @@ void XFileInfoWidget::reload()
 
 void XFileInfoWidget::adjustView()
 {
+    getGlobalOptions()->adjustWidget(ui->plainTextEditFileInfo, XOptions::ID_VIEW_FONT_TEXTEDITS);
 }
 
 void XFileInfoWidget::registerShortcuts(bool bState)
