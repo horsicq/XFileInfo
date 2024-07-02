@@ -105,6 +105,7 @@ void XFileInfoWidget::reload()
 
 void XFileInfoWidget::adjustView()
 {
+    getGlobalOptions()->adjustWidget(this, XOptions::ID_VIEW_FONT_CONTROLS);
     getGlobalOptions()->adjustWidget(ui->plainTextEditFileInfo, XOptions::ID_VIEW_FONT_TEXTEDITS);
 }
 
