@@ -1033,6 +1033,8 @@ void XFileInfo::process()
                 QString sRecord = "SHA1";
                 if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA1, g_pDevice, g_pPdStruct));
             }
+#ifndef QT_CRYPTOGRAPHICHASH_ONLY_SHA1
+#if (QT_VERSION_MAJOR > 4)
             {
                 QString sRecord = "SHA224";
                 if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA224, g_pDevice, g_pPdStruct));
@@ -1049,6 +1051,8 @@ void XFileInfo::process()
                 QString sRecord = "SHA512";
                 if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA512, g_pDevice, g_pPdStruct));
             }
+#endif
+#endif
         }
     }
     {
