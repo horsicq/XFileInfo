@@ -22,7 +22,7 @@
 
 #include "ui_dialogxfileinfo.h"
 
-DialogXFileInfo::DialogXFileInfo(QWidget *pParent) : XShortcutsDialog(pParent), ui(new Ui::DialogXFileInfo)
+DialogXFileInfo::DialogXFileInfo(QWidget *pParent) : XShortcutsDialog(pParent, true), ui(new Ui::DialogXFileInfo)
 {
     ui->setupUi(this);
 }
