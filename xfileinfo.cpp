@@ -82,6 +82,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     } else if (XBinary::checkFileType(XBinary::FT_NE, fileType)) {
         _addMethod(&listResult, "Entry point");
         _addMethod(&listResult, "IMAGE_DOS_HEADER");
+        _addMethod(&listResult, "IMAGE_OS2_HEADER");
         // TODO !!!
     } else if (XBinary::checkFileType(XBinary::FT_LE, fileType)) {
         _addMethod(&listResult, "Entry point");
@@ -810,6 +811,136 @@ void XFileInfo::PE_IMAGE_SECTION_HEADER(XPE *pPE)
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+void XFileInfo::NE_IMAGE_OS2_HEADER(XNE *pNE)
+{
+    QString sGroup = "IMAGE_OS2_HEADER";
+    if (check(sGroup)) {
+        XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+        {
+            {
+                QString sRecord = "ne_magic";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_magic()));
+            }
+            {
+                QString sRecord = "ne_ver";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_ver()));
+            }
+            {
+                QString sRecord = "ne_rev";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_rev()));
+            }
+            {
+                QString sRecord = "ne_enttab";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_enttab()));
+            }
+            {
+                QString sRecord = "ne_cbenttab";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_cbenttab()));
+            }
+            {
+                QString sRecord = "ne_crc";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_crc()));
+            }
+            {
+                QString sRecord = "ne_flags";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_flags()));
+            }
+            {
+                QString sRecord = "ne_autodata";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_autodata()));
+            }
+            {
+                QString sRecord = "ne_heap";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_heap()));
+            }
+            {
+                QString sRecord = "ne_stack";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_stack()));
+            }
+            {
+                QString sRecord = "ne_csip";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_csip()));
+            }
+            {
+                QString sRecord = "ne_sssp";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_sssp()));
+            }
+            {
+                QString sRecord = "ne_cseg";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_cseg()));
+            }
+            {
+                QString sRecord = "ne_cmod";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_cmod()));
+            }
+            {
+                QString sRecord = "ne_cbnrestab";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_cbnrestab()));
+            }
+            {
+                QString sRecord = "ne_segtab";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_segtab()));
+            }
+            {
+                QString sRecord = "ne_rsrctab";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_rsrctab()));
+            }
+            {
+                QString sRecord = "ne_restab";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_restab()));
+            }
+            {
+                QString sRecord = "ne_modtab";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_modtab()));
+            }
+            {
+                QString sRecord = "ne_imptab";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_imptab()));
+            }
+            {
+                QString sRecord = "ne_nrestab";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_nrestab()));
+            }
+            {
+                QString sRecord = "ne_cmovent";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_cmovent()));
+            }
+            {
+                QString sRecord = "ne_align";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_align()));
+            }
+            {
+                QString sRecord = "ne_cres";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_cres()));
+            }
+            {
+                QString sRecord = "ne_exetyp";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_exetyp()));
+            }
+            {
+                QString sRecord = "ne_flagsothers";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_flagsothers()));
+            }
+            {
+                QString sRecord = "ne_pretthunks";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_pretthunks()));
+            }
+            {
+                QString sRecord = "ne_psegrefbytes";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_psegrefbytes()));
+            }
+            {
+                QString sRecord = "ne_swaparea";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_swaparea()));
+            }
+            {
+                QString sRecord = "ne_expver";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(pNE->getImageOS2Header_expver()));
             }
         }
     }
