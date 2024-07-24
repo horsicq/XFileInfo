@@ -1189,11 +1189,13 @@ void XFileInfo::process()
     {
         QString sRecord = "Entropy";
         if (check(sRecord)) {
-            double dEntropy = XBinary::getEntropy(g_pDevice, g_pPdStruct);
+            XBinary binary(g_pDevice);
+
+            double dEntropy = binary.getBinaryStatus(XBinary::BSTATUS_ENTROPY, 0, -1, g_pPdStruct);
             QString sEntropy = QString::number(dEntropy);
 
             if (g_options.bComment) {
-                sEntropy += QString("(%1)").arg(XBinary::isPacked(dEntropy) ? ("packed") : ("not packed"));
+                sEntropy += QString("(%1)").arg(binary.isPacked(dEntropy) ? ("packed") : ("not packed"));
             }
 
             appendRecord(0, sRecord, sEntropy);
