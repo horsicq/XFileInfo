@@ -1282,7 +1282,10 @@ void XFileInfo::process()
                     _entryPoint(&pe, &memoryMap);
                     _IMAGE_DOS_HEADER(&pe, true);
                     PE_IMAGE_NT_HEADERS(&pe, bIs64);
-                    PE_IMAGE_SECTION_HEADER(&pe);
+
+                    if (pe.getFileHeader_NumberOfSections()) {
+                        PE_IMAGE_SECTION_HEADER(&pe);
+                    }
 
                     // TODO
                     // Sizes !!!
