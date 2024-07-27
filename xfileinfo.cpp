@@ -1287,6 +1287,10 @@ void XFileInfo::process()
                         PE_IMAGE_SECTION_HEADER(&pe);
                     }
 
+                    if (pe.isResourcesPresent()) {
+                        // TODO
+                    }
+
                     // TODO
                     // Sizes !!!
                     // Resources
