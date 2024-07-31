@@ -851,8 +851,6 @@ void XFileInfo::PE_IMAGE_RESOURCE_DIRECTORY(XPE *pPE)
                 if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ird.NumberOfIdEntries));
             }
         }
-
-
     }
 }
 
