@@ -78,6 +78,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
         _addMethod(&listResult, "IMAGE_DOS_HEADER");
         _addMethod(&listResult, "IMAGE_NT_HEADERS");
         _addMethod(&listResult, "IMAGE_SECTION_HEADER");
+        _addMethod(&listResult, "IMAGE_RESOURCE_DIRECTORY");
         // TODO !!!
     } else if (XBinary::checkFileType(XBinary::FT_NE, fileType)) {
         _addMethod(&listResult, "Entry point");
@@ -816,6 +817,45 @@ void XFileInfo::PE_IMAGE_SECTION_HEADER(XPE *pPE)
     }
 }
 
+void XFileInfo::PE_IMAGE_RESOURCE_DIRECTORY(XPE *pPE)
+{
+    QString sGroup = "IMAGE_RESOURCE_DIRECTORY";
+    if (check(sGroup)) {
+        qint64 nResourceOffset = pPE->getDataDirectoryOffset(XPE_DEF::S_IMAGE_DIRECTORY_ENTRY_RESOURCE);
+
+        if (nResourceOffset != -1) {
+            XPE_DEF::IMAGE_RESOURCE_DIRECTORY ird = pPE->read_IMAGE_RESOURCE_DIRECTORY(nResourceOffset);
+            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+            {
+                QString sRecord = "Characteristics";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ird.Characteristics));
+            }
+            {
+                QString sRecord = "TimeDateStamp";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ird.TimeDateStamp));
+            }
+            {
+                QString sRecord = "MajorVersion";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ird.MajorVersion));
+            }
+            {
+                QString sRecord = "MinorVersion";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ird.MinorVersion));
+            }
+            {
+                QString sRecord = "NumberOfNamedEntries";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ird.NumberOfNamedEntries));
+            }
+            {
+                QString sRecord = "NumberOfIdEntries";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ird.NumberOfIdEntries));
+            }
+        }
+
+
+    }
+}
+
 void XFileInfo::NE_IMAGE_OS2_HEADER(XNE *pNE)
 {
     QString sGroup = "IMAGE_OS2_HEADER";
@@ -1288,7 +1328,7 @@ void XFileInfo::process()
                     }
 
                     if (pe.isResourcesPresent()) {
-                        // TODO
+                        PE_IMAGE_RESOURCE_DIRECTORY(&pe);
                     }
 
                     // TODO
