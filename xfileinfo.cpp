@@ -1149,6 +1149,12 @@ void XFileInfo::process()
                     appendRecord(pItemParent, sRecord, fileFormatInfo.sVersion);
                 }
             }
+            {
+                QString sRecord = "Options";
+                if (check(sGroup, sRecord) && (fileFormatInfo.sOptions != "")) {
+                    appendRecord(pItemParent, sRecord, fileFormatInfo.sOptions);
+                }
+            }
 
             if (XBinary::checkFileType(XBinary::FT_ELF, fileType) || XBinary::checkFileType(XBinary::FT_PE, fileType) ||
                 XBinary::checkFileType(XBinary::FT_MACHO, fileType) || XBinary::checkFileType(XBinary::FT_MSDOS, fileType) ||
