@@ -79,6 +79,8 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
         _addMethod(&listResult, "IMAGE_NT_HEADERS");
         _addMethod(&listResult, "IMAGE_SECTION_HEADER");
         _addMethod(&listResult, "IMAGE_RESOURCE_DIRECTORY");
+        // _addMethod(&listResult, "IMAGE_IMPORT_DESCRIPTOR");
+        _addMethod(&listResult, "IMAGE_EXPORT_DIRECTORY");
         // TODO !!!
     } else if (XBinary::checkFileType(XBinary::FT_NE, fileType)) {
         _addMethod(&listResult, "Entry point");
@@ -854,6 +856,63 @@ void XFileInfo::PE_IMAGE_RESOURCE_DIRECTORY(XPE *pPE)
     }
 }
 
+void XFileInfo::PE_IMAGE_EXPORT_DIRECTORY(XPE *pPE)
+{
+    QString sGroup = "IMAGE_EXPORT_DIRECTORY";
+    if (check(sGroup)) {
+        qint64 nExportOffset = pPE->getDataDirectoryOffset(XPE_DEF::S_IMAGE_DIRECTORY_ENTRY_EXPORT);
+
+        if (nExportOffset != -1) {
+            XPE_DEF::IMAGE_EXPORT_DIRECTORY ied = pPE->read_IMAGE_EXPORT_DIRECTORY(nExportOffset);
+            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+            {
+                QString sRecord = "Characteristics";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ied.Characteristics));
+            }
+            {
+                QString sRecord = "TimeDateStamp";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ied.TimeDateStamp));
+            }
+            {
+                QString sRecord = "MajorVersion";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ied.MajorVersion));
+            }
+            {
+                QString sRecord = "MinorVersion";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ied.MinorVersion));
+            }
+            {
+                QString sRecord = "Name";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ied.Name));
+            }
+            {
+                QString sRecord = "Base";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ied.Base));
+            }
+            {
+                QString sRecord = "NumberOfFunctions";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ied.NumberOfFunctions));
+            }
+            {
+                QString sRecord = "NumberOfNames";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ied.NumberOfNames));
+            }
+            {
+                QString sRecord = "AddressOfFunctions";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ied.AddressOfFunctions));
+            }
+            {
+                QString sRecord = "AddressOfNames";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ied.AddressOfNames));
+            }
+            {
+                QString sRecord = "AddressOfNameOrdinals";
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHex(ied.AddressOfNameOrdinals));
+            }
+        }
+    }
+}
+
 void XFileInfo::NE_IMAGE_OS2_HEADER(XNE *pNE)
 {
     QString sGroup = "IMAGE_OS2_HEADER";
@@ -1333,6 +1392,10 @@ void XFileInfo::process()
 
                     if (pe.isResourcesPresent()) {
                         PE_IMAGE_RESOURCE_DIRECTORY(&pe);
+                    }
+
+                    if (pe.isExportPresent()) {
+                        PE_IMAGE_EXPORT_DIRECTORY(&pe);
                     }
 
                     // TODO
