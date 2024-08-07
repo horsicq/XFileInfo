@@ -1196,11 +1196,15 @@ void XFileInfo::process()
             }
             {
                 QString sRecord = "String";
-                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, fileFormatInfo.sString);
+                if (check(sGroup, sRecord) && (fileFormatInfo.sString != "")) {
+                    appendRecord(pItemParent, sRecord, fileFormatInfo.sString);
+                }
             }
             {
                 QString sRecord = "Extension";
-                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, fileFormatInfo.sExt);
+                if (check(sGroup, sRecord) && (fileFormatInfo.sExt != "")) {
+                    appendRecord(pItemParent, sRecord, fileFormatInfo.sExt);
+                }
             }
             {
                 QString sRecord = "Version";
