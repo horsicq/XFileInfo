@@ -1153,6 +1153,79 @@ void XFileInfo::DEX_HEADER(XDEX *pDEX)
     }
 }
 
+void XFileInfo::ELF_Shdr(XELF *pELF)
+{
+    QString sGroup = "Section header";
+    if (check(sGroup)) {
+        QList<XELF_DEF::Elf_Shdr> listSH = pELF->getElf_ShdrList(100);
+        qint32 nNumberOfSections = listSH.count();
+
+        if (nNumberOfSections > 0) {
+            XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+
+            for (qint32 i = 0; i < nNumberOfSections; i++) {
+                QString sSectionName = QString("%1").arg(i);
+
+                QString sSubGroup = sSectionName;
+                if (check(sGroup, sSubGroup)) {
+                    XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
+                    {
+                        {
+                            QString sRecord = "sh_name";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listSH.at(i).sh_name));
+                        }
+                        // {
+                        //     QString sRecord = "sh_type";
+                        //     if (check(sGroup, sSubGroup, sRecord))
+                        //         appendRecord(pItemSub, sRecord,
+                        //                      addFlags(XBinary::MODE_32, listSH.at(i).sh_type, XELF::getSectionHeaderType(), XBinary::VL_TYPE_LIST));
+                        // }
+                        // {
+                        //     QString sRecord = "sh_flags";
+                        //     if (check(sGroup, sSubGroup, sRecord))
+                        //         appendRecord(pItemSub, sRecord,
+                        //                      addFlags(XBinary::MODE_32, listSH.at(i).sh_flags, XELF::getSectionHeaderFlags(), XBinary::VL_TYPE_FLAGS));
+                        // }
+                        {
+                            QString sRecord = "sh_addr";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listSH.at(i).sh_addr));
+                        }
+                        {
+                            QString sRecord = "sh_offset";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listSH.at(i).sh_offset));
+                        }
+                        {
+                            QString sRecord = "sh_size";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listSH.at(i).sh_size));
+                        }
+                        {
+                            QString sRecord = "sh_link";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listSH.at(i).sh_link));
+                        }
+                        {
+                            QString sRecord = "sh_info";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listSH.at(i).sh_info));
+                        }
+                        {
+                            QString sRecord = "sh_addralign";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listSH.at(i).sh_addralign));
+                        }
+                        {
+                            QString sRecord = "sh_entsize";
+                            if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listSH.at(i).sh_entsize));
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void XFileInfo::ELF_Phdr(XELF *pELF)
+{
+
+}
+
 void XFileInfo::process()
 {
     QElapsedTimer scanTimer;

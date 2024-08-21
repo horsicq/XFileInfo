@@ -67,6 +67,8 @@ private:
     void PE_IMAGE_EXPORT_DIRECTORY(XPE *pPE);
     void NE_IMAGE_OS2_HEADER(XNE *pNE);
     void DEX_HEADER(XDEX *pDEX);
+    void ELF_Shdr(XELF *pELF);
+    void ELF_Phdr(XELF *pELF);
 
 public slots:
     void process();
