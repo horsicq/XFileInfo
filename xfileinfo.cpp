@@ -1223,7 +1223,6 @@ void XFileInfo::ELF_Shdr(XELF *pELF)
 
 void XFileInfo::ELF_Phdr(XELF *pELF)
 {
-
 }
 
 void XFileInfo::process()
