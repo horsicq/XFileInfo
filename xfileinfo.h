@@ -69,6 +69,7 @@ private:
     void DEX_HEADER(XDEX *pDEX);
     void ELF_Shdr(XELF *pELF);
     void ELF_Phdr(XELF *pELF);
+    void ELF_Sym(XELF *pELF);
 
 public slots:
     void process();

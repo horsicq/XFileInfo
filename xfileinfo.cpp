@@ -1226,6 +1226,55 @@ void XFileInfo::ELF_Phdr(XELF *pELF)
     Q_UNUSED(pELF)
 }
 
+void XFileInfo::ELF_Sym(XELF *pELF)
+{
+    Q_UNUSED(pELF)
+    // QString sGroup = "Symbol table";
+    // if (check(sGroup)) {
+    //     QList<XELF_DEF::Elf_Sym> listSym = pELF->getElf_SymList(100,);
+    //     qint32 nNumberOfSymbols = listSym.count();
+
+    //     if (nNumberOfSymbols > 0) {
+    //         XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
+
+    //         for (qint32 i = 0; i < nNumberOfSymbols; i++) {
+    //             QString sSymbolName = QString("%1").arg(i);
+
+    //             QString sSubGroup = sSymbolName;
+    //             if (check(sGroup, sSubGroup)) {
+    //                 XFileInfoItem *pItemSub = appendRecord(pItemParent, sSubGroup, "");
+    //                 {
+    //                     {
+    //                         QString sRecord = "st_name";
+    //                         if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listSym.at(i).st_name));
+    //                     }
+    //                     {
+    //                         QString sRecord = "st_value";
+    //                         if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listSym.at(i).st_value));
+    //                     }
+    //                     {
+    //                         QString sRecord = "st_size";
+    //                         if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listSym.at(i).st_size));
+    //                     }
+    //                     {
+    //                         QString sRecord = "st_info";
+    //                         if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listSym.at(i).st_info));
+    //                     }
+    //                     {
+    //                         QString sRecord = "st_other";
+    //                         if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listSym.at(i).st_other));
+    //                     }
+    //                     {
+    //                         QString sRecord = "st_shndx";
+    //                         if (check(sGroup, sSubGroup, sRecord)) appendRecord(pItemSub, sRecord, XBinary::valueToHex(listSym.at(i).st_shndx));
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+}
+
 void XFileInfo::process()
 {
     QElapsedTimer scanTimer;
