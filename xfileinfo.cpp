@@ -752,7 +752,7 @@ void XFileInfo::PE_IMAGE_SECTION_HEADER(XPE *pPE)
 {
     QString sGroup = "IMAGE_SECTION_HEADER";
     if (check(sGroup)) {
-        QList<XPE_DEF::IMAGE_SECTION_HEADER> listISH = pPE->getSectionHeaders();
+        QList<XPE_DEF::IMAGE_SECTION_HEADER> listISH = pPE->getSectionHeaders(g_pPdStruct);
         qint32 nNumberOfSections = listISH.count();
 
         if (nNumberOfSections > 0) {
