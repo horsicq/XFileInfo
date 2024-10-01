@@ -26,8 +26,13 @@ XFileInfoWidget::XFileInfoWidget(QWidget *pParent) : XShortcutsWidget(pParent), 
 {
     ui->setupUi(this);
 
-    XOptions::addToolButtonIcon(ui->toolButtonReload, "://icons/Refresh.16.16.png");
-    XOptions::addToolButtonIcon(ui->toolButtonSave, "://icons/Save.16.16.png");
+    XOptions::adjustToolButton(ui->toolButtonReload, XOptions::ICONTYPE_RELOAD);
+    XOptions::adjustToolButton(ui->toolButtonSave, XOptions::ICONTYPE_SAVE);
+
+    ui->comboBoxType->setToolTip(tr("Type"));
+    ui->comboBoxMethod->setToolTip(tr("Method"));
+    ui->comboBoxOutput->setToolTip(tr("Output"));
+    ui->checkBoxComment->setToolTip(tr("Comment"));
 
     g_pDevice = nullptr;
     g_nOffset = 0;
@@ -35,13 +40,14 @@ XFileInfoWidget::XFileInfoWidget(QWidget *pParent) : XShortcutsWidget(pParent), 
 
     ui->checkBoxComment->setChecked(true);
 
-    const bool bBlocked1 = ui->comboBoxShow->blockSignals(true);
+    const bool bBlocked1 = ui->comboBoxOutput->blockSignals(true);
 
-    ui->comboBoxShow->addItem(tr("Text"), SM_TEXT);
-    ui->comboBoxShow->addItem(QString("json"), SM_JSON);
-    ui->comboBoxShow->addItem(QString("XML"), SM_XML);
+    // TODO move
+    ui->comboBoxOutput->addItem(tr("Text"), SM_TEXT);
+    ui->comboBoxOutput->addItem(QString("json"), SM_JSON);
+    ui->comboBoxOutput->addItem(QString("XML"), SM_XML);
 
-    ui->comboBoxShow->blockSignals(bBlocked1);
+    ui->comboBoxOutput->blockSignals(bBlocked1);
 }
 
 XFileInfoWidget::~XFileInfoWidget()
@@ -89,7 +95,7 @@ void XFileInfoWidget::reload()
         if (dip.isSuccess()) {
             QString sText;
 
-            SM showMode = (SM)(ui->comboBoxShow->currentData().toInt());
+            SM showMode = (SM)(ui->comboBoxOutput->currentData().toInt());
 
             if (showMode == SM_TEXT) {
                 sText = pModel->toFormattedString();
@@ -175,7 +181,7 @@ void XFileInfoWidget::reloadType()
     ui->comboBoxMethod->blockSignals(bBlocked1);
 }
 
-void XFileInfoWidget::on_comboBoxShow_currentIndexChanged(int nIndex)
+void XFileInfoWidget::on_comboBoxOutput_currentIndexChanged(int nIndex)
 {
     Q_UNUSED(nIndex)
 

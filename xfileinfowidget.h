@@ -59,7 +59,7 @@ private slots:
     void on_comboBoxType_currentIndexChanged(int nIndex);
     void on_comboBoxMethod_currentIndexChanged(int nIndex);
     void reloadType();
-    void on_comboBoxShow_currentIndexChanged(int nIndex);
+    void on_comboBoxOutput_currentIndexChanged(int nIndex);
 
 private:
     Ui::XFileInfoWidget *ui;
