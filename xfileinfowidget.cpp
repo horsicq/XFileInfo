@@ -26,6 +26,9 @@ XFileInfoWidget::XFileInfoWidget(QWidget *pParent) : XShortcutsWidget(pParent), 
 {
     ui->setupUi(this);
 
+    XOptions::addToolButtonIcon(ui->toolButtonReload, "://icons/Refresh.16.16.png");
+    XOptions::addToolButtonIcon(ui->toolButtonSave, "://icons/Save.16.16.png");
+
     g_pDevice = nullptr;
     g_nOffset = 0;
     g_nSize = 0;
@@ -115,7 +118,7 @@ void XFileInfoWidget::registerShortcuts(bool bState)
     // TODO !!!
 }
 
-void XFileInfoWidget::on_pushButtonSave_clicked()
+void XFileInfoWidget::on_toolButtonSave_clicked()
 {
     QString sFileName = XBinary::getResultFileName(g_pDevice, QString("%1.txt").arg(tr("Info")));
     sFileName = QFileDialog::getSaveFileName(this, tr("Save file"), sFileName, QString("%1 (*.txt);;%2 (*)").arg(tr("Text files"), tr("All files")));
@@ -125,7 +128,7 @@ void XFileInfoWidget::on_pushButtonSave_clicked()
     }
 }
 
-void XFileInfoWidget::on_pushButtonReload_clicked()
+void XFileInfoWidget::on_toolButtonReload_clicked()
 {
     reload();
 }
