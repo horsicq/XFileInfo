@@ -1345,7 +1345,7 @@ void XFileInfo::process()
             if (XBinary::checkFileType(XBinary::FT_ELF, fileType) || XBinary::checkFileType(XBinary::FT_PE, fileType) ||
                 XBinary::checkFileType(XBinary::FT_MACHO, fileType) || XBinary::checkFileType(XBinary::FT_MSDOS, fileType) ||
                 XBinary::checkFileType(XBinary::FT_NE, fileType) || XBinary::checkFileType(XBinary::FT_LE, fileType) ||
-                XBinary::checkFileType(XBinary::FT_MACHOFAT, fileType)) {
+                XBinary::checkFileType(XBinary::FT_MACHOFAT, fileType) || XBinary::checkFileType(XBinary::FT_AMIGAHUNK, fileType)) {
                 XBinary::OSINFO osInfo = XFormats::getOsInfo(fileType, g_pDevice);
 
                 {
