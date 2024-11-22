@@ -118,6 +118,13 @@ void XFileInfoWidget::adjustView()
     getGlobalOptions()->adjustWidget(ui->plainTextEditFileInfo, XOptions::ID_VIEW_FONT_TEXTEDITS);
 }
 
+void XFileInfoWidget::reloadData(bool bSaveSelection)
+{
+    Q_UNUSED(bSaveSelection)
+
+    reload();
+}
+
 void XFileInfoWidget::registerShortcuts(bool bState)
 {
     Q_UNUSED(bState)
