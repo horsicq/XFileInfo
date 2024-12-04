@@ -4,8 +4,11 @@ if (NOT DEFINED XFORMATS_SOURCES)
     include(${CMAKE_CURRENT_LIST_DIR}/../Formats/xformats.cmake)
     set(XFILEINFO_SOURCES ${XFILEINFO_SOURCES} ${XFORMATS_SOURCES})
 endif()
+if (NOT DEFINED XDEX_SOURCES)
+    include(${CMAKE_CURRENT_LIST_DIR}/../XDEX/xdex.cmake)
+    set(XFILEINFO_SOURCES ${XFILEINFO_SOURCES} ${XDEX_SOURCES})
+endif()
 
-include(${CMAKE_CURRENT_LIST_DIR}/../XDEX/xdex.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/../XPDF/xpdf.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/../XArchive/xarchives.cmake)
 
