@@ -1,6 +1,10 @@
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
-include(${CMAKE_CURRENT_LIST_DIR}/xfileinfo.cmake)
+if (NOT DEFINED XFILEINFO_SOURCES)
+    include(${CMAKE_CURRENT_LIST_DIR}/xfileinfo.cmake)
+    set(XFILEINFOWIDGET_SOURCES ${XFILEINFOWIDGET_SOURCES} ${XFILEINFO_SOURCES})
+endif()
+
 include(${CMAKE_CURRENT_LIST_DIR}/../FormatDialogs/xdialogprocess.cmake)
 
 set(XFILEINFOWIDGET_SOURCES
