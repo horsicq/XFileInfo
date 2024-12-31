@@ -11,8 +11,6 @@ endif()
 
 set(XFILEINFOWIDGET_SOURCES
     ${XFILEINFOWIDGET_SOURCES}
-    ${XFILEINFO_SOURCES}
-    ${XDIALOGPROCESS_SOURCES}
     ${CMAKE_CURRENT_LIST_DIR}/xfileinfowidget.cpp
     ${CMAKE_CURRENT_LIST_DIR}/xfileinfowidget.h
     ${CMAKE_CURRENT_LIST_DIR}/xfileinfowidget.ui
