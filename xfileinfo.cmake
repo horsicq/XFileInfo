@@ -19,10 +19,6 @@ endif()
 
 set(XFILEINFO_SOURCES
     ${XFILEINFO_SOURCES}
-    ${XFORMATS_SOURCES}
-    ${XDEX_SOURCES}
-    ${XPDF_SOURCES}
-    ${XARCHIVES_SOURCES}
     ${CMAKE_CURRENT_LIST_DIR}/xfileinfo.cpp
     ${CMAKE_CURRENT_LIST_DIR}/xfileinfo.h
     ${CMAKE_CURRENT_LIST_DIR}/xfileinfoitem.cpp
