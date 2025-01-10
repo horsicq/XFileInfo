@@ -224,8 +224,7 @@ void XFileInfo::_entryPoint(XBinary *pBinary, XBinary::_MEMORY_MAP *pMemoryMap)
         {
             QString sRecord = QString("%1(rel)").arg("Signature");
             if (check(sGroup, sRecord))
-                appendRecord(pItemParent, sRecord,
-                             XCapstone::getSignature(g_pDevice, pMemoryMap, pMemoryMap->nEntryPointAddress, XCapstone::ST_REL, N_SIGNATURECOUNT));
+                appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, pMemoryMap, pMemoryMap->nEntryPointAddress, XCapstone::ST_REL, N_SIGNATURECOUNT));
         }
     }
 }
