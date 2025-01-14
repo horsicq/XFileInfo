@@ -21,7 +21,7 @@
 #ifndef XFILEINFO_H
 #define XFILEINFO_H
 
-#include "xcapstone.h"
+#include "xdisasmcore.h"
 #include "xfileinfomodel.h"
 #include "xformats.h"
 

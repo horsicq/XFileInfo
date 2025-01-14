@@ -211,20 +211,23 @@ void XFileInfo::_entryPoint(XBinary *pBinary, XBinary::_MEMORY_MAP *pMemoryMap)
             QString sRecord = "Relative address";
             if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::valueToHexEx(pBinary->getEntryPointRVA(pMemoryMap)));
         }
+
+        XDisasmCore disasmCore;
+        disasmCore.setMode(XBinary::getDisasmMode(pMemoryMap), XBinary::SYNTAX_DEFAULT);
         {
             QString sRecord = "Bytes";
             if (check(sGroup, sRecord))
-                appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, pMemoryMap, pMemoryMap->nEntryPointAddress, XCapstone::ST_FULL, N_SIGNATURECOUNT));
+                appendRecord(pItemParent, sRecord, disasmCore.getSignature(g_pDevice, pMemoryMap, pMemoryMap->nEntryPointAddress, XDisasmCore::ST_FULL, N_SIGNATURECOUNT));
         }
         {
             QString sRecord = "Signature";
             if (check(sGroup, sRecord))
-                appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, pMemoryMap, pMemoryMap->nEntryPointAddress, XCapstone::ST_MASK, N_SIGNATURECOUNT));
+                appendRecord(pItemParent, sRecord, disasmCore.getSignature(g_pDevice, pMemoryMap, pMemoryMap->nEntryPointAddress, XDisasmCore::ST_MASK, N_SIGNATURECOUNT));
         }
         {
             QString sRecord = QString("%1(rel)").arg("Signature");
             if (check(sGroup, sRecord))
-                appendRecord(pItemParent, sRecord, XCapstone::getSignature(g_pDevice, pMemoryMap, pMemoryMap->nEntryPointAddress, XCapstone::ST_REL, N_SIGNATURECOUNT));
+                appendRecord(pItemParent, sRecord, disasmCore.getSignature(g_pDevice, pMemoryMap, pMemoryMap->nEntryPointAddress, XDisasmCore::ST_REL, N_SIGNATURECOUNT));
         }
     }
 }
