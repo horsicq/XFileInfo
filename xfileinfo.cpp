@@ -63,6 +63,7 @@ QList<QString> XFileInfo::getMethodNames(XBinary::FT fileType)
     _addMethod(&listResult, "Info");
     _addMethod(&listResult, "Hash");
     _addMethod(&listResult, "Entropy");
+    _addMethod(&listResult, "Check format");
 
     if (XBinary::checkFileType(XBinary::FT_ELF, fileType)) {
         _addMethod(&listResult, "Entry point");
@@ -1434,6 +1435,20 @@ void XFileInfo::process()
             }
 
             appendRecord(0, sRecord, sEntropy);
+        }
+    }
+    {
+        QString sRecord = "Check format";
+        if (check(sRecord)) {
+            QList<XBinary::FMT_MSG> listFileFormatMessages;
+
+            if (XBinary::checkFileType(XBinary::FT_PE, fileType)) {
+                XPE pe(g_pDevice);
+
+                if (pe.isValid()) {
+                    listFileFormatMessages = pe.checkFileFormat(g_pPdStruct);
+                }
+            }
         }
     }
 
