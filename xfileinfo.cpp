@@ -1448,6 +1448,15 @@ void XFileInfo::process()
                 if (pe.isValid()) {
                     listFileFormatMessages = pe.checkFileFormat(g_pPdStruct);
                 }
+
+                QList<QString> listResult = XBinary::getFileFormatMessages(&listFileFormatMessages);
+
+                qint32 nNumberOfMessages = listResult.count();
+
+                for (qint32 i = 0; i < nNumberOfMessages; i++) {
+                    QString sString = listResult.at(i);
+                    appendRecord(0, sRecord, sString);
+                }
             }
         }
     }
