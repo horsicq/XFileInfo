@@ -765,7 +765,7 @@ void XFileInfo::PE_IMAGE_SECTION_HEADER(XPE *pPE)
             XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
 
             for (qint32 i = 0; i < nNumberOfSections; i++) {
-                QString sSectionName = QString("%1").arg(i);
+                QString sSectionName = QString("%1").arg(i + 1);
 
                 QString sSubGroup = sSectionName;
                 if (check(sGroup, sSubGroup)) {
@@ -1455,7 +1455,7 @@ void XFileInfo::process()
 
                 for (qint32 i = 0; i < nNumberOfMessages; i++) {
                     QString sString = listResult.at(i);
-                    appendRecord(0, sRecord, sString);
+                    appendRecord(0, QString::number(i), sString);
                 }
             }
         }
