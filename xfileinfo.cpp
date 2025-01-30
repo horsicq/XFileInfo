@@ -1446,7 +1446,7 @@ void XFileInfo::process()
                 XPE pe(g_pDevice);
 
                 if (pe.isValid()) {
-                    listFileFormatMessages = pe.checkFileFormat(g_pPdStruct);
+                    listFileFormatMessages = pe.checkFileFormat(true, g_pPdStruct);
                 }
 
                 QList<QString> listResult = XBinary::getFileFormatMessages(&listFileFormatMessages);
