@@ -214,7 +214,7 @@ void XFileInfo::_entryPoint(XBinary *pBinary, XBinary::_MEMORY_MAP *pMemoryMap)
         }
 
         XDisasmCore disasmCore;
-        disasmCore.setMode(XBinary::getDisasmMode(pMemoryMap), XBinary::SYNTAX_DEFAULT);
+        disasmCore.setMode(XBinary::getDisasmMode(pMemoryMap));
         {
             QString sRecord = "Bytes";
             if (check(sGroup, sRecord))
