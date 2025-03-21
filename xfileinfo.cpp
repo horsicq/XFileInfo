@@ -1324,8 +1324,9 @@ void XFileInfo::process()
             }
             {
                 QString sRecord = "String";
-                if (check(sGroup, sRecord) && (fileFormatInfo.sString != "")) {
-                    appendRecord(pItemParent, sRecord, fileFormatInfo.sString);
+                QString sString = XBinary::getFileFormatString(&fileFormatInfo);
+                if (check(sGroup, sRecord) && (sString != "")) {
+                    appendRecord(pItemParent, sRecord, sString);
                 }
             }
             {
@@ -1351,15 +1352,13 @@ void XFileInfo::process()
                 XBinary::checkFileType(XBinary::FT_MACHO, fileType) || XBinary::checkFileType(XBinary::FT_MSDOS, fileType) ||
                 XBinary::checkFileType(XBinary::FT_NE, fileType) || XBinary::checkFileType(XBinary::FT_LE, fileType) ||
                 XBinary::checkFileType(XBinary::FT_MACHOFAT, fileType) || XBinary::checkFileType(XBinary::FT_AMIGAHUNK, fileType)) {
-                XBinary::OSINFO osInfo = XFormats::getOsInfo(fileType, g_pDevice);
-
                 {
                     QString sRecord = "Operation system";
                     if (check(sGroup, sRecord)) {
-                        QString sOperationSystem = XBinary::osNameIdToString(osInfo.osName);
+                        QString sOperationSystem = XBinary::osNameIdToString(fileFormatInfo.osName);
 
-                        if (osInfo.sOsVersion != "") {
-                            sOperationSystem += QString("(%1)").arg(osInfo.sOsVersion);
+                        if (fileFormatInfo.sOsVersion != "") {
+                            sOperationSystem += QString("(%1)").arg(fileFormatInfo.sOsVersion);
                         }
 
                         appendRecord(pItemParent, sRecord, sOperationSystem);
@@ -1367,19 +1366,19 @@ void XFileInfo::process()
                 }
                 {
                     QString sRecord = "Architecture";
-                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, osInfo.sArch);
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, fileFormatInfo.sArch);
                 }
                 {
                     QString sRecord = "Mode";
-                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::modeIdToString(osInfo.mode));
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::modeIdToString(fileFormatInfo.mode));
                 }
                 {
                     QString sRecord = "Type";
-                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, osInfo.sType);
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, fileFormatInfo.sType);
                 }
                 {
                     QString sRecord = "Endianness";
-                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::endianToString(osInfo.endian));
+                    if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::endianToString(fileFormatInfo.endian));
                 }
             }
         }
