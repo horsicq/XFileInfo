@@ -1308,7 +1308,7 @@ void XFileInfo::process()
             {
                 QString sRecord = "Size";
                 if (check(sGroup, sRecord)) {
-                    qint64 nSize = fileFormatInfo.nSize;
+                    qint64 nSize = g_pDevice->size();
                     QString sSize = QString::number(nSize);
 
                     if (g_options.bComment) {
