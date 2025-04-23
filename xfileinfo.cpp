@@ -1444,7 +1444,7 @@ void XFileInfo::process()
             if (XBinary::checkFileType(XBinary::FT_PE, fileType)) {
                 XPE pe(g_pDevice);
 
-                if (pe.isValid()) {
+                if (pe.isValid(g_pPdStruct)) {
                     listFileFormatMessages = pe.checkFileFormat(true, g_pPdStruct);
                 }
 
@@ -1464,7 +1464,7 @@ void XFileInfo::process()
         if (XBinary::checkFileType(XBinary::FT_BINARY, fileType)) {
             XBinary binary(g_pDevice);
 
-            if (binary.isValid()) {
+            if (binary.isValid(g_pPdStruct)) {
                 if (!(g_pPdStruct->bIsStop)) {
                     {
                         // TODO
@@ -1474,7 +1474,7 @@ void XFileInfo::process()
         } else if (XBinary::checkFileType(XBinary::FT_ELF, fileType)) {
             XELF elf(g_pDevice);
 
-            if (elf.isValid()) {
+            if (elf.isValid(g_pPdStruct)) {
                 if (!(g_pPdStruct->bIsStop)) {
                     bool bIs64 = elf.is64();
 
@@ -1508,7 +1508,7 @@ void XFileInfo::process()
         } else if (XBinary::checkFileType(XBinary::FT_MACHO, fileType)) {
             XMACH mach(g_pDevice);
 
-            if (mach.isValid()) {
+            if (mach.isValid(g_pPdStruct)) {
                 if (!(g_pPdStruct->bIsStop)) {
                     bool bIs64 = mach.is64();
 
@@ -1523,7 +1523,7 @@ void XFileInfo::process()
         } else if (XBinary::checkFileType(XBinary::FT_MACHOFAT, fileType)) {
             XMACHOFat machofat(g_pDevice);
 
-            if (machofat.isValid()) {
+            if (machofat.isValid(g_pPdStruct)) {
                 if (!(g_pPdStruct->bIsStop)) {
                     // TODO
                 }
@@ -1531,7 +1531,7 @@ void XFileInfo::process()
         } else if (XBinary::checkFileType(XBinary::FT_PE, fileType)) {
             XPE pe(g_pDevice);
 
-            if (pe.isValid()) {
+            if (pe.isValid(g_pPdStruct)) {
                 if (!(g_pPdStruct->bIsStop)) {
                     //                    XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
@@ -1574,7 +1574,7 @@ void XFileInfo::process()
         } else if (XBinary::checkFileType(XBinary::FT_NE, fileType)) {
             XNE ne(g_pDevice);
 
-            if (ne.isValid()) {
+            if (ne.isValid(g_pPdStruct)) {
                 if (!(g_pPdStruct->bIsStop)) {
                     //                    XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
@@ -1586,7 +1586,7 @@ void XFileInfo::process()
         } else if (XBinary::checkFileType(XBinary::FT_LE, fileType)) {
             XLE le(g_pDevice);
 
-            if (le.isValid()) {
+            if (le.isValid(g_pPdStruct)) {
                 if (!(g_pPdStruct->bIsStop)) {
                     //                    XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
@@ -1614,7 +1614,7 @@ void XFileInfo::process()
         } else if (XBinary::checkFileType(XBinary::FT_COM, fileType)) {
             XCOM xcom(g_pDevice);
 
-            if (xcom.isValid()) {
+            if (xcom.isValid(g_pPdStruct)) {
                 if (!(g_pPdStruct->bIsStop)) {
                     //                    XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
@@ -1626,7 +1626,7 @@ void XFileInfo::process()
         } else if (XBinary::checkFileType(XBinary::FT_DEX, fileType)) {
             XDEX dex(g_pDevice);
 
-            if (dex.isValid()) {
+            if (dex.isValid(g_pPdStruct)) {
                 if (!(g_pPdStruct->bIsStop)) {
                     DEX_HEADER(&dex);
                 }
@@ -1634,7 +1634,7 @@ void XFileInfo::process()
         } else if (XBinary::checkFileType(XBinary::FT_PDF, fileType)) {
             XPDF pdf(g_pDevice);
 
-            if (pdf.isValid()) {
+            if (pdf.isValid(g_pPdStruct)) {
                 if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(pdf.getFileType()));
                 //                if(check("Version","Version"))
                 //                appendRecord(0,"Version"),pdf.getVersion());
@@ -1643,7 +1643,7 @@ void XFileInfo::process()
         } else if (XBinary::checkFileType(XBinary::FT_MACHOFAT, fileType)) {
             XMACHOFat machofat(g_pDevice);
 
-            if (machofat.isValid()) {
+            if (machofat.isValid(g_pPdStruct)) {
                 // TODO
             }
         } else {
