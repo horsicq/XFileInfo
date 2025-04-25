@@ -729,7 +729,7 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
 
                         qint32 nCount = qMin(pPE->getOptionalHeader_NumberOfRvaAndSizes(), (quint32)16);
 
-                        for (qint32 i = 0; (i < nCount) && (!(g_pPdStruct->bIsStop)); i++) {
+                        for (qint32 i = 0; (i < nCount) && XBinary::isPdStructNotCanceled(g_pPdStruct); i++) {
                             QString sSubGroup3 = mapDD.value(i);
                             if (check(sGroup, sSubGroup, sSubGroup2, sSubGroup3)) {
                                 XFileInfoItem *pItemSub3 = appendRecord(pItemSub2, sSubGroup3, "");
