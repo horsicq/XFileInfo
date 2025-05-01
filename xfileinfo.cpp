@@ -1460,7 +1460,7 @@ void XFileInfo::process()
         }
     }
 
-    if (!(g_pPdStruct->bIsStop)) {
+    if (XBinary::isPdStructNotCanceled(pPdStruct)) {
         if (XBinary::checkFileType(XBinary::FT_BINARY, fileType)) {
             XBinary binary(g_pDevice);
 
