@@ -1459,13 +1459,21 @@ void XFileInfo::process()
             }
         }
     }
+    {
+        QString sRecord = "Format";
+        if (check(sRecord)) {
+            // XFormats::getDaraRefs(g_pDevice, g_pPdStruct, true);
 
-    if (XBinary::isPdStructNotCanceled(pPdStruct)) {
+
+        }
+    }
+
+    if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
         if (XBinary::checkFileType(XBinary::FT_BINARY, fileType)) {
             XBinary binary(g_pDevice);
 
             if (binary.isValid(g_pPdStruct)) {
-                if (!(g_pPdStruct->bIsStop)) {
+                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
                     {
                         // TODO
                     }
@@ -1475,7 +1483,7 @@ void XFileInfo::process()
             XELF elf(g_pDevice);
 
             if (elf.isValid(g_pPdStruct)) {
-                if (!(g_pPdStruct->bIsStop)) {
+                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
                     bool bIs64 = elf.is64();
 
                     //                    XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(g_options.mapMode, g_pPdStruct);
@@ -1509,7 +1517,7 @@ void XFileInfo::process()
             XMACH mach(g_pDevice);
 
             if (mach.isValid(g_pPdStruct)) {
-                if (!(g_pPdStruct->bIsStop)) {
+                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
                     bool bIs64 = mach.is64();
 
                     //                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(g_options.mapMode, g_pPdStruct);
@@ -1524,7 +1532,7 @@ void XFileInfo::process()
             XMACHOFat machofat(g_pDevice);
 
             if (machofat.isValid(g_pPdStruct)) {
-                if (!(g_pPdStruct->bIsStop)) {
+                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
                     // TODO
                 }
             }
@@ -1532,7 +1540,7 @@ void XFileInfo::process()
             XPE pe(g_pDevice);
 
             if (pe.isValid(g_pPdStruct)) {
-                if (!(g_pPdStruct->bIsStop)) {
+                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
                     //                    XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
                     bool bIs64 = pe.is64();
@@ -1575,7 +1583,7 @@ void XFileInfo::process()
             XNE ne(g_pDevice);
 
             if (ne.isValid(g_pPdStruct)) {
-                if (!(g_pPdStruct->bIsStop)) {
+                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
                     //                    XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
@@ -1587,7 +1595,7 @@ void XFileInfo::process()
             XLE le(g_pDevice);
 
             if (le.isValid(g_pPdStruct)) {
-                if (!(g_pPdStruct->bIsStop)) {
+                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
                     //                    XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
@@ -1601,7 +1609,7 @@ void XFileInfo::process()
             XMSDOS msdos(g_pDevice);
 
             if (msdos.isValid()) {
-                if (!(g_pPdStruct->bIsStop)) {
+                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
                     //                    XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
@@ -1615,7 +1623,7 @@ void XFileInfo::process()
             XCOM xcom(g_pDevice);
 
             if (xcom.isValid(g_pPdStruct)) {
-                if (!(g_pPdStruct->bIsStop)) {
+                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
                     //                    XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(g_options.mapMode, g_pPdStruct);
                     XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
 
@@ -1627,7 +1635,7 @@ void XFileInfo::process()
             XDEX dex(g_pDevice);
 
             if (dex.isValid(g_pPdStruct)) {
-                if (!(g_pPdStruct->bIsStop)) {
+                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
                     DEX_HEADER(&dex);
                 }
             }
