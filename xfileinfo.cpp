@@ -1463,8 +1463,6 @@ void XFileInfo::process()
         QString sRecord = "Format";
         if (check(sRecord)) {
             // XFormats::getDaraRefs(g_pDevice, g_pPdStruct, true);
-
-
         }
     }
 
