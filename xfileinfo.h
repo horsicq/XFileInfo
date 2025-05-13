@@ -57,16 +57,16 @@ private:
     void _entryPoint(XBinary *pBinary, XBinary::_MEMORY_MAP *pMemoryMap);
     void _IMAGE_DOS_HEADER(XMSDOS *pMSDOS, bool bExtra);
     void _Elf_Ehdr(XELF *pELF, bool bIs64);
-    void _mach_header(XMACH *pMACH, bool bIs64);
-    void PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64);
-    void PE_IMAGE_SECTION_HEADER(XPE *pPE);
-    void PE_IMAGE_RESOURCE_DIRECTORY(XPE *pPE);
-    void PE_IMAGE_EXPORT_DIRECTORY(XPE *pPE);
-    void NE_IMAGE_OS2_HEADER(XNE *pNE);
-    void DEX_HEADER(XDEX *pDEX);
-    void ELF_Shdr(XELF *pELF);
-    void ELF_Phdr(XELF *pELF);
-    void ELF_Sym(XELF *pELF);
+    void _mach_header(XMACH *pMACH, bool bIs64); // TODO remove
+    void PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64); // TODO remove
+    void PE_IMAGE_SECTION_HEADER(XPE *pPE); // TODO remove
+    void PE_IMAGE_RESOURCE_DIRECTORY(XPE *pPE); // TODO remove
+    void PE_IMAGE_EXPORT_DIRECTORY(XPE *pPE); // TODO remove
+    void NE_IMAGE_OS2_HEADER(XNE *pNE); // TODO remove
+    void DEX_HEADER(XDEX *pDEX); // TODO remove
+    void ELF_Shdr(XELF *pELF); // TODO remove
+    void ELF_Phdr(XELF *pELF); // TODO remove
+    void ELF_Sym(XELF *pELF); // TODO remove
 
 public slots:
     void process();
