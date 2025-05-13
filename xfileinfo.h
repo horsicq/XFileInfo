@@ -65,8 +65,6 @@ private:
     void NE_IMAGE_OS2_HEADER(XNE *pNE); // TODO remove
     void DEX_HEADER(XDEX *pDEX); // TODO remove
     void ELF_Shdr(XELF *pELF); // TODO remove
-    void ELF_Phdr(XELF *pELF); // TODO remove
-    void ELF_Sym(XELF *pELF); // TODO remove
 
 public slots:
     void process();
