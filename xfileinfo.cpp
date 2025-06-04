@@ -1288,9 +1288,15 @@ void XFileInfo::process()
                 }
             }
             {
-                QString sRecord = "Options";
-                if (check(sGroup, sRecord) && (fileFormatInfo.sOptions != "")) {
-                    appendRecord(pItemParent, sRecord, fileFormatInfo.sOptions);
+                QString sRecord = "Info";
+                if (check(sGroup, sRecord) && (fileFormatInfo.sInfo != "")) {
+                    appendRecord(pItemParent, sRecord, fileFormatInfo.sInfo);
+                }
+            }
+            {
+                QString sRecord = "MIME";
+                if (check(sGroup, sRecord) && (fileFormatInfo.sMIME != "")) {
+                    appendRecord(pItemParent, sRecord, fileFormatInfo.sMIME);
                 }
             }
 
