@@ -20,7 +20,7 @@
  */
 #include "xfileinfo.h"
 
-XFileInfo::XFileInfo(QObject *pParent) : QObject(pParent)
+XFileInfo::XFileInfo(QObject *pParent) : XThreadObject(pParent)
 {
     g_pModel = nullptr;
     g_pDevice = nullptr;

@@ -24,8 +24,9 @@
 #include "xdisasmcore.h"
 #include "xfileinfomodel.h"
 #include "xformats.h"
+#include "xthreadobject.h"
 
-class XFileInfo : public QObject {
+class XFileInfo : public XThreadObject {
     Q_OBJECT
 
 public:
@@ -40,10 +41,6 @@ public:
     void setData(QIODevice *pDevice, XFileInfoModel *pModel, const OPTIONS &options, XBinary::PDSTRUCT *pPdStruct);
     static bool processFile(const QString &sFileName, XFileInfoModel *pModel, const OPTIONS &options);
     static QList<QString> getMethodNames(XBinary::FT fileType);
-
-signals:
-    void errorMessage(const QString &sText);
-    void completed(qint64 nElapsed);
 
 private:
     XFileInfoItem *appendRecord(XFileInfoItem *pItemParent, const QString &sName, QVariant varData);
@@ -65,8 +62,6 @@ private:
     void NE_IMAGE_OS2_HEADER(XNE *pNE);              // TODO remove
     void DEX_HEADER(XDEX *pDEX);                     // TODO remove
     void ELF_Shdr(XELF *pELF);                       // TODO remove
-
-public slots:
     void process();
 
 private:
