@@ -88,8 +88,11 @@ void XFileInfoWidget::reload()
 
         XFileInfoModel *pModel = new XFileInfoModel;
 
-        DialogXFileInfoProcess dip(XOptions::getMainWidget(this), g_pDevice, pModel, options);
+        XFileInfo fileInfo;
+        XDialogProcess dip(XOptions::getMainWidget(this), &fileInfo);
         dip.setGlobal(getShortcuts(), getGlobalOptions());
+        fileInfo.setData(g_pDevice, pModel, options, dip.getPdStruct());
+        dip.start();
         dip.showDialogDelay();
 
         if (dip.isSuccess()) {

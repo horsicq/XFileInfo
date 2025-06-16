@@ -23,7 +23,8 @@
 
 #include <QWidget>
 
-#include "dialogxfileinfoprocess.h"
+#include "xdialogprocess.h"
+#include "xfileinfo.h"
 #include "xfileinfo.h"
 #include "xshortcutswidget.h"
 

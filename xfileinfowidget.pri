@@ -3,12 +3,10 @@ DEPENDPATH += $$PWD
 
 HEADERS += \
     $$PWD/dialogxfileinfo.h \
-    $$PWD/dialogxfileinfoprocess.h \
     $$PWD/xfileinfowidget.h
 
 SOURCES += \
     $$PWD/dialogxfileinfo.cpp \
-    $$PWD/dialogxfileinfoprocess.cpp \
     $$PWD/xfileinfowidget.cpp
 
 FORMS += \
