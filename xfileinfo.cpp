@@ -1229,9 +1229,6 @@ void XFileInfo::ELF_Shdr(XELF *pELF)
 
 void XFileInfo::process()
 {
-    QElapsedTimer scanTimer;
-    scanTimer.start();
-
     g_nFreeIndex = XBinary::getFreeIndex(g_pPdStruct);
     XBinary::setPdStructInit(g_pPdStruct, g_nFreeIndex, 0);
 
@@ -1610,6 +1607,4 @@ void XFileInfo::process()
     }
 
     XBinary::setPdStructFinished(g_pPdStruct, g_nFreeIndex);
-
-    emit completed(scanTimer.elapsed());
 }
