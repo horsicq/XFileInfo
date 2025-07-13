@@ -44,7 +44,7 @@ XFileInfoWidget::XFileInfoWidget(QWidget *pParent) : XShortcutsWidget(pParent), 
 
     // TODO move
     ui->comboBoxOutput->addItem(tr("Text"), SM_TEXT);
-    ui->comboBoxOutput->addItem(QString("json"), SM_JSON);
+    ui->comboBoxOutput->addItem(QString("JSON"), SM_JSON);
     ui->comboBoxOutput->addItem(QString("XML"), SM_XML);
 
     ui->comboBoxOutput->blockSignals(bBlocked1);
