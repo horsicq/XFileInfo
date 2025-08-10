@@ -66,11 +66,11 @@ private:
 
 private:
     const qint32 N_SIGNATURECOUNT = 10;  // TODO Set/Get
-    QIODevice *g_pDevice;
-    XFileInfoModel *g_pModel;
-    OPTIONS g_options;
-    XBinary::PDSTRUCT *g_pPdStruct;
-    qint32 g_nFreeIndex;
+    QIODevice *m_pDevice;
+    XFileInfoModel *m_pModel;
+    OPTIONS m_options;
+    XBinary::PDSTRUCT *m_pPdStruct;
+    qint32 m_nFreeIndex;
 };
 
 #endif  // XFILEINFO_H

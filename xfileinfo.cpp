@@ -22,19 +22,19 @@
 
 XFileInfo::XFileInfo(QObject *pParent) : XThreadObject(pParent)
 {
-    g_pModel = nullptr;
-    g_pDevice = nullptr;
-    g_pPdStruct = nullptr;
-    g_options = {};
-    g_nFreeIndex = -1;
+    m_pModel = nullptr;
+    m_pDevice = nullptr;
+    m_pPdStruct = nullptr;
+    m_options = {};
+    m_nFreeIndex = -1;
 }
 
 void XFileInfo::setData(QIODevice *pDevice, XFileInfoModel *pModel, const OPTIONS &options, XBinary::PDSTRUCT *pPdStruct)
 {
-    this->g_pDevice = pDevice;
-    this->g_pModel = pModel;
-    this->g_options = options;
-    this->g_pPdStruct = pPdStruct;
+    this->m_pDevice = pDevice;
+    this->m_pModel = pModel;
+    this->m_options = options;
+    this->m_pPdStruct = pPdStruct;
 }
 
 bool XFileInfo::processFile(const QString &sFileName, XFileInfoModel *pModel, const OPTIONS &options)
@@ -118,7 +118,7 @@ XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pItemParent, const QString
     if (pItemParent) {
         pItemParent->appendChild(pResult);
     } else {
-        g_pModel->appendChild(pResult);
+    m_pModel->appendChild(pResult);
     }
 
     return pResult;
@@ -126,7 +126,7 @@ XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pItemParent, const QString
 
 void XFileInfo::setCurrentStatus(const QString &sStatus)
 {
-    XBinary::setPdStructStatus(g_pPdStruct, g_nFreeIndex, sStatus);
+    XBinary::setPdStructStatus(m_pPdStruct, m_nFreeIndex, sStatus);
 }
 
 bool XFileInfo::check(const QString &sString, const QString &sExtra1, const QString &sExtra2, const QString &sExtra3, const QString &sExtra4)
@@ -151,10 +151,10 @@ bool XFileInfo::check(const QString &sString, const QString &sExtra1, const QStr
         sCurrentString += "#" + sExtra4;
     }
 
-    qint32 nNumberOfSections = g_options.sString.count("#") + 1;
+    qint32 nNumberOfSections = m_options.sString.count("#") + 1;
 
     for (qint32 i = 0; i < nNumberOfSections; i++) {
-        QString sOptionString = g_options.sString.section("#", i, i).toUpper();
+    QString sOptionString = m_options.sString.section("#", i, i).toUpper();
         QString _sString = sCurrentString.section("#", i, i).toUpper();
         if ((sOptionString != _sString) && (_sString != "")) {
             bResult = false;
@@ -172,7 +172,7 @@ QString XFileInfo::addFlags(XBinary::MODE mode, quint64 nValue, QMap<quint64, QS
 {
     QString sResult = XBinary::valueToHex(mode, nValue);
 
-    if (g_options.bComment) {
+    if (m_options.bComment) {
         sResult += QString("(%1)").arg(XBinary::valueToFlagsString(nValue, mapFlags, vlType));
     }
 
@@ -183,7 +183,7 @@ QString XFileInfo::addDateTime(XBinary::MODE mode, XBinary::DT_TYPE dtType, quin
 {
     QString sResult = XBinary::valueToHex(mode, nValue);
 
-    if (g_options.bComment) {
+    if (m_options.bComment) {
         sResult += QString("(%1)").arg(XBinary::valueToTimeString(nValue, dtType));
     }
 
@@ -219,18 +219,18 @@ void XFileInfo::_entryPoint(XBinary *pBinary, XBinary::_MEMORY_MAP *pMemoryMap)
             QString sRecord = "Bytes";
             if (check(sGroup, sRecord))
                 appendRecord(pItemParent, sRecord,
-                             disasmCore.getSignature(g_pDevice, pMemoryMap, pMemoryMap->nEntryPointAddress, XDisasmCore::ST_FULL, N_SIGNATURECOUNT));
+                             disasmCore.getSignature(m_pDevice, pMemoryMap, pMemoryMap->nEntryPointAddress, XDisasmCore::ST_FULL, N_SIGNATURECOUNT));
         }
         {
             QString sRecord = "Signature";
             if (check(sGroup, sRecord))
                 appendRecord(pItemParent, sRecord,
-                             disasmCore.getSignature(g_pDevice, pMemoryMap, pMemoryMap->nEntryPointAddress, XDisasmCore::ST_MASK, N_SIGNATURECOUNT));
+                             disasmCore.getSignature(m_pDevice, pMemoryMap, pMemoryMap->nEntryPointAddress, XDisasmCore::ST_MASK, N_SIGNATURECOUNT));
         }
         {
             QString sRecord = QString("%1(rel)").arg("Signature");
             if (check(sGroup, sRecord))
-                appendRecord(pItemParent, sRecord, disasmCore.getSignature(g_pDevice, pMemoryMap, pMemoryMap->nEntryPointAddress, XDisasmCore::ST_REL, N_SIGNATURECOUNT));
+                appendRecord(pItemParent, sRecord, disasmCore.getSignature(m_pDevice, pMemoryMap, pMemoryMap->nEntryPointAddress, XDisasmCore::ST_REL, N_SIGNATURECOUNT));
         }
     }
 }
@@ -729,7 +729,7 @@ void XFileInfo::PE_IMAGE_NT_HEADERS(XPE *pPE, bool bIs64)
 
                         qint32 nCount = qMin(pPE->getOptionalHeader_NumberOfRvaAndSizes(), (quint32)16);
 
-                        for (qint32 i = 0; (i < nCount) && XBinary::isPdStructNotCanceled(g_pPdStruct); i++) {
+                        for (qint32 i = 0; (i < nCount) && XBinary::isPdStructNotCanceled(m_pPdStruct); i++) {
                             QString sSubGroup3 = mapDD.value(i);
                             if (check(sGroup, sSubGroup, sSubGroup2, sSubGroup3)) {
                                 XFileInfoItem *pItemSub3 = appendRecord(pItemSub2, sSubGroup3, "");
@@ -758,7 +758,7 @@ void XFileInfo::PE_IMAGE_SECTION_HEADER(XPE *pPE)
 {
     QString sGroup = "IMAGE_SECTION_HEADER";
     if (check(sGroup)) {
-        QList<XPE_DEF::IMAGE_SECTION_HEADER> listISH = pPE->getSectionHeaders(g_pPdStruct);
+    QList<XPE_DEF::IMAGE_SECTION_HEADER> listISH = pPE->getSectionHeaders(m_pPdStruct);
         qint32 nNumberOfSections = listISH.count();
 
         if (nNumberOfSections > 0) {
@@ -1229,13 +1229,13 @@ void XFileInfo::ELF_Shdr(XELF *pELF)
 
 void XFileInfo::process()
 {
-    g_nFreeIndex = XBinary::getFreeIndex(g_pPdStruct);
-    XBinary::setPdStructInit(g_pPdStruct, g_nFreeIndex, 0);
+    m_nFreeIndex = XBinary::getFreeIndex(m_pPdStruct);
+    XBinary::setPdStructInit(m_pPdStruct, m_nFreeIndex, 0);
 
-    XBinary::FT fileType = g_options.fileType;
+    XBinary::FT fileType = m_options.fileType;
 
     if (fileType == XBinary::FT_UNKNOWN) {
-        fileType = XBinary::getPrefFileType(g_pDevice);
+        fileType = XBinary::getPrefFileType(m_pDevice);
     }
 
     {
@@ -1244,17 +1244,17 @@ void XFileInfo::process()
             XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
             {
                 QString sRecord = "File name";
-                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getDeviceFileName(g_pDevice));
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getDeviceFileName(m_pDevice));
             }
 
-            XBinary::FILEFORMATINFO fileFormatInfo = XFormats::getFileFormatInfo(fileType, g_pDevice, true, -1, g_pPdStruct);
+            XBinary::FILEFORMATINFO fileFormatInfo = XFormats::getFileFormatInfo(fileType, m_pDevice, true, -1, m_pPdStruct);
             {
                 QString sRecord = "Size";
                 if (check(sGroup, sRecord)) {
-                    qint64 nSize = g_pDevice->size();
+                    qint64 nSize = m_pDevice->size();
                     QString sSize = QString::number(nSize);
 
-                    if (g_options.bComment) {
+                    if (m_options.bComment) {
                         sSize += QString("(%1)").arg(XBinary::bytesCountToString(nSize));
                     }
 
@@ -1338,33 +1338,33 @@ void XFileInfo::process()
             XFileInfoItem *pItemParent = appendRecord(0, sGroup, "");
             {
                 QString sRecord = "MD4";
-                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_MD4, g_pDevice, g_pPdStruct));
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_MD4, m_pDevice, m_pPdStruct));
             }
             {
                 QString sRecord = "MD5";
-                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_MD5, g_pDevice, g_pPdStruct));
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_MD5, m_pDevice, m_pPdStruct));
             }
             {
                 QString sRecord = "SHA1";
-                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA1, g_pDevice, g_pPdStruct));
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA1, m_pDevice, m_pPdStruct));
             }
 #ifndef QT_CRYPTOGRAPHICHASH_ONLY_SHA1
 #if (QT_VERSION_MAJOR > 4)
             {
                 QString sRecord = "SHA224";
-                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA224, g_pDevice, g_pPdStruct));
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA224, m_pDevice, m_pPdStruct));
             }
             {
                 QString sRecord = "SHA256";
-                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA256, g_pDevice, g_pPdStruct));
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA256, m_pDevice, m_pPdStruct));
             }
             {
                 QString sRecord = "SHA384";
-                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA384, g_pDevice, g_pPdStruct));
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA384, m_pDevice, m_pPdStruct));
             }
             {
                 QString sRecord = "SHA512";
-                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA512, g_pDevice, g_pPdStruct));
+                if (check(sGroup, sRecord)) appendRecord(pItemParent, sRecord, XBinary::getHash(XBinary::HASH_SHA512, m_pDevice, m_pPdStruct));
             }
 #endif
 #endif
@@ -1373,12 +1373,12 @@ void XFileInfo::process()
     {
         QString sRecord = "Entropy";
         if (check(sRecord)) {
-            XBinary binary(g_pDevice);
+            XBinary binary(m_pDevice);
 
-            double dEntropy = binary.getBinaryStatus(XBinary::BSTATUS_ENTROPY, 0, -1, g_pPdStruct);
+            double dEntropy = binary.getBinaryStatus(XBinary::BSTATUS_ENTROPY, 0, -1, m_pPdStruct);
             QString sEntropy = QString::number(dEntropy);
 
-            if (g_options.bComment) {
+            if (m_options.bComment) {
                 sEntropy += QString("(%1)").arg(binary.isPacked(dEntropy) ? ("packed") : ("not packed"));
             }
 
@@ -1391,10 +1391,10 @@ void XFileInfo::process()
             QList<XBinary::FMT_MSG> listFileFormatMessages;
 
             if (XBinary::checkFileType(XBinary::FT_PE, fileType)) {
-                XPE pe(g_pDevice);
+                XPE pe(m_pDevice);
 
-                if (pe.isValid(g_pPdStruct)) {
-                    listFileFormatMessages = pe.checkFileFormat(true, g_pPdStruct);
+                if (pe.isValid(m_pPdStruct)) {
+                    listFileFormatMessages = pe.checkFileFormat(true, m_pPdStruct);
                 }
 
                 QList<QString> listResult = XBinary::getFileFormatMessages(&listFileFormatMessages);
@@ -1411,30 +1411,30 @@ void XFileInfo::process()
     {
         QString sRecord = "Format";
         if (check(sRecord)) {
-            // XFormats::getDaraRefs(g_pDevice, g_pPdStruct, true);
+            // XFormats::getDaraRefs(m_pDevice, m_pPdStruct, true);
         }
     }
 
-    if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
+    if (XBinary::isPdStructNotCanceled(m_pPdStruct)) {
         if (XBinary::checkFileType(XBinary::FT_BINARY, fileType)) {
-            XBinary binary(g_pDevice);
+            XBinary binary(m_pDevice);
 
-            if (binary.isValid(g_pPdStruct)) {
-                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
+            if (binary.isValid(m_pPdStruct)) {
+                if (XBinary::isPdStructNotCanceled(m_pPdStruct)) {
                     {
                         // TODO
                     }
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_ELF, fileType)) {
-            XELF elf(g_pDevice);
+            XELF elf(m_pDevice);
 
-            if (elf.isValid(g_pPdStruct)) {
-                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
+            if (elf.isValid(m_pPdStruct)) {
+                if (XBinary::isPdStructNotCanceled(m_pPdStruct)) {
                     bool bIs64 = elf.is64();
 
-                    //                    XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(g_options.mapMode, g_pPdStruct);
-                    XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(XBinary::MAPMODE_SEGMENTS, g_pPdStruct);
+                    //                    XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(m_options.mapMode, m_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = elf.getMemoryMap(XBinary::MAPMODE_SEGMENTS, m_pPdStruct);
 
                     _entryPoint(&elf, &memoryMap);
                     _Elf_Ehdr(&elf, bIs64);
@@ -1461,14 +1461,14 @@ void XFileInfo::process()
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_MACHO, fileType)) {
-            XMACH mach(g_pDevice);
+            XMACH mach(m_pDevice);
 
-            if (mach.isValid(g_pPdStruct)) {
-                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
+            if (mach.isValid(m_pPdStruct)) {
+                if (XBinary::isPdStructNotCanceled(m_pPdStruct)) {
                     bool bIs64 = mach.is64();
 
-                    //                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(g_options.mapMode, g_pPdStruct);
-                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(XBinary::MAPMODE_SEGMENTS, g_pPdStruct);
+                    //                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(m_options.mapMode, m_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = mach.getMemoryMap(XBinary::MAPMODE_SEGMENTS, m_pPdStruct);
 
                     _entryPoint(&mach, &memoryMap);
                     _mach_header(&mach, bIs64);
@@ -1476,20 +1476,20 @@ void XFileInfo::process()
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_MACHOFAT, fileType)) {
-            XMACHOFat machofat(g_pDevice);
+            XMACHOFat machofat(m_pDevice);
 
-            if (machofat.isValid(g_pPdStruct)) {
-                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
+            if (machofat.isValid(m_pPdStruct)) {
+                if (XBinary::isPdStructNotCanceled(m_pPdStruct)) {
                     // TODO
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_PE, fileType)) {
-            XPE pe(g_pDevice);
+            XPE pe(m_pDevice);
 
-            if (pe.isValid(g_pPdStruct)) {
-                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
-                    //                    XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(g_options.mapMode, g_pPdStruct);
-                    XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
+            if (pe.isValid(m_pPdStruct)) {
+                if (XBinary::isPdStructNotCanceled(m_pPdStruct)) {
+                    //                    XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(m_options.mapMode, m_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = pe.getMemoryMap(XBinary::MAPMODE_UNKNOWN, m_pPdStruct);
                     bool bIs64 = pe.is64();
 
                     _entryPoint(&pe, &memoryMap);
@@ -1527,24 +1527,24 @@ void XFileInfo::process()
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_NE, fileType)) {
-            XNE ne(g_pDevice);
+            XNE ne(m_pDevice);
 
-            if (ne.isValid(g_pPdStruct)) {
-                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
-                    //                    XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(g_options.mapMode, g_pPdStruct);
-                    XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
+            if (ne.isValid(m_pPdStruct)) {
+                if (XBinary::isPdStructNotCanceled(m_pPdStruct)) {
+                    //                    XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(m_options.mapMode, m_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = ne.getMemoryMap(XBinary::MAPMODE_UNKNOWN, m_pPdStruct);
 
                     _entryPoint(&ne, &memoryMap);
                     _IMAGE_DOS_HEADER(&ne, true);
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_LE, fileType)) {
-            XLE le(g_pDevice);
+            XLE le(m_pDevice);
 
-            if (le.isValid(g_pPdStruct)) {
-                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
-                    //                    XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(g_options.mapMode, g_pPdStruct);
-                    XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
+            if (le.isValid(m_pPdStruct)) {
+                if (XBinary::isPdStructNotCanceled(m_pPdStruct)) {
+                    //                    XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(m_options.mapMode, m_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = le.getMemoryMap(XBinary::MAPMODE_UNKNOWN, m_pPdStruct);
 
                     _entryPoint(&le, &memoryMap);
                     _IMAGE_DOS_HEADER(&le, true);
@@ -1553,12 +1553,12 @@ void XFileInfo::process()
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_MSDOS, fileType)) {
-            XMSDOS msdos(g_pDevice);
+            XMSDOS msdos(m_pDevice);
 
             if (msdos.isValid()) {
-                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
-                    //                    XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(g_options.mapMode, g_pPdStruct);
-                    XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
+                if (XBinary::isPdStructNotCanceled(m_pPdStruct)) {
+                    //                    XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(m_options.mapMode, m_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = msdos.getMemoryMap(XBinary::MAPMODE_UNKNOWN, m_pPdStruct);
 
                     _entryPoint(&msdos, &memoryMap);
                     _IMAGE_DOS_HEADER(&msdos, false);
@@ -1567,38 +1567,38 @@ void XFileInfo::process()
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_COM, fileType)) {
-            XCOM xcom(g_pDevice);
+            XCOM xcom(m_pDevice);
 
-            if (xcom.isValid(g_pPdStruct)) {
-                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
-                    //                    XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(g_options.mapMode, g_pPdStruct);
-                    XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(XBinary::MAPMODE_UNKNOWN, g_pPdStruct);
+            if (xcom.isValid(m_pPdStruct)) {
+                if (XBinary::isPdStructNotCanceled(m_pPdStruct)) {
+                    //                    XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(m_options.mapMode, m_pPdStruct);
+                    XBinary::_MEMORY_MAP memoryMap = xcom.getMemoryMap(XBinary::MAPMODE_UNKNOWN, m_pPdStruct);
 
                     _entryPoint(&xcom, &memoryMap);
                     // TODO
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_DEX, fileType)) {
-            XDEX dex(g_pDevice);
+            XDEX dex(m_pDevice);
 
-            if (dex.isValid(g_pPdStruct)) {
-                if (XBinary::isPdStructNotCanceled(g_pPdStruct)) {
+            if (dex.isValid(m_pPdStruct)) {
+                if (XBinary::isPdStructNotCanceled(m_pPdStruct)) {
                     DEX_HEADER(&dex);
                 }
             }
         } else if (XBinary::checkFileType(XBinary::FT_PDF, fileType)) {
-            XPDF pdf(g_pDevice);
+            XPDF pdf(m_pDevice);
 
-            if (pdf.isValid(g_pPdStruct)) {
+            if (pdf.isValid(m_pPdStruct)) {
                 if (check("File type")) appendRecord(0, "File type", XBinary::fileTypeIdToString(pdf.getFileType()));
                 //                if(check("Version","Version"))
                 //                appendRecord(0,"Version"),pdf.getVersion());
                 // TODO
             }
         } else if (XBinary::checkFileType(XBinary::FT_MACHOFAT, fileType)) {
-            XMACHOFat machofat(g_pDevice);
+            XMACHOFat machofat(m_pDevice);
 
-            if (machofat.isValid(g_pPdStruct)) {
+            if (machofat.isValid(m_pPdStruct)) {
                 // TODO
             }
         } else {
@@ -1606,5 +1606,5 @@ void XFileInfo::process()
         }
     }
 
-    XBinary::setPdStructFinished(g_pPdStruct, g_nFreeIndex);
+    XBinary::setPdStructFinished(m_pPdStruct, m_nFreeIndex);
 }
