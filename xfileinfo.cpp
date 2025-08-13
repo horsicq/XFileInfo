@@ -118,7 +118,7 @@ XFileInfoItem *XFileInfo::appendRecord(XFileInfoItem *pItemParent, const QString
     if (pItemParent) {
         pItemParent->appendChild(pResult);
     } else {
-    m_pModel->appendChild(pResult);
+        m_pModel->appendChild(pResult);
     }
 
     return pResult;
@@ -154,7 +154,7 @@ bool XFileInfo::check(const QString &sString, const QString &sExtra1, const QStr
     qint32 nNumberOfSections = m_options.sString.count("#") + 1;
 
     for (qint32 i = 0; i < nNumberOfSections; i++) {
-    QString sOptionString = m_options.sString.section("#", i, i).toUpper();
+        QString sOptionString = m_options.sString.section("#", i, i).toUpper();
         QString _sString = sCurrentString.section("#", i, i).toUpper();
         if ((sOptionString != _sString) && (_sString != "")) {
             bResult = false;
@@ -758,7 +758,7 @@ void XFileInfo::PE_IMAGE_SECTION_HEADER(XPE *pPE)
 {
     QString sGroup = "IMAGE_SECTION_HEADER";
     if (check(sGroup)) {
-    QList<XPE_DEF::IMAGE_SECTION_HEADER> listISH = pPE->getSectionHeaders(m_pPdStruct);
+        QList<XPE_DEF::IMAGE_SECTION_HEADER> listISH = pPE->getSectionHeaders(m_pPdStruct);
         qint32 nNumberOfSections = listISH.count();
 
         if (nNumberOfSections > 0) {
