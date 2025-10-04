@@ -34,7 +34,7 @@ XFileInfoWidget::XFileInfoWidget(QWidget *pParent) : XShortcutsWidget(pParent), 
     ui->comboBoxOutput->setToolTip(tr("Output"));
     ui->checkBoxComment->setToolTip(tr("Comment"));
 
-    g_pDevice = nullptr;
+    m_pDevice = nullptr;
     g_nOffset = 0;
     g_nSize = 0;
 
@@ -59,7 +59,7 @@ void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, const QS
 {
     Q_UNUSED(sString)
     // TODO sString !!!
-    this->g_pDevice = pDevice;
+    this->m_pDevice = pDevice;
     g_nOffset = 0;
     g_nSize = pDevice->size();
 
@@ -67,7 +67,7 @@ void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, const QS
         this->g_nSize = (pDevice->size()) - (this->g_nOffset);
     }
 
-    XFormats::setFileTypeComboBox(fileType, g_pDevice, ui->comboBoxType);
+    XFormats::setFileTypeComboBox(fileType, m_pDevice, ui->comboBoxType);
 
     reloadType();
 
@@ -78,7 +78,7 @@ void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, const QS
 
 void XFileInfoWidget::reload()
 {
-    if (g_pDevice) {
+    if (m_pDevice) {
         XFileInfo::OPTIONS options = {};
         options.fileType = (XBinary::FT)(ui->comboBoxType->currentData().toInt());
         //    options.mapMode = (XBinary::MAPMODE)(ui->comboBoxMapMode->currentData().toInt());
@@ -91,7 +91,7 @@ void XFileInfoWidget::reload()
         XFileInfo fileInfo;
         XDialogProcess dip(XOptions::getMainWidget(this), &fileInfo);
         dip.setGlobal(getShortcuts(), getGlobalOptions());
-        fileInfo.setData(g_pDevice, pModel, options, dip.getPdStruct());
+        fileInfo.setData(m_pDevice, pModel, options, dip.getPdStruct());
         dip.start();
         dip.showDialogDelay();
 
@@ -136,7 +136,7 @@ void XFileInfoWidget::registerShortcuts(bool bState)
 
 void XFileInfoWidget::on_toolButtonSave_clicked()
 {
-    QString sFileName = XBinary::getResultFileName(g_pDevice, QString("%1.txt").arg(tr("Info")));
+    QString sFileName = XBinary::getResultFileName(m_pDevice, QString("%1.txt").arg(tr("Info")));
     sFileName = QFileDialog::getSaveFileName(this, tr("Save file"), sFileName, QString("%1 (*.txt);;%2 (*)").arg(tr("Text files"), tr("All files")));
 
     if (!sFileName.isEmpty()) {
