@@ -58,7 +58,7 @@ private:
     void _toFormattedString(QString *pString, XFileInfoItem *pItem, qint32 nLevel);
 
 private:
-    XFileInfoItem *g_pRootItem;
+    XFileInfoItem *m_pRootItem;
 };
 
 #endif  // XFILEINFOMODEL_H

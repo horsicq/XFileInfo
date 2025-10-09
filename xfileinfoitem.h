@@ -39,10 +39,10 @@ public:
     XFileInfoItem *getParentItem();
 
 private:
-    QList<XFileInfoItem *> g_listChildItems;
-    QString g_sName;
-    QVariant g_varValue;
-    XFileInfoItem *g_pParentItem;
+    QList<XFileInfoItem *> m_listChildItems;
+    QString m_sName;
+    QVariant m_varValue;
+    XFileInfoItem *m_pParentItem;
 };
 
 #endif  // XFILEINFOITEM_H

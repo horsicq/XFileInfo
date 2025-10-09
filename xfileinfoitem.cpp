@@ -22,29 +22,29 @@
 
 XFileInfoItem::XFileInfoItem(const QString &sName, const QVariant &varValue, XFileInfoItem *pParentItem)
 {
-    this->g_pParentItem = pParentItem;
-    this->g_sName = sName;
-    this->g_varValue = varValue;
+    this->m_pParentItem = pParentItem;
+    this->m_sName = sName;
+    this->m_varValue = varValue;
 }
 
 XFileInfoItem::~XFileInfoItem()
 {
-    qDeleteAll(g_listChildItems);
+    qDeleteAll(m_listChildItems);
 }
 
 void XFileInfoItem::appendChild(XFileInfoItem *pItemChild)
 {
-    g_listChildItems.append(pItemChild);
+    m_listChildItems.append(pItemChild);
 }
 
 XFileInfoItem *XFileInfoItem::child(int nRow)
 {
-    return g_listChildItems.value(nRow);
+    return m_listChildItems.value(nRow);
 }
 
 int XFileInfoItem::childCount() const
 {
-    return g_listChildItems.count();
+    return m_listChildItems.count();
 }
 
 int XFileInfoItem::columnCount() const
@@ -57,7 +57,7 @@ QVariant XFileInfoItem::data(int nColumn) const
     QVariant result;
 
     if (nColumn == 0) {
-        result = g_sName;
+        result = m_sName;
     }
 
     return result;
@@ -65,20 +65,20 @@ QVariant XFileInfoItem::data(int nColumn) const
 
 QString XFileInfoItem::getName()
 {
-    return g_sName;
+    return m_sName;
 }
 
 QVariant XFileInfoItem::getValue()
 {
-    return g_varValue;
+    return m_varValue;
 }
 
 int XFileInfoItem::row() const
 {
     int nResult = 0;
 
-    if (g_pParentItem) {
-        nResult = g_pParentItem->g_listChildItems.indexOf(const_cast<XFileInfoItem *>(this));
+    if (m_pParentItem) {
+        nResult = m_pParentItem->m_listChildItems.indexOf(const_cast<XFileInfoItem *>(this));
     }
 
     return nResult;
@@ -86,5 +86,5 @@ int XFileInfoItem::row() const
 
 XFileInfoItem *XFileInfoItem::getParentItem()
 {
-    return g_pParentItem;
+    return m_pParentItem;
 }

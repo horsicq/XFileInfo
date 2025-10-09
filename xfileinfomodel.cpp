@@ -22,12 +22,12 @@
 
 XFileInfoModel::XFileInfoModel(QObject *pParent) : QAbstractItemModel(pParent)
 {
-    g_pRootItem = new XFileInfoItem("data", "");
+    m_pRootItem = new XFileInfoItem("data", "");
 }
 
 XFileInfoModel::~XFileInfoModel()
 {
-    delete g_pRootItem;
+    delete m_pRootItem;
 }
 
 QVariant XFileInfoModel::headerData(int nSection, Qt::Orientation orientation, int nRole) const
@@ -35,7 +35,7 @@ QVariant XFileInfoModel::headerData(int nSection, Qt::Orientation orientation, i
     QVariant result;
 
     if ((orientation == Qt::Horizontal) && (nRole == Qt::DisplayRole)) {
-        result = g_pRootItem->data(nSection);
+        result = m_pRootItem->data(nSection);
     }
 
     return result;
@@ -49,7 +49,7 @@ QModelIndex XFileInfoModel::index(int nRow, int nColumn, const QModelIndex &pare
         XFileInfoItem *pItemParent = nullptr;
 
         if (!parent.isValid()) {
-            pItemParent = g_pRootItem;
+            pItemParent = m_pRootItem;
         } else {
             pItemParent = static_cast<XFileInfoItem *>(parent.internalPointer());
         }
@@ -72,7 +72,7 @@ QModelIndex XFileInfoModel::parent(const QModelIndex &index) const
         XFileInfoItem *pItemChild = static_cast<XFileInfoItem *>(index.internalPointer());
         XFileInfoItem *pParentItem = pItemChild->getParentItem();
 
-        if (pParentItem != g_pRootItem) {
+        if (pParentItem != m_pRootItem) {
             result = createIndex(pParentItem->row(), 0, pParentItem);
         }
     }
@@ -88,7 +88,7 @@ int XFileInfoModel::rowCount(const QModelIndex &parent) const
         XFileInfoItem *pParentItem = nullptr;
 
         if (!parent.isValid()) {
-            pParentItem = g_pRootItem;
+            pParentItem = m_pRootItem;
         } else {
             pParentItem = static_cast<XFileInfoItem *>(parent.internalPointer());
         }
@@ -106,7 +106,7 @@ int XFileInfoModel::columnCount(const QModelIndex &parent) const
     if (parent.isValid()) {
         nResult = static_cast<XFileInfoItem *>(parent.internalPointer())->columnCount();
     } else {
-        nResult = g_pRootItem->columnCount();
+        nResult = m_pRootItem->columnCount();
     }
 
     return nResult;
@@ -140,7 +140,7 @@ Qt::ItemFlags XFileInfoModel::flags(const QModelIndex &index) const
 
 void XFileInfoModel::appendChild(XFileInfoItem *pItemChild)
 {
-    g_pRootItem->appendChild(pItemChild);
+    m_pRootItem->appendChild(pItemChild);
 }
 
 QString XFileInfoModel::toXML()
@@ -150,7 +150,7 @@ QString XFileInfoModel::toXML()
 
     xml.setAutoFormatting(true);
 
-    _toXML(&xml, g_pRootItem, 0);
+    _toXML(&xml, m_pRootItem, 0);
 
     return sResult;
 }
@@ -161,7 +161,7 @@ QString XFileInfoModel::toJSON()
 
     QJsonObject jsonResult;
 
-    _toJSON(&jsonResult, g_pRootItem, 0);
+    _toJSON(&jsonResult, m_pRootItem, 0);
 
     QJsonDocument saveFormat(jsonResult);
 
@@ -176,7 +176,7 @@ QString XFileInfoModel::toCSV()
 {
     QString sResult;
 
-    _toCSV(&sResult, g_pRootItem, 0);
+    _toCSV(&sResult, m_pRootItem, 0);
 
     return sResult;
 }
@@ -185,7 +185,7 @@ QString XFileInfoModel::toTSV()
 {
     QString sResult;
 
-    _toTSV(&sResult, g_pRootItem, 0);
+    _toTSV(&sResult, m_pRootItem, 0);
 
     return sResult;
 }
@@ -194,7 +194,7 @@ QString XFileInfoModel::toFormattedString()
 {
     QString sResult;
 
-    _toFormattedString(&sResult, g_pRootItem, 0);
+    _toFormattedString(&sResult, m_pRootItem, 0);
 
     return sResult;
 }
