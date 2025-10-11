@@ -66,8 +66,8 @@ private slots:
 private:
     Ui::XFileInfoWidget *ui;
     QIODevice *m_pDevice;
-    qint64 g_nOffset;
-    qint64 g_nSize;
+    qint64 m_nOffset;
+    qint64 m_nSize;
 };
 
 #endif  // XFILEINFOWIDGET_H

@@ -35,8 +35,8 @@ XFileInfoWidget::XFileInfoWidget(QWidget *pParent) : XShortcutsWidget(pParent), 
     ui->checkBoxComment->setToolTip(tr("Comment"));
 
     m_pDevice = nullptr;
-    g_nOffset = 0;
-    g_nSize = 0;
+    m_nOffset = 0;
+    m_nSize = 0;
 
     ui->checkBoxComment->setChecked(true);
 
@@ -60,11 +60,11 @@ void XFileInfoWidget::setData(QIODevice *pDevice, XBinary::FT fileType, const QS
     Q_UNUSED(sString)
     // TODO sString !!!
     this->m_pDevice = pDevice;
-    g_nOffset = 0;
-    g_nSize = pDevice->size();
+    m_nOffset = 0;
+    m_nSize = pDevice->size();
 
-    if (this->g_nSize == -1) {  // TODO Check
-        this->g_nSize = (pDevice->size()) - (this->g_nOffset);
+    if (this->m_nSize == -1) {  // TODO Check
+        this->m_nSize = (pDevice->size()) - (this->m_nOffset);
     }
 
     XFormats::setFileTypeComboBox(fileType, m_pDevice, ui->comboBoxType);
