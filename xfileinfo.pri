@@ -13,11 +13,6 @@ SOURCES += \
     $$PWD/xfileinfomodel.cpp \
     $$PWD/xfileinfovalues.cpp
 
-!contains(XCONFIG, xcomboboxex) {
-    XCONFIG += xcomboboxex
-    include($$PWD/../Controls/xcomboboxex.pri)
-}
-
 !contains(XCONFIG, xformats) {
     XCONFIG += xformats
     include($$PWD/../Formats/xformats.pri)
