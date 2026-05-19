@@ -13,6 +13,11 @@ SOURCES += \
     $$PWD/xfileinfomodel.cpp \
     $$PWD/xfileinfovalues.cpp
 
+!contains(XCONFIG, xcomboboxex) {
+    XCONFIG += xcomboboxex
+    include($$PWD/../Controls/xcomboboxex.pri)
+}
+
 !contains(XCONFIG, xformats) {
     XCONFIG += xformats
     include($$PWD/../Formats/xformats.pri)
@@ -21,6 +26,11 @@ SOURCES += \
 !contains(XCONFIG, xoptions) {
     XCONFIG += xoptions
     include($$PWD/../XOptions/xoptions.pri)
+}
+
+!contains(XCONFIG, xdisasmcore) {
+    XCONFIG += xdisasmcore
+    include($$PWD/../XDisasmCore/xdisasmcore.pri)
 }
 
 contains(XCONFIG, use_capstone_x86) {

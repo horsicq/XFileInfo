@@ -23,9 +23,14 @@
 
 #include "xformats.h"
 #include "xthreadobject.h"
+#ifdef QT_WIDGETS_LIB
+#include "xcomboboxex.h"
+#endif
 
 #include <QHash>
+#ifdef QT_GUI_LIB
 #include <QIcon>
+#endif
 #include <Qt>
 #include <QVariant>
 
@@ -34,16 +39,30 @@ class XFileInfoValues : public XThreadObject {
 
 public:
     enum XFIV  {
-        XFIV_FILE_UNKNNOWN,
-        XFIV_FILE_SIZE,
-        XFIV_FILE_EXTENSION,
-        XFIV_FILE_ENTROPY
+        XFIV_NAME = 0,
+        XFIV_SIZE,
+        XFIV_EXTENSION,
+        XFIV_ENTROPY,
+
+        XFIV_HEADER_BYTES,
+
+        XFIV_ENTRYPOINT_BYTES,
+        XFIV_ENTRYPOINT_SIGNATURE,
+        XFIV_ENTRYPOINT_SIGNATURE_RELATIVE,
+
+        XFIV_OVERLAY_BYTES,
+        XFIV_OVERLAY_SIZE,
+        XFIV_OVERLAY_ENTROPY,
+
+        __XFIV_SIZE
     };
 
     struct RecordInfo {
         QString sFileName;
         QString sFilePath;
+#ifdef QT_GUI_LIB
         QIcon icon;
+#endif
         bool bIsDir;
         bool bEnabled;
         QHash<XFIV, QVariant> mapValues;
@@ -61,6 +80,13 @@ public:
     void process() override;
     QString getTitle() override;
 
+    static QString valueIdToString(XFIV value);
+    static XFIV valueStringToId(const QString &sValue);
+    static QVariant getDisplayRole(QVariant varValue, XFIV value);
+    static Qt::AlignmentFlag getTextAlignmentRole(XFIV value);
+#ifdef QT_WIDGETS_LIB
+    static QList<XComboBoxEx::CUSTOM_FLAG> getColumnCustomFlags();
+#endif
     static QHash<XFIV, QVariant> getValues(const QString &sFileName, QList<XFIV> *pList, XBinary::PDSTRUCT *pPdStruct);
     static QHash<XFIV, QVariant> getValues(QIODevice *pDevice, QList<XFIV> *pList, XBinary::PDSTRUCT *pPdStruct);
 
@@ -71,7 +97,7 @@ private:
 
 struct XFileInfoValues_Sort {
     Qt::SortOrder sortOrder = Qt::AscendingOrder;
-    XFileInfoValues::XFIV xFIV = XFileInfoValues::XFIV_FILE_UNKNNOWN;
+    XFileInfoValues::XFIV xFIV = XFileInfoValues::XFIV_NAME;
 
     bool operator()(const XFileInfoValues::RecordInfo &recordInfo1, const XFileInfoValues::RecordInfo &recordInfo2) const;
 };
