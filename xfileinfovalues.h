@@ -42,18 +42,19 @@ public:
         XFIV_NAME = 0,
         XFIV_SIZE,
         XFIV_EXTENSION,
+        XFIV_FILETYPE,
         XFIV_ENTROPY,
-
+        XFIV_ARCH,
         XFIV_HEADER_BYTES,
-
         XFIV_ENTRYPOINT_BYTES,
         XFIV_ENTRYPOINT_SIGNATURE,
         XFIV_ENTRYPOINT_SIGNATURE_RELATIVE,
-
         XFIV_OVERLAY_BYTES,
         XFIV_OVERLAY_SIZE,
         XFIV_OVERLAY_ENTROPY,
-
+        XFIV_PE_TIMEDATESTAMP,
+        XFIV_PE_MAJORLINKERVERSION,
+        XFIV_PE_MINORLINKERVERSION,
         __XFIV_SIZE
     };
 
@@ -64,6 +65,7 @@ public:
         QIcon icon;
 #endif
         bool bIsDir;
+        bool bIsHidden;
         bool bEnabled;
         QHash<XFIV, QVariant> mapValues;
     };
@@ -83,7 +85,7 @@ public:
     static QString valueIdToString(XFIV value);
     static XFIV valueStringToId(const QString &sValue);
     static QVariant getDisplayRole(QVariant varValue, XFIV value);
-    static Qt::AlignmentFlag getTextAlignmentRole(XFIV value);
+    static int getTextAlignmentRole(XFIV value);
 #ifdef QT_WIDGETS_LIB
     static QList<XComboBoxEx::CUSTOM_FLAG> getColumnCustomFlags();
 #endif

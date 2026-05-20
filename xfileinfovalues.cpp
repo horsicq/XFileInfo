@@ -35,6 +35,12 @@ bool isBinaryValue(XFileInfoValues::XFIV value)
            (value == XFileInfoValues::XFIV_OVERLAY_ENTROPY);
 }
 
+bool isPEValue(XFileInfoValues::XFIV value)
+{
+    return (value == XFileInfoValues::XFIV_PE_TIMEDATESTAMP) || (value == XFileInfoValues::XFIV_PE_MAJORLINKERVERSION) ||
+           (value == XFileInfoValues::XFIV_PE_MINORLINKERVERSION);
+}
+
 QString readBytes(QIODevice *pDevice, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
 {
     QString sResult;
@@ -52,7 +58,9 @@ XBinary::XIDSTRING _TABLE_XFIV[] = {
     {XFileInfoValues::XFIV_NAME, QObject::tr("Name")},
     {XFileInfoValues::XFIV_SIZE, QObject::tr("Size")},
     {XFileInfoValues::XFIV_EXTENSION, QObject::tr("Extension")},
+    {XFileInfoValues::XFIV_FILETYPE, QObject::tr("File type")},
     {XFileInfoValues::XFIV_ENTROPY, QObject::tr("Entropy")},
+    {XFileInfoValues::XFIV_ARCH, QObject::tr("Architecture")},
     {XFileInfoValues::XFIV_HEADER_BYTES, QObject::tr("Header bytes")},
     {XFileInfoValues::XFIV_ENTRYPOINT_BYTES, QObject::tr("Entry point bytes")},
     {XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE, QObject::tr("Entry point signature")},
@@ -60,6 +68,9 @@ XBinary::XIDSTRING _TABLE_XFIV[] = {
     {XFileInfoValues::XFIV_OVERLAY_BYTES, QObject::tr("Overlay bytes")},
     {XFileInfoValues::XFIV_OVERLAY_SIZE, QObject::tr("Overlay size")},
     {XFileInfoValues::XFIV_OVERLAY_ENTROPY, QObject::tr("Overlay entropy")},
+    {XFileInfoValues::XFIV_PE_TIMEDATESTAMP, QObject::tr("PE TimeDateStamp")},
+    {XFileInfoValues::XFIV_PE_MAJORLINKERVERSION, QObject::tr("PE MajorLinkerVersion")},
+    {XFileInfoValues::XFIV_PE_MINORLINKERVERSION, QObject::tr("PE MinorLinkerVersion")},
 };
 
 const qint32 N_XFIV = sizeof(_TABLE_XFIV) / sizeof(XBinary::XIDSTRING);
@@ -70,19 +81,19 @@ bool XFileInfoValues_Sort::operator()(const XFileInfoValues::RecordInfo &recordI
         return recordInfo1.bIsDir;
     }
 
-    if ((xFIV == XFileInfoValues::XFIV_SIZE) || (xFIV == XFileInfoValues::XFIV_OVERLAY_SIZE)) {
+    if ((xFIV == XFileInfoValues::XFIV_SIZE) || (xFIV == XFileInfoValues::XFIV_OVERLAY_SIZE) || isPEValue(xFIV)) {
         qint64 nSize1 = recordInfo1.mapValues.value(xFIV).toLongLong();
         qint64 nSize2 = recordInfo2.mapValues.value(xFIV).toLongLong();
 
         if (nSize1 != nSize2) {
             return (sortOrder == Qt::DescendingOrder) ? (nSize2 < nSize1) : (nSize1 < nSize2);
         }
-    } else if (xFIV == XFileInfoValues::XFIV_EXTENSION) {
-        QString sExtension1 = recordInfo1.mapValues.value(XFileInfoValues::XFIV_EXTENSION).toString().toCaseFolded();
-        QString sExtension2 = recordInfo2.mapValues.value(XFileInfoValues::XFIV_EXTENSION).toString().toCaseFolded();
+    } else if ((xFIV == XFileInfoValues::XFIV_EXTENSION) || (xFIV == XFileInfoValues::XFIV_FILETYPE) || (xFIV == XFileInfoValues::XFIV_ARCH)) {
+        QString sValue1 = recordInfo1.mapValues.value(xFIV).toString().toCaseFolded();
+        QString sValue2 = recordInfo2.mapValues.value(xFIV).toString().toCaseFolded();
 
-        if (sExtension1 != sExtension2) {
-            return (sortOrder == Qt::DescendingOrder) ? (sExtension2 < sExtension1) : (sExtension1 < sExtension2);
+        if (sValue1 != sValue2) {
+            return (sortOrder == Qt::DescendingOrder) ? (sValue2 < sValue1) : (sValue1 < sValue2);
         }
     } else if ((xFIV == XFileInfoValues::XFIV_ENTROPY) || (xFIV == XFileInfoValues::XFIV_OVERLAY_ENTROPY)) {
         double dEntropy1 = recordInfo1.mapValues.value(xFIV).toDouble();
@@ -168,6 +179,8 @@ QVariant XFileInfoValues::getDisplayRole(QVariant varValue, XFIV value)
     if (varValue.isValid()) {
         if ((value == XFIV_SIZE) || (value == XFIV_OVERLAY_SIZE)) {
             result = XBinary::bytesCountToString(varValue.toLongLong(), 1024);
+        } else if (value == XFIV_PE_TIMEDATESTAMP) {
+            result = XBinary::valueToHex(static_cast<quint32>(varValue.toUInt()));
         } else if ((value == XFIV_ENTROPY) || (value == XFIV_OVERLAY_ENTROPY)) {
             result = QString::number(varValue.toDouble(), 'f', 4);
         }
@@ -176,12 +189,12 @@ QVariant XFileInfoValues::getDisplayRole(QVariant varValue, XFIV value)
     return result;
 }
 
-Qt::AlignmentFlag XFileInfoValues::getTextAlignmentRole(XFIV value)
+int XFileInfoValues::getTextAlignmentRole(XFIV value)
 {
-    Qt::AlignmentFlag result = static_cast<Qt::AlignmentFlag>(0);
+    int result = Qt::AlignLeft;
 
-    if ((value == XFIV_SIZE) || (value == XFIV_ENTROPY) || (value == XFIV_OVERLAY_SIZE) || (value == XFIV_OVERLAY_ENTROPY)) {
-        result = static_cast<Qt::AlignmentFlag>(static_cast<int>(Qt::AlignRight | Qt::AlignVCenter));
+    if ((value == XFIV_SIZE) || (value == XFIV_ENTROPY) || (value == XFIV_OVERLAY_SIZE) || (value == XFIV_OVERLAY_ENTROPY) || isPEValue(value)) {
+        result = static_cast<int>(Qt::AlignRight | Qt::AlignVCenter);
     }
 
     return result;
@@ -226,20 +239,50 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
 {
     QHash<XFileInfoValues::XFIV, QVariant> result;
     XBinary::_MEMORY_MAP memoryMap = {};
+    XBinary::FILEFORMATINFO fileFormatInfo = {};
     XBinary *pBinary = nullptr;
+    XPE *pPE = nullptr;
+    XBinary::FT fileType = XBinary::FT_UNKNOWN;
+    bool bNeedFileFormatInfo = false;
+    bool bNeedMemoryMap = false;
+    bool bNeedPEValues = false;
 
     qint32 nNumberOfValues = pList->size();
 
     for (qint32 i = 0; (i < nNumberOfValues) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
         XFIV value = pList->at(i);
 
-        if (isBinaryValue(value)) {
-            XBinary::FT fileType = XFormats::getPrefFileType(pDevice, true, pPdStruct);
-            pBinary = XFormats::getClass(fileType, pDevice, false, -1);
-            if (pBinary) {
+        bNeedFileFormatInfo |= ((value == XFIV_FILETYPE) || (value == XFIV_ARCH));
+        bNeedMemoryMap |= isBinaryValue(value);
+        bNeedPEValues |= isPEValue(value);
+    }
+
+    if ((bNeedFileFormatInfo || bNeedMemoryMap || bNeedPEValues) && XBinary::isPdStructNotCanceled(pPdStruct)) {
+        fileType = XFormats::getPrefFileType(pDevice, true, pPdStruct);
+        pBinary = XFormats::getClass(fileType, pDevice, false, -1);
+
+        if (pBinary) {
+            if (bNeedPEValues && XBinary::checkFileType(XBinary::FT_PE, fileType)) {
+                pPE = static_cast<XPE *>(pBinary);
+
+                if (!pPE->isValid(pPdStruct)) {
+                    pPE = nullptr;
+                }
+            }
+
+            if (bNeedFileFormatInfo) {
+                fileFormatInfo = pBinary->getFileFormatInfo(pPdStruct);
+
+                if (fileFormatInfo.fileType == XBinary::FT_UNKNOWN) {
+                    fileFormatInfo.fileType = fileType;
+                }
+            }
+
+            if (bNeedMemoryMap) {
                 memoryMap = pBinary->getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
             }
-            break;
+        } else {
+            fileFormatInfo.fileType = fileType;
         }
     }
 
@@ -252,8 +295,24 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
             varValue = XBinary::getSize(pDevice);
         } else if (value == XFIV_EXTENSION) {
             varValue = XBinary::getDeviceFileSuffix(pDevice);
+        } else if (value == XFIV_FILETYPE) {
+            varValue = XBinary::fileTypeIdToString(fileFormatInfo.fileType);
         } else if (value == XFIV_ENTROPY) {
             varValue = XBinary::getEntropy(pDevice, pPdStruct);
+        } else if (value == XFIV_ARCH) {
+            varValue = fileFormatInfo.sArch;
+        } else if (value == XFIV_PE_TIMEDATESTAMP) {
+            if (pPE) {
+                varValue = pPE->getFileHeader_TimeDateStamp();
+            }
+        } else if (value == XFIV_PE_MAJORLINKERVERSION) {
+            if (pPE) {
+                varValue = static_cast<quint32>(pPE->getOptionalHeader_MajorLinkerVersion());
+            }
+        } else if (value == XFIV_PE_MINORLINKERVERSION) {
+            if (pPE) {
+                varValue = static_cast<quint32>(pPE->getOptionalHeader_MinorLinkerVersion());
+            }
         } else if (value == XFIV_HEADER_BYTES) {
             varValue = pBinary ? pBinary->getSignature(0, 20) : QString();
         } else if (value == XFIV_ENTRYPOINT_BYTES) {
