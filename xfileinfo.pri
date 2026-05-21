@@ -28,6 +28,16 @@ SOURCES += \
     include($$PWD/../XDisasmCore/xdisasmcore.pri)
 }
 
+!contains(XCONFIG, specabstract) {
+    XCONFIG += specabstract
+    include($$PWD/../SpecAbstract/specabstract.pri)
+}
+
+!contains(XCONFIG, die_script) {
+    XCONFIG += die_script
+    include($$PWD/../die_script/die_script.pri)
+}
+
 contains(XCONFIG, use_capstone_x86) {
     !contains(XCONFIG, xcapstone_x86) {
         XCONFIG += xcapstone_x86

@@ -34,12 +34,20 @@
 #include <Qt>
 #include <QVariant>
 
+class XOptions;
+
 class XFileInfoValues : public XThreadObject {
     Q_OBJECT
 
 public:
     enum XFIV  {
         XFIV_NAME = 0,
+        XFIV_NFD_LINKER,
+        XFIV_NFD_COMPILER,
+        XFIV_NFD_PROTECTION,
+        XFIV_DIE_LINKER,
+        XFIV_DIE_COMPILER,
+        XFIV_DIE_PROTECTION,
         XFIV_SIZE,
         XFIV_EXTENSION,
         XFIV_FILETYPE,
@@ -55,6 +63,49 @@ public:
         XFIV_PE_TIMEDATESTAMP,
         XFIV_PE_MAJORLINKERVERSION,
         XFIV_PE_MINORLINKERVERSION,
+        XFIV_PE_NUMBEROFSECTIONS,
+        XFIV_PE_FIRSTSECTION_NAME,
+        XFIV_PE_FIRSTSECTION_SIZE,
+        XFIV_PE_FIRSTSECTION_ENTROPY,
+        XFIV_PE_SECONDSECTION_NAME,
+        XFIV_PE_SECONDSECTION_SIZE,
+        XFIV_PE_SECONDSECTION_ENTROPY,
+        XFIV_PE_THIRDSECTION_NAME,
+        XFIV_PE_THIRDSECTION_SIZE,
+        XFIV_PE_THIRDSECTION_ENTROPY,
+        XFIV_PE_NEXTTOLASTSECTION_NAME,
+        XFIV_PE_NEXTTOLASTSECTION_SIZE,
+        XFIV_PE_NEXTTOLASTSECTION_ENTROPY,
+        XFIV_PE_LASTSECTION_NAME,
+        XFIV_PE_LASTSECTION_SIZE,
+        XFIV_PE_LASTSECTION_ENTROPY,
+        XFIV_PE_FIRSTIMPORT_NAME,
+        XFIV_PE_FIRSTIMPORT_NUMBEROFFUNCTIONS,
+        XFIV_PE_SECONDIMPORT_NAME,
+        XFIV_PE_SECONDIMPORT_NUMBEROFFUNCTIONS,
+        XFIV_PE_THIRDIMPORT_NAME,
+        XFIV_PE_THIRDIMPORT_NUMBEROFFUNCTIONS,
+        XFIV_PE_NEXTTOLASTIMPORT_NAME,
+        XFIV_PE_NEXTTOLASTIMPORT_NUMBEROFFUNCTIONS,
+        XFIV_PE_LASTIMPORT_NAME,
+        XFIV_PE_LASTIMPORT_NUMBEROFFUNCTIONS,
+        XFIV_PE_IMPORT_HASH32,
+        XFIV_PE_IMPORT_HASH64,
+        XFIV_PE_EXPORT,
+        XFIV_PE_IMPORT,
+        XFIV_PE_RESOURCE,
+        XFIV_PE_EXCEPTION,
+        XFIV_PE_SECURITY,
+        XFIV_PE_BASERELOC,
+        XFIV_PE_DEBUG,
+        XFIV_PE_ARCHITECTURE,
+        XFIV_PE_GLOBALPTR,
+        XFIV_PE_TLS,
+        XFIV_PE_LOAD_CONFIG,
+        XFIV_PE_BOUND_IMPORT,
+        XFIV_PE_IAT,
+        XFIV_PE_DELAY_IMPORT,
+        XFIV_PE_COM_DESCRIPTOR,
         __XFIV_SIZE
     };
 
@@ -77,7 +128,7 @@ public:
 
     explicit XFileInfoValues(QObject *pParent = nullptr);
 
-    void setData(XFIDATA *pData, XBinary::PDSTRUCT *pPdStruct = nullptr);
+    void setData(XFIDATA *pData, XBinary::PDSTRUCT *pPdStruct = nullptr, XOptions *pOptions = nullptr);
 
     void process() override;
     QString getTitle() override;
@@ -89,12 +140,13 @@ public:
 #ifdef QT_WIDGETS_LIB
     static QList<XComboBoxEx::CUSTOM_FLAG> getColumnCustomFlags();
 #endif
-    static QHash<XFIV, QVariant> getValues(const QString &sFileName, QList<XFIV> *pList, XBinary::PDSTRUCT *pPdStruct);
-    static QHash<XFIV, QVariant> getValues(QIODevice *pDevice, QList<XFIV> *pList, XBinary::PDSTRUCT *pPdStruct);
+    static QHash<XFIV, QVariant> getValues(const QString &sFileName, QList<XFIV> *pList, XBinary::PDSTRUCT *pPdStruct, XOptions *pOptions = nullptr);
+    static QHash<XFIV, QVariant> getValues(QIODevice *pDevice, QList<XFIV> *pList, XBinary::PDSTRUCT *pPdStruct, XOptions *pOptions = nullptr);
 
 private:
     XFIDATA *m_pData;
     XBinary::PDSTRUCT *m_pPdStruct;
+    XOptions *m_pOptions;
 };
 
 struct XFileInfoValues_Sort {
