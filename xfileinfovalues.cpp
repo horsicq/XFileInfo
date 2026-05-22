@@ -67,13 +67,13 @@ bool isPEValue(XFileInfoValues::XFIV value)
 bool isNFDValue(XFileInfoValues::XFIV value)
 {
     return (value == XFileInfoValues::XFIV_NFD_LINKER) || (value == XFileInfoValues::XFIV_NFD_COMPILER) ||
-           (value == XFileInfoValues::XFIV_NFD_PROTECTION);
+           (value == XFileInfoValues::XFIV_NFD_WRAPPER);
 }
 
 bool isDIEValue(XFileInfoValues::XFIV value)
 {
     return (value == XFileInfoValues::XFIV_DIE_LINKER) || (value == XFileInfoValues::XFIV_DIE_COMPILER) ||
-           (value == XFileInfoValues::XFIV_DIE_PROTECTION);
+           (value == XFileInfoValues::XFIV_DIE_WRAPPER);
 }
 
 bool isScanValue(XFileInfoValues::XFIV value)
@@ -242,54 +242,6 @@ qint32 getPEDataDirectoryNumber(XFileInfoValues::XFIV value)
 
     return nResult;
 }
-
-QString readBytes(QIODevice *pDevice, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
-{
-    QString sResult;
-
-    if ((nOffset >= 0) && (nSize > 0)) {
-        QByteArray baData = XBinary::read_array_process(pDevice, nOffset, qMin(N_XFIV_BYTES, nSize), pPdStruct);
-        sResult = QString::fromLatin1(baData.toHex().toUpper());
-    }
-
-    return sResult;
-}
-
-bool isScanRecordAllowed(XFileInfoValues::XFIV value, const XScanEngine::SCANSTRUCT &record)
-{
-    bool bResult = false;
-
-    if ((value == XFileInfoValues::XFIV_NFD_LINKER) || (value == XFileInfoValues::XFIV_DIE_LINKER)) {
-        bResult = (record.type == XScanEngine::RECORD_TYPE_LINKER);
-    } else if ((value == XFileInfoValues::XFIV_NFD_COMPILER) || (value == XFileInfoValues::XFIV_DIE_COMPILER)) {
-        bResult = (record.type == XScanEngine::RECORD_TYPE_COMPILER);
-    } else if ((value == XFileInfoValues::XFIV_NFD_PROTECTION) || (value == XFileInfoValues::XFIV_DIE_PROTECTION)) {
-        bResult = record.bIsProtection;
-    }
-
-    return bResult;
-}
-
-QString getScanRecordsString(const XScanEngine::SCAN_RESULT &scanResult, XFileInfoValues::XFIV value)
-{
-    QStringList listResult;
-    XScanEngine::SCAN_OPTIONS scanOptions = XScanEngine::getDefaultOptions(XScanEngine::SF_FORMATRESULT);
-    scanOptions.bShowType = ((value == XFileInfoValues::XFIV_NFD_PROTECTION) || (value == XFileInfoValues::XFIV_DIE_PROTECTION));
-
-    qint32 nNumberOfRecords = scanResult.listRecords.count();
-
-    for (qint32 i = 0; i < nNumberOfRecords; i++) {
-        XScanEngine::SCANSTRUCT record = scanResult.listRecords.at(i);
-
-        if ((!record.bIsUnknown) && isScanRecordAllowed(value, record)) {
-            listResult.append(XScanEngine::createResultStringEx(&scanOptions, &record));
-        }
-    }
-
-    listResult.removeDuplicates();
-
-    return listResult.join("; ");
-}
 }  // namespace
 
 XBinary::XIDSTRING _TABLE_XFIV[] = {
@@ -354,10 +306,10 @@ XBinary::XIDSTRING _TABLE_XFIV[] = {
     {XFileInfoValues::XFIV_PE_COM_DESCRIPTOR, QObject::tr("PE COM descriptor")},
     {XFileInfoValues::XFIV_NFD_LINKER, QObject::tr("NFD linker")},
     {XFileInfoValues::XFIV_NFD_COMPILER, QObject::tr("NFD compiler")},
-    {XFileInfoValues::XFIV_NFD_PROTECTION, QObject::tr("NFD protection")},
+    {XFileInfoValues::XFIV_NFD_WRAPPER, QObject::tr("NFD wrapper")},
     {XFileInfoValues::XFIV_DIE_LINKER, QObject::tr("DiE linker")},
     {XFileInfoValues::XFIV_DIE_COMPILER, QObject::tr("DiE compiler")},
-    {XFileInfoValues::XFIV_DIE_PROTECTION, QObject::tr("DiE protection")},
+    {XFileInfoValues::XFIV_DIE_WRAPPER, QObject::tr("DiE wrapper")},
 };
 
 const qint32 N_XFIV = sizeof(_TABLE_XFIV) / sizeof(XBinary::XIDSTRING);
@@ -544,6 +496,8 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
     QList<XPE::IMPORT_RECORD> listPEImportRecords;
     XScanEngine::SCAN_RESULT nfdScanResult = {};
     XScanEngine::SCAN_RESULT dieScanResult = {};
+    XScanEngine::SCAN_OPTIONS scanOptionsNFD = {};
+    XScanEngine::SCAN_OPTIONS scanOptionsDIE = {};
     XBinary::FT fileType = XBinary::FT_UNKNOWN;
     bool bNeedFileFormatInfo = false;
     bool bNeedMemoryMap = false;
@@ -613,9 +567,11 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
 
     if (bNeedNFDValues && XBinary::isPdStructNotCanceled(pPdStruct)) {
         qint64 nDevicePos = pDevice->isSequential() ? -1 : pDevice->pos();
-        XScanEngine::SCAN_OPTIONS scanOptions = XScanEngine::getDefaultOptions(XScanEngine::SF_SORT | XScanEngine::SF_HIDEUNKNOWN | XScanEngine::SF_FORMATRESULT);
+        quint64 nFlags = XScanEngine::getScanFlagsFromGlobalOptions(pOptions);
+
+        scanOptionsNFD = XScanEngine::getDefaultOptions(nFlags);
         SpecAbstract specAbstract;
-        nfdScanResult = specAbstract.scanDevice(pDevice, &scanOptions, pPdStruct);
+        nfdScanResult = specAbstract.scanDevice(pDevice, &scanOptionsNFD, pPdStruct);
 
         if (nDevicePos != -1) {
             pDevice->seek(nDevicePos);
@@ -624,23 +580,28 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
 
     if (bNeedDIEValues && XBinary::isPdStructNotCanceled(pPdStruct)) {
         qint64 nDevicePos = pDevice->isSequential() ? -1 : pDevice->pos();
-        XScanEngine::SCAN_OPTIONS scanOptions =
-            XScanEngine::getDefaultOptions(XScanEngine::SF_SORT | XScanEngine::SF_HIDEUNKNOWN | XScanEngine::SF_FORMATRESULT | XScanEngine::SF_USECACHE);
-        scanOptions.bUseExtraDatabase = true;
-        scanOptions.bUseCustomDatabase = true;
+        quint64 nFlags = XScanEngine::getScanFlagsFromGlobalOptions(pOptions);
+
+        scanOptionsDIE = XScanEngine::getDefaultOptions(nFlags);
+
+        quint64 nDatabases = XScanEngine::getDatabasesFromGlobalOptions(pOptions);
+        XScanEngine::setDatabases(&scanOptionsDIE, nDatabases);
+
+        scanOptionsDIE.bUseExtraDatabase = true;
+        scanOptionsDIE.bUseCustomDatabase = true;
 
         if (pOptions && pOptions->isIDPresent(XOptions::ID_SCAN_ENGINE_DIE_ENABLED)) {
-            scanOptions.sMainDatabasePath = pOptions->getValue(XOptions::ID_SCAN_DIE_DATABASE_MAIN_PATH).toString();
-            scanOptions.sExtraDatabasePath = pOptions->getValue(XOptions::ID_SCAN_DIE_DATABASE_EXTRA_PATH).toString();
-            scanOptions.sCustomDatabasePath = pOptions->getValue(XOptions::ID_SCAN_DIE_DATABASE_CUSTOM_PATH).toString();
-            scanOptions.bUseExtraDatabase = pOptions->getValue(XOptions::ID_SCAN_DIE_DATABASE_EXTRA_ENABLED).toBool();
-            scanOptions.bUseCustomDatabase = pOptions->getValue(XOptions::ID_SCAN_DIE_DATABASE_CUSTOM_ENABLED).toBool();
+            scanOptionsDIE.sMainDatabasePath = pOptions->getValue(XOptions::ID_SCAN_DIE_DATABASE_MAIN_PATH).toString();
+            scanOptionsDIE.sExtraDatabasePath = pOptions->getValue(XOptions::ID_SCAN_DIE_DATABASE_EXTRA_PATH).toString();
+            scanOptionsDIE.sCustomDatabasePath = pOptions->getValue(XOptions::ID_SCAN_DIE_DATABASE_CUSTOM_PATH).toString();
+            scanOptionsDIE.bUseExtraDatabase = pOptions->getValue(XOptions::ID_SCAN_DIE_DATABASE_EXTRA_ENABLED).toBool();
+            scanOptionsDIE.bUseCustomDatabase = pOptions->getValue(XOptions::ID_SCAN_DIE_DATABASE_CUSTOM_ENABLED).toBool();
         }
 
         DiE_Script dieScript;
 
-        if (dieScript.loadDatabase(&scanOptions, pPdStruct)) {
-            dieScanResult = dieScript.scanDevice(pDevice, &scanOptions, pPdStruct);
+        if (dieScript.loadDatabase(&scanOptionsDIE, pPdStruct)) {
+            dieScanResult = dieScript.scanDevice(pDevice, &scanOptionsDIE, pPdStruct);
         }
 
         if (nDevicePos != -1) {
@@ -663,10 +624,18 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
             varValue = XBinary::getEntropy(pDevice, pPdStruct);
         } else if (value == XFIV_ARCH) {
             varValue = fileFormatInfo.sArch;
-        } else if (isNFDValue(value)) {
-            varValue = getScanRecordsString(nfdScanResult, value);
-        } else if (isDIEValue(value)) {
-            varValue = getScanRecordsString(dieScanResult, value);
+        } else if (value == XFIV_NFD_LINKER) {
+            varValue = XScanEngine::getLinker(&scanOptionsNFD, &nfdScanResult.listRecords);
+        } else if (value == XFIV_NFD_COMPILER) {
+            varValue = XScanEngine::getCompiler(&scanOptionsNFD, &nfdScanResult.listRecords);
+        } else if (value == XFIV_NFD_WRAPPER) {
+            varValue = XScanEngine::getWrapper(&scanOptionsNFD, &nfdScanResult.listRecords);
+        } else if (value == XFIV_DIE_LINKER) {
+            varValue = XScanEngine::getLinker(&scanOptionsDIE, &dieScanResult.listRecords);
+        } else if (value == XFIV_DIE_COMPILER) {
+            varValue = XScanEngine::getCompiler(&scanOptionsDIE, &dieScanResult.listRecords);
+        } else if (value == XFIV_DIE_WRAPPER) {
+            varValue = XScanEngine::getWrapper(&scanOptionsDIE, &dieScanResult.listRecords);
         } else if (value == XFIV_PE_TIMEDATESTAMP) {
             if (pPE) {
                 varValue = pPE->getFileHeader_TimeDateStamp();
