@@ -33,10 +33,9 @@ const qint32 N_XFIV_SIGNATURECOUNT = 10;
 
 bool isBinaryValue(XFileInfoValues::XFIV value)
 {
-    return (value == XFileInfoValues::XFIV_HEADER_BYTES) || (value == XFileInfoValues::XFIV_ENTRYPOINT_BYTES) ||
-           (value == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE) || (value == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE_RELATIVE) ||
-           (value == XFileInfoValues::XFIV_OVERLAY_BYTES) || (value == XFileInfoValues::XFIV_OVERLAY_SIZE) ||
-           (value == XFileInfoValues::XFIV_OVERLAY_ENTROPY);
+    return (value == XFileInfoValues::XFIV_HEADER_BYTES) || (value == XFileInfoValues::XFIV_ENTRYPOINT_BYTES) || (value == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE) ||
+           (value == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE_RELATIVE) || (value == XFileInfoValues::XFIV_OVERLAY_BYTES) ||
+           (value == XFileInfoValues::XFIV_OVERLAY_SIZE) || (value == XFileInfoValues::XFIV_OVERLAY_ENTROPY);
 }
 
 bool isPEValue(XFileInfoValues::XFIV value)
@@ -50,30 +49,28 @@ bool isPEValue(XFileInfoValues::XFIV value)
            (value == XFileInfoValues::XFIV_PE_THIRDSECTION_ENTROPY) || (value == XFileInfoValues::XFIV_PE_NEXTTOLASTSECTION_NAME) ||
            (value == XFileInfoValues::XFIV_PE_NEXTTOLASTSECTION_SIZE) || (value == XFileInfoValues::XFIV_PE_NEXTTOLASTSECTION_ENTROPY) ||
            (value == XFileInfoValues::XFIV_PE_LASTSECTION_NAME) || (value == XFileInfoValues::XFIV_PE_LASTSECTION_SIZE) ||
-           (value == XFileInfoValues::XFIV_PE_LASTSECTION_ENTROPY) ||
-           (value == XFileInfoValues::XFIV_PE_FIRSTIMPORT_NAME) || (value == XFileInfoValues::XFIV_PE_FIRSTIMPORT_NUMBEROFFUNCTIONS) ||
-           (value == XFileInfoValues::XFIV_PE_SECONDIMPORT_NAME) || (value == XFileInfoValues::XFIV_PE_SECONDIMPORT_NUMBEROFFUNCTIONS) ||
-           (value == XFileInfoValues::XFIV_PE_THIRDIMPORT_NAME) || (value == XFileInfoValues::XFIV_PE_THIRDIMPORT_NUMBEROFFUNCTIONS) ||
-           (value == XFileInfoValues::XFIV_PE_NEXTTOLASTIMPORT_NAME) || (value == XFileInfoValues::XFIV_PE_NEXTTOLASTIMPORT_NUMBEROFFUNCTIONS) ||
-           (value == XFileInfoValues::XFIV_PE_LASTIMPORT_NAME) || (value == XFileInfoValues::XFIV_PE_LASTIMPORT_NUMBEROFFUNCTIONS) ||
-           (value == XFileInfoValues::XFIV_PE_IMPORT_HASH32) || (value == XFileInfoValues::XFIV_PE_IMPORT_HASH64) ||
-           (value == XFileInfoValues::XFIV_PE_EXPORT) || (value == XFileInfoValues::XFIV_PE_IMPORT) || (value == XFileInfoValues::XFIV_PE_RESOURCE) ||
-           (value == XFileInfoValues::XFIV_PE_EXCEPTION) || (value == XFileInfoValues::XFIV_PE_SECURITY) || (value == XFileInfoValues::XFIV_PE_BASERELOC) ||
-           (value == XFileInfoValues::XFIV_PE_DEBUG) || (value == XFileInfoValues::XFIV_PE_ARCHITECTURE) || (value == XFileInfoValues::XFIV_PE_GLOBALPTR) ||
-           (value == XFileInfoValues::XFIV_PE_TLS) || (value == XFileInfoValues::XFIV_PE_LOAD_CONFIG) || (value == XFileInfoValues::XFIV_PE_BOUND_IMPORT) ||
-           (value == XFileInfoValues::XFIV_PE_IAT) || (value == XFileInfoValues::XFIV_PE_DELAY_IMPORT) || (value == XFileInfoValues::XFIV_PE_COM_DESCRIPTOR);
+           (value == XFileInfoValues::XFIV_PE_LASTSECTION_ENTROPY) || (value == XFileInfoValues::XFIV_PE_FIRSTIMPORT_NAME) ||
+           (value == XFileInfoValues::XFIV_PE_FIRSTIMPORT_NUMBEROFFUNCTIONS) || (value == XFileInfoValues::XFIV_PE_SECONDIMPORT_NAME) ||
+           (value == XFileInfoValues::XFIV_PE_SECONDIMPORT_NUMBEROFFUNCTIONS) || (value == XFileInfoValues::XFIV_PE_THIRDIMPORT_NAME) ||
+           (value == XFileInfoValues::XFIV_PE_THIRDIMPORT_NUMBEROFFUNCTIONS) || (value == XFileInfoValues::XFIV_PE_NEXTTOLASTIMPORT_NAME) ||
+           (value == XFileInfoValues::XFIV_PE_NEXTTOLASTIMPORT_NUMBEROFFUNCTIONS) || (value == XFileInfoValues::XFIV_PE_LASTIMPORT_NAME) ||
+           (value == XFileInfoValues::XFIV_PE_LASTIMPORT_NUMBEROFFUNCTIONS) || (value == XFileInfoValues::XFIV_PE_IMPORT_HASH32) ||
+           (value == XFileInfoValues::XFIV_PE_IMPORT_HASH64) || (value == XFileInfoValues::XFIV_PE_EXPORT) || (value == XFileInfoValues::XFIV_PE_IMPORT) ||
+           (value == XFileInfoValues::XFIV_PE_RESOURCE) || (value == XFileInfoValues::XFIV_PE_EXCEPTION) || (value == XFileInfoValues::XFIV_PE_SECURITY) ||
+           (value == XFileInfoValues::XFIV_PE_BASERELOC) || (value == XFileInfoValues::XFIV_PE_DEBUG) || (value == XFileInfoValues::XFIV_PE_ARCHITECTURE) ||
+           (value == XFileInfoValues::XFIV_PE_GLOBALPTR) || (value == XFileInfoValues::XFIV_PE_TLS) || (value == XFileInfoValues::XFIV_PE_LOAD_CONFIG) ||
+           (value == XFileInfoValues::XFIV_PE_BOUND_IMPORT) || (value == XFileInfoValues::XFIV_PE_IAT) || (value == XFileInfoValues::XFIV_PE_DELAY_IMPORT) ||
+           (value == XFileInfoValues::XFIV_PE_COM_DESCRIPTOR);
 }
 
 bool isNFDValue(XFileInfoValues::XFIV value)
 {
-    return (value == XFileInfoValues::XFIV_NFD_LINKER) || (value == XFileInfoValues::XFIV_NFD_COMPILER) ||
-           (value == XFileInfoValues::XFIV_NFD_WRAPPER);
+    return (value == XFileInfoValues::XFIV_NFD_LINKER) || (value == XFileInfoValues::XFIV_NFD_COMPILER) || (value == XFileInfoValues::XFIV_NFD_WRAPPER);
 }
 
 bool isDIEValue(XFileInfoValues::XFIV value)
 {
-    return (value == XFileInfoValues::XFIV_DIE_LINKER) || (value == XFileInfoValues::XFIV_DIE_COMPILER) ||
-           (value == XFileInfoValues::XFIV_DIE_WRAPPER);
+    return (value == XFileInfoValues::XFIV_DIE_LINKER) || (value == XFileInfoValues::XFIV_DIE_COMPILER) || (value == XFileInfoValues::XFIV_DIE_WRAPPER);
 }
 
 bool isScanValue(XFileInfoValues::XFIV value)
@@ -88,10 +85,9 @@ bool isPEIntegerValue(XFileInfoValues::XFIV value)
            (value == XFileInfoValues::XFIV_PE_FIRSTSECTION_SIZE) || (value == XFileInfoValues::XFIV_PE_SECONDSECTION_SIZE) ||
            (value == XFileInfoValues::XFIV_PE_THIRDSECTION_SIZE) || (value == XFileInfoValues::XFIV_PE_NEXTTOLASTSECTION_SIZE) ||
            (value == XFileInfoValues::XFIV_PE_LASTSECTION_SIZE) || (value == XFileInfoValues::XFIV_PE_FIRSTIMPORT_NUMBEROFFUNCTIONS) ||
-           (value == XFileInfoValues::XFIV_PE_SECONDIMPORT_NUMBEROFFUNCTIONS) ||
-           (value == XFileInfoValues::XFIV_PE_THIRDIMPORT_NUMBEROFFUNCTIONS) || (value == XFileInfoValues::XFIV_PE_NEXTTOLASTIMPORT_NUMBEROFFUNCTIONS) ||
-           (value == XFileInfoValues::XFIV_PE_LASTIMPORT_NUMBEROFFUNCTIONS) || (value == XFileInfoValues::XFIV_PE_IMPORT_HASH32) ||
-           (value == XFileInfoValues::XFIV_PE_IMPORT_HASH64);
+           (value == XFileInfoValues::XFIV_PE_SECONDIMPORT_NUMBEROFFUNCTIONS) || (value == XFileInfoValues::XFIV_PE_THIRDIMPORT_NUMBEROFFUNCTIONS) ||
+           (value == XFileInfoValues::XFIV_PE_NEXTTOLASTIMPORT_NUMBEROFFUNCTIONS) || (value == XFileInfoValues::XFIV_PE_LASTIMPORT_NUMBEROFFUNCTIONS) ||
+           (value == XFileInfoValues::XFIV_PE_IMPORT_HASH32) || (value == XFileInfoValues::XFIV_PE_IMPORT_HASH64);
 }
 
 bool isPESectionNameValue(XFileInfoValues::XFIV value)
@@ -327,8 +323,8 @@ bool XFileInfoValues_Sort::operator()(const XFileInfoValues::RecordInfo &recordI
         if (nSize1 != nSize2) {
             return (sortOrder == Qt::DescendingOrder) ? (nSize2 < nSize1) : (nSize1 < nSize2);
         }
-    } else if ((xFIV == XFileInfoValues::XFIV_EXTENSION) || (xFIV == XFileInfoValues::XFIV_FILETYPE) || (xFIV == XFileInfoValues::XFIV_ARCH) ||
-               isPEStringValue(xFIV) || isScanValue(xFIV)) {
+    } else if ((xFIV == XFileInfoValues::XFIV_EXTENSION) || (xFIV == XFileInfoValues::XFIV_FILETYPE) || (xFIV == XFileInfoValues::XFIV_ARCH) || isPEStringValue(xFIV) ||
+               isScanValue(xFIV)) {
         QString sValue1 = recordInfo1.mapValues.value(xFIV).toString().toCaseFolded();
         QString sValue2 = recordInfo2.mapValues.value(xFIV).toString().toCaseFolded();
 

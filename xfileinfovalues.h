@@ -40,7 +40,7 @@ class XFileInfoValues : public XThreadObject {
     Q_OBJECT
 
 public:
-    enum XFIV  {
+    enum XFIV {
         XFIV_NAME = 0,
         XFIV_NFD_LINKER,
         XFIV_NFD_COMPILER,
@@ -121,7 +121,7 @@ public:
         QHash<XFIV, QVariant> mapValues;
     };
 
-    struct XFIDATA{
+    struct XFIDATA {
         QList<RecordInfo> listRecords;
         QList<XFIV> listFIV;
     };
