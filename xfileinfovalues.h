@@ -42,6 +42,8 @@ class XFileInfoValues : public XThreadObject {
 public:
     enum XFIV {
         XFIV_NAME = 0,
+        XFIV_FILEFORMAT,
+        XFIV_OPERATIONSYSTEM,
         XFIV_NFD_LINKER,
         XFIV_NFD_COMPILER,
         XFIV_NFD_WRAPPER,
@@ -54,10 +56,12 @@ public:
         XFIV_ENTROPY,
         XFIV_ARCH,
         XFIV_HEADER_BYTES,
+        XFIV_HEADER_BYTES_TEXT,
         XFIV_ENTRYPOINT_BYTES,
         XFIV_ENTRYPOINT_SIGNATURE,
         XFIV_ENTRYPOINT_SIGNATURE_RELATIVE,
         XFIV_OVERLAY_BYTES,
+        XFIV_OVERLAY_BYTES_TEXT,
         XFIV_OVERLAY_SIZE,
         XFIV_OVERLAY_ENTROPY,
         XFIV_PE_TIMEDATESTAMP,

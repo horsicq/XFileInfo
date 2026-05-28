@@ -33,9 +33,41 @@ const qint32 N_XFIV_SIGNATURECOUNT = 10;
 
 bool isBinaryValue(XFileInfoValues::XFIV value)
 {
-    return (value == XFileInfoValues::XFIV_HEADER_BYTES) || (value == XFileInfoValues::XFIV_ENTRYPOINT_BYTES) || (value == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE) ||
+    return (value == XFileInfoValues::XFIV_HEADER_BYTES) || (value == XFileInfoValues::XFIV_HEADER_BYTES_TEXT) ||
+           (value == XFileInfoValues::XFIV_ENTRYPOINT_BYTES) || (value == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE) ||
            (value == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE_RELATIVE) || (value == XFileInfoValues::XFIV_OVERLAY_BYTES) ||
-           (value == XFileInfoValues::XFIV_OVERLAY_SIZE) || (value == XFileInfoValues::XFIV_OVERLAY_ENTROPY);
+           (value == XFileInfoValues::XFIV_OVERLAY_BYTES_TEXT) || (value == XFileInfoValues::XFIV_OVERLAY_SIZE) ||
+           (value == XFileInfoValues::XFIV_OVERLAY_ENTROPY);
+}
+
+QString bytesToText(const QByteArray &baData)
+{
+    QString sResult;
+
+    sResult.reserve(baData.size());
+
+    for (qint32 i = 0; i < baData.size(); i++) {
+        quint8 nByte = static_cast<quint8>(baData.at(i));
+
+        if ((nByte >= 0x20) && (nByte <= 0x7E)) {
+            sResult.append(QChar(nByte));
+        } else {
+            sResult.append(QChar('.'));
+        }
+    }
+
+    return sResult;
+}
+
+QString getBytesText(XBinary *pBinary, qint64 nOffset, qint64 nSize)
+{
+    QString sResult;
+
+    if (pBinary && (nOffset != -1)) {
+        sResult = bytesToText(pBinary->read_array(nOffset, nSize));
+    }
+
+    return sResult;
 }
 
 bool isPEValue(XFileInfoValues::XFIV value)
@@ -73,9 +105,14 @@ bool isDIEValue(XFileInfoValues::XFIV value)
     return (value == XFileInfoValues::XFIV_DIE_LINKER) || (value == XFileInfoValues::XFIV_DIE_COMPILER) || (value == XFileInfoValues::XFIV_DIE_WRAPPER);
 }
 
+bool isXScanEngineValue(XFileInfoValues::XFIV value)
+{
+    return (value == XFileInfoValues::XFIV_FILEFORMAT) || (value == XFileInfoValues::XFIV_OPERATIONSYSTEM);
+}
+
 bool isScanValue(XFileInfoValues::XFIV value)
 {
-    return isNFDValue(value) || isDIEValue(value);
+    return isXScanEngineValue(value) || isNFDValue(value) || isDIEValue(value);
 }
 
 bool isPEIntegerValue(XFileInfoValues::XFIV value)
@@ -242,16 +279,20 @@ qint32 getPEDataDirectoryNumber(XFileInfoValues::XFIV value)
 
 XBinary::XIDSTRING _TABLE_XFIV[] = {
     {XFileInfoValues::XFIV_NAME, QObject::tr("Name")},
+    {XFileInfoValues::XFIV_FILEFORMAT, QObject::tr("File format")},
+    {XFileInfoValues::XFIV_OPERATIONSYSTEM, QObject::tr("Operation system")},
     {XFileInfoValues::XFIV_SIZE, QObject::tr("Size")},
     {XFileInfoValues::XFIV_EXTENSION, QObject::tr("Extension")},
     {XFileInfoValues::XFIV_FILETYPE, QObject::tr("File type")},
     {XFileInfoValues::XFIV_ENTROPY, QObject::tr("Entropy")},
     {XFileInfoValues::XFIV_ARCH, QObject::tr("Architecture")},
     {XFileInfoValues::XFIV_HEADER_BYTES, QObject::tr("Header bytes")},
+    {XFileInfoValues::XFIV_HEADER_BYTES_TEXT, QObject::tr("Header bytes text")},
     {XFileInfoValues::XFIV_ENTRYPOINT_BYTES, QObject::tr("Entry point bytes")},
     {XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE, QObject::tr("Entry point signature")},
     {XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE_RELATIVE, QObject::tr("Entry point signature relative")},
     {XFileInfoValues::XFIV_OVERLAY_BYTES, QObject::tr("Overlay bytes")},
+    {XFileInfoValues::XFIV_OVERLAY_BYTES_TEXT, QObject::tr("Overlay bytes text")},
     {XFileInfoValues::XFIV_OVERLAY_SIZE, QObject::tr("Overlay size")},
     {XFileInfoValues::XFIV_OVERLAY_ENTROPY, QObject::tr("Overlay entropy")},
     {XFileInfoValues::XFIV_PE_TIMEDATESTAMP, QObject::tr("PE TimeDateStamp")},
@@ -338,8 +379,10 @@ bool XFileInfoValues_Sort::operator()(const XFileInfoValues::RecordInfo &recordI
         if (dEntropy1 != dEntropy2) {
             return (sortOrder == Qt::DescendingOrder) ? (dEntropy2 < dEntropy1) : (dEntropy1 < dEntropy2);
         }
-    } else if ((xFIV == XFileInfoValues::XFIV_HEADER_BYTES) || (xFIV == XFileInfoValues::XFIV_ENTRYPOINT_BYTES) || (xFIV == XFileInfoValues::XFIV_OVERLAY_BYTES) ||
-               (xFIV == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE) || (xFIV == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE_RELATIVE)) {
+    } else if ((xFIV == XFileInfoValues::XFIV_HEADER_BYTES) || (xFIV == XFileInfoValues::XFIV_HEADER_BYTES_TEXT) ||
+               (xFIV == XFileInfoValues::XFIV_ENTRYPOINT_BYTES) || (xFIV == XFileInfoValues::XFIV_OVERLAY_BYTES) ||
+               (xFIV == XFileInfoValues::XFIV_OVERLAY_BYTES_TEXT) || (xFIV == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE) ||
+               (xFIV == XFileInfoValues::XFIV_ENTRYPOINT_SIGNATURE_RELATIVE)) {
         QString sValue1 = recordInfo1.mapValues.value(xFIV).toString();
         QString sValue2 = recordInfo2.mapValues.value(xFIV).toString();
 
@@ -490,8 +533,10 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
     QList<XPE::SECTION_RECORD> listPESectionRecords;
     QList<XPE::IMPORT_HEADER> listPEImportHeaders;
     QList<XPE::IMPORT_RECORD> listPEImportRecords;
+    XScanEngine::SCAN_RESULT xScanEngineResult = {};
     XScanEngine::SCAN_RESULT nfdScanResult = {};
     XScanEngine::SCAN_RESULT dieScanResult = {};
+    XScanEngine::SCAN_OPTIONS scanOptionsXScanEngine = {};
     XScanEngine::SCAN_OPTIONS scanOptionsNFD = {};
     XScanEngine::SCAN_OPTIONS scanOptionsDIE = {};
     XBinary::FT fileType = XBinary::FT_UNKNOWN;
@@ -501,6 +546,8 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
     bool bNeedPESectionValues = false;
     bool bNeedPEImportValues = false;
     bool bNeedPEImportHashValues = false;
+    bool bNeedXScanEngineValues = false;
+    bool bNeedOperationSystem = false;
     bool bNeedNFDValues = false;
     bool bNeedDIEValues = false;
 
@@ -515,6 +562,8 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
         bNeedPESectionValues |= (isPESectionNameValue(value) || isPESectionSizeValue(value) || isPESectionEntropyValue(value));
         bNeedPEImportValues |= (isPEImportNameValue(value) || isPEImportNumberOfFunctionsValue(value));
         bNeedPEImportHashValues |= isPEImportHashValue(value);
+        bNeedXScanEngineValues |= isXScanEngineValue(value);
+        bNeedOperationSystem |= (value == XFIV_OPERATIONSYSTEM);
         bNeedNFDValues |= isNFDValue(value);
         bNeedDIEValues |= isDIEValue(value);
     }
@@ -561,9 +610,27 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
         }
     }
 
+    if (bNeedXScanEngineValues && XBinary::isPdStructNotCanceled(pPdStruct)) {
+        qint64 nDevicePos = pDevice->isSequential() ? -1 : pDevice->pos();
+        quint64 nFlags = pOptions ? XScanEngine::getScanFlagsFromGlobalOptions(pOptions) : 0;
+
+        scanOptionsXScanEngine = XScanEngine::getDefaultOptions(nFlags);
+
+        if (bNeedOperationSystem) {
+            scanOptionsXScanEngine.bIsVerbose = true;
+        }
+
+        XScanEngine scanEngine;
+        xScanEngineResult = scanEngine.scanDevice(pDevice, &scanOptionsXScanEngine, pPdStruct);
+
+        if (nDevicePos != -1) {
+            pDevice->seek(nDevicePos);
+        }
+    }
+
     if (bNeedNFDValues && XBinary::isPdStructNotCanceled(pPdStruct)) {
         qint64 nDevicePos = pDevice->isSequential() ? -1 : pDevice->pos();
-        quint64 nFlags = XScanEngine::getScanFlagsFromGlobalOptions(pOptions);
+        quint64 nFlags = pOptions ? XScanEngine::getScanFlagsFromGlobalOptions(pOptions) : 0;
 
         scanOptionsNFD = XScanEngine::getDefaultOptions(nFlags);
         SpecAbstract specAbstract;
@@ -576,11 +643,11 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
 
     if (bNeedDIEValues && XBinary::isPdStructNotCanceled(pPdStruct)) {
         qint64 nDevicePos = pDevice->isSequential() ? -1 : pDevice->pos();
-        quint64 nFlags = XScanEngine::getScanFlagsFromGlobalOptions(pOptions);
+        quint64 nFlags = pOptions ? XScanEngine::getScanFlagsFromGlobalOptions(pOptions) : 0;
 
         scanOptionsDIE = XScanEngine::getDefaultOptions(nFlags);
 
-        quint64 nDatabases = XScanEngine::getDatabasesFromGlobalOptions(pOptions);
+        quint64 nDatabases = pOptions ? XScanEngine::getDatabasesFromGlobalOptions(pOptions) : XScanEngine::DATABASE_MAIN;
         XScanEngine::setDatabases(&scanOptionsDIE, nDatabases);
 
         scanOptionsDIE.bUseExtraDatabase = true;
@@ -620,6 +687,10 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
             varValue = XBinary::getEntropy(pDevice, pPdStruct);
         } else if (value == XFIV_ARCH) {
             varValue = fileFormatInfo.sArch;
+        } else if (value == XFIV_FILEFORMAT) {
+            varValue = XScanEngine::getFileFormat(&scanOptionsXScanEngine, &xScanEngineResult.listRecords);
+        } else if (value == XFIV_OPERATIONSYSTEM) {
+            varValue = XScanEngine::getOperationSystem(&scanOptionsXScanEngine, &xScanEngineResult.listRecords);
         } else if (value == XFIV_NFD_LINKER) {
             varValue = XScanEngine::getLinker(&scanOptionsNFD, &nfdScanResult.listRecords);
         } else if (value == XFIV_NFD_COMPILER) {
@@ -696,11 +767,17 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
             }
         } else if (value == XFIV_HEADER_BYTES) {
             varValue = pBinary ? pBinary->getSignature(0, 20) : QString();
+        } else if (value == XFIV_HEADER_BYTES_TEXT) {
+            varValue = getBytesText(pBinary, 0, 20);
         } else if (value == XFIV_ENTRYPOINT_BYTES) {
             varValue = pBinary ? pBinary->getSignature(pBinary->getEntryPointOffset(&memoryMap), 20) : QString();
         } else if (value == XFIV_OVERLAY_BYTES) {
             if (pBinary && pBinary->isOverlayPresent(&memoryMap, pPdStruct)) {
                 varValue = pBinary->getSignature(pBinary->getOverlayOffset(), 20);
+            }
+        } else if (value == XFIV_OVERLAY_BYTES_TEXT) {
+            if (pBinary && pBinary->isOverlayPresent(&memoryMap, pPdStruct)) {
+                varValue = getBytesText(pBinary, pBinary->getOverlayOffset(), 20);
             }
         } else if ((value == XFIV_ENTRYPOINT_SIGNATURE) || (value == XFIV_ENTRYPOINT_SIGNATURE_RELATIVE)) {
             if (pBinary) {
