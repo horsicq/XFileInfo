@@ -570,7 +570,7 @@ QHash<XFileInfoValues::XFIV, QVariant> XFileInfoValues::getValues(QIODevice *pDe
 
     if ((bNeedFileFormatInfo || bNeedMemoryMap || bNeedPEValues) && XBinary::isPdStructNotCanceled(pPdStruct)) {
         fileType = XFormats::getPrefFileType(pDevice, true, pPdStruct);
-        pBinary = XFormats::getClass(fileType, pDevice, false, -1);
+        pBinary = XFormats::createClass(fileType, pDevice, false, -1);
 
         if (pBinary) {
             if (bNeedPEValues && XBinary::checkFileType(XBinary::FT_PE, fileType)) {
